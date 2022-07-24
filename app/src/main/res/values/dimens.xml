@@ -1,0 +1,82 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="app_bottom">64dp</dimen>
+    <dimen name="app_top">50dp</dimen>
+    <dimen name="app_safe_top">30dp</dimen>
+
+    <dimen name="margin_heavy">60dp</dimen>
+    <dimen name="margin_medium">32dp</dimen>
+    <dimen name="margin_regular">20dp</dimen>
+    <dimen name="margin_regularExtra">16dp</dimen>
+    <dimen name="margin_light">14dp</dimen>
+    <dimen name="margin_thin">12dp</dimen>
+    <dimen name="margin_tiny">10dp</dimen>
+    <dimen name="margin_tinyExtra">8dp</dimen>
+    <dimen name="margin_micro">4dp</dimen>
+    <dimen name="margin_microExtra">2dp</dimen>
+
+    <dimen name="icon_heavy">56dp</dimen>
+    <dimen name="icon_medium">38dp</dimen>
+    <dimen name="icon_regular">28dp</dimen>
+    <dimen name="icon_light">24dp</dimen>
+    <dimen name="icon_thin">20dp</dimen>
+    <dimen name="icon_tiny">12dp</dimen>
+    <dimen name="icon_micro">8dp</dimen>
+
+    <dimen name="profile_heavy">80dp</dimen>
+    <dimen name="profile_medium">68dp</dimen>
+    <dimen name="profile_regular">62dp</dimen>
+    <dimen name="profile_light">48dp</dimen>
+    <dimen name="profile_lightExtra">46dp</dimen>
+    <dimen name="profile_thin">34dp</dimen>
+
+    <dimen name="tab_heavy">85dp</dimen>
+    <dimen name="tab_medium">56dp</dimen>
+    <dimen name="tab_regular">46dp</dimen>
+    <dimen name="tab_light">36dp</dimen>
+    <dimen name="tab_thin">24dp</dimen>
+
+    <dimen name="loading_bar">20dp</dimen>
+    <dimen name="loading_bar_large">40dp</dimen>
+
+    <dimen name="button_heavy">72dp</dimen>
+    <dimen name="button_medium">56dp</dimen>
+    <dimen name="button_mediumExtra">52dp</dimen>
+    <dimen name="button_regular">44dp</dimen>
+    <dimen name="button_light">36dp</dimen>
+    <dimen name="button_thin">32dp</dimen>
+
+
+    <dimen name="radius_heavy">32dp</dimen>
+    <dimen name="radius_medium">24dp</dimen>
+    <dimen name="radius_regular">20dp</dimen>
+    <dimen name="radius_light">16dp</dimen>
+    <dimen name="radius_lightExtra">14dp</dimen>
+    <dimen name="radius_thin">12dp</dimen>
+    <dimen name="radius_tiny">8dp</dimen>
+    <dimen name="radius_micro">4dp</dimen>
+
+    <dimen name="bar_medium">34dp</dimen>
+    <dimen name="bar_regular">7dp</dimen>
+    <dimen name="bar_light">4dp</dimen>
+
+    <dimen name="line_heavy">10dp</dimen>
+    <dimen name="line_medium">6dp</dimen>
+    <dimen name="line_regular">2dp</dimen>
+    <dimen name="line_light">1dp</dimen>
+
+    <dimen name="stroke_heavy">16dp</dimen>
+    <dimen name="stroke_medium">8dp</dimen>
+    <dimen name="stroke_regular">2dp</dimen>
+    <dimen name="stroke_light">1dp</dimen>
+
+    <dimen name="font_black">28dp</dimen>
+    <dimen name="font_bold">24dp</dimen>
+    <dimen name="font_medium">20dp</dimen>
+    <dimen name="font_regular">18dp</dimen>
+    <dimen name="font_light">16dp</dimen>
+    <dimen name="font_thin">14dp</dimen>
+    <dimen name="font_tiny">12dp</dimen>
+    <dimen name="font_micro">9dp</dimen>
+
+</resources>

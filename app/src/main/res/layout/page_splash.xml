@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_primary">
+    <ImageView
+        android:layout_width="109dp"
+        android:layout_height="131dp"
+        android:src="@drawable/ic_splash_logo"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        style="@style/fontRegular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:textColor="@color/app_white"
+        android:textSize="@dimen/font_thin"
+        android:textAlignment="center"
+        android:text ="IRON RAFT" />
+</FrameLayout>

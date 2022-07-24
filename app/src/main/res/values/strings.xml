@@ -1,0 +1,135 @@
+<resources>
+    <string name="app_id" translatable="false">com.ironraft.pupping.bero</string>
+    <string name="ios_id" translatable="false">com.ironraft.pupping.Bero</string>
+    <!-- For Fdl -->
+    <string name="fdl_domain" translatable="false">raftgroup.com</string>
+    <string name="fdl_link" translatable="false">raftgroup.page.link</string>
+    <string name="fdl_link_path" translatable="false">https://raftgroup.page.link/</string>
+
+    <!-- For Fcm -->
+    <string name="default_notification_channel_name" translatable="false">RaftGroup</string>
+    <string name="default_notification_channel_id" translatable="false">1</string>
+    <string name="fcm_title" translatable="false">RaftGroup notice</string>
+
+    <!-- For FB -->
+    <string name="facebook_app_id" translatable="false">415565693399214</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb415565693399214</string>
+    <string name="facebook_client_token" translatable="false">a712c78e3bce352aa36d92a32dcefef1</string>
+
+    <string name="app_name">Bero</string>
+
+    <string name="noticeAppExit">Press once more to exit.</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="close">Close</string>
+
+    <string name="male">male</string>
+    <string name="female">female</string>
+
+    <string name="puppingCoin">Pupping</string>
+    <string name="point">Point</string>
+    <string name="mission">Mission</string>
+    <string name="walk">Walk</string>
+    <string name="year">YY</string>
+    <string name="month">MM</string>
+    <string name="day">DD</string>
+    <string name="step">step</string>
+    <string name="of">of</string>
+
+    <string name="kmPerH">km/h</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
+    <string name="min">분</string>
+    <string name="redeem">Redeem</string>
+    <string name="kg">kg</string>
+
+
+    <string name="filter">filter</string>
+    <string name="near">near</string>
+
+    <string name="weight">Weight</string>
+    <string name="size">Size</string>
+    <string name="owner">\'s</string>
+
+    <string name="snsFacebook">\'s</string>
+
+    /*
+    Button
+    */
+    <string name="btnClose">Close</string>
+    <string name="btnRetry">Retry</string>
+    <string name="btnReset">Reset</string>
+    <string name="btnApply">Apply</string>
+    <string name="btnDelete">Delete</string>
+    <string name="btnModify">Modify</string>
+    <string name="btnMore">more</string>
+    <string name="btnAlbum">Album</string>
+    <string name="btnCamera">Camera</string>
+
+    /*
+    Alert
+    */
+    <string name="alertApns">Pupping notification</string>
+    <string name="alertApi">Pupping notification</string>
+    <string name="alertApiErrorServer">Connection lost. Please try again later.</string>
+    <string name="alertApiErrorClient">Please check the internet connection and try again.</string>
+    <string name="alertNetworkError">Your internet connection is unstable.</string>
+    <string name="alertDataError">No data.</string>
+
+    <string name="alertLocation">Please allow location access.</string>
+    <string name="alertLocationSub">According to Apple\'s policy, you must allow location access to send us your locatoin.</string>
+    <string name="alertLocationBtn">Go to grant permission</string>
+    <string name="alertLocationDisable">Unable to get location information. try again?</string>
+    <string name="alertLocationFind">Retrieving location information. Please wait.</string>
+
+    <string name="alertSnsLoginError">After login. Available.</string>
+
+    /*
+    Gnb
+    */
+    <string name="gnbWalk">Walk</string>
+    <string name="gnbMatching">Matching</string>
+    <string name="gnbDiary">Diary</string>
+    <string name="gnbMy">My</string>
+
+    /*
+    Location
+    */
+    <string name="locationNotFound">Where Are You?</string>
+
+    /*
+    PartTitle
+    */
+    <string name="titleMy">My</string>
+    <string name="titleExplore">Explore</string>
+    <string name="titleEditProfile">Edit Profile</string>
+    <string name="titleMyRewards">My Rewards</string>
+    <string name="titleMyDogs">My Dogs</string>
+    <string name="titleCommingSoon">Coming soon</string>
+    <string name="titleMission">Start Mission</string>
+    <string name="titleMissionInfo">Preview Mission</string>
+    <string name="titleHistory">History</string>
+    <string name="titleAlbum">Album</string>
+    <string name="titleWalkReport">Walk Report</string>
+    /*
+    PageIntro
+    */
+    <string name="introText1_1">Walk your dog\nwith fun missions.</string>
+    <string name="introText1_2">Walking dogs never been this\nfun! Explore new routes with\nthe daily and monthly missions.</string>
+    <string name="introText2_1">Earn Encrypted\nCoins as you walk.</string>
+    <string name="introText2_2">Walk your dog and earn\nfinancial rewards. The coins are\ndesignated to your dog!</string>
+    <string name="introText3_1">Make a local dog\ncommunity.</string>
+    <string name="introText3_2">Find new local dog friends to\nwalk with and share\ninformation.</string>
+    <string name="introComplete">Let’s explore!</string>
+
+
+    /*
+    PageLogin
+    */
+    <string name="loginText">Let’s walk\nour dogs together!</string>
+    <string name="loginStart">Let’s Start!</string>
+
+
+
+</resources>
