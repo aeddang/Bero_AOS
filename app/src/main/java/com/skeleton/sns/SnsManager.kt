@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.lib.page.PageActivity
 import com.lib.page.PageFragment
 import com.lib.page.PageLifecycleUser
 import com.lib.util.Log
@@ -23,6 +26,10 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
     private var currentManager:Sns? = null
 
     val fb:FaceBookManager = FaceBookManager()
+    val google:GoogleSignManager = GoogleSignManager()
+    fun setup(ac: PageActivity){
+        google.setup(ac)
+    }
 
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
         fb.respond.observe(owner, Observer{ res:SnsResponds? ->
@@ -33,17 +40,28 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
             err ?: return@Observer
             onError(err)
         })
-
+        google.respond.observe(owner, Observer{ res:SnsResponds? ->
+            res ?: return@Observer
+            onRespond(res)
+        })
+        google.error.observe(owner, Observer{ err:SnsError? ->
+            err ?: return@Observer
+            onError(err)
+        })
     }
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         fb.respond.removeObservers(owner)
         fb.error.removeObservers(owner)
+        google.respond.removeObservers(owner)
+        google.error.removeObservers(owner)
+
     }
 
     fun getManager(type:SnsType? = null) : Sns?{
         return when(type) {
             SnsType.Fb -> fb
+            SnsType.Google -> google
             else -> null
         }
     }
@@ -90,6 +108,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         fb.onActivityResult(requestCode,resultCode, data)
+        google.onActivityResult(requestCode,resultCode, data)
         return false
     }
 
@@ -108,6 +127,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
     }
     fun requestAllLogOut() {
         fb.requestLogOut()
+        google.requestLogOut()
     }
 
     fun getAccessTokenInfo() {

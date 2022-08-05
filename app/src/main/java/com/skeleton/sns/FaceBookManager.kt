@@ -42,19 +42,10 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
                 currentProfile?.let {
                     val profile = SnsUserInfo(
                         it.name,
-                        it.getProfilePictureUri(150, 150).path)
+                        it.getProfilePictureUri(150, 150).path
+                        )
                     respond.value = SnsResponds(SnsEvent.GetProfile, type, profile)
-                    /*
-                    if (accessToken != null){
-                        GraphRequest.newMeRequest(accessToken){ obj: JSONObject?, response: GraphResponse? ->
-                            obj?.let { DataLog.d(obj, appTag) }
-                            response?.let { DataLog.d(response, appTag) }
-                            respond.value = SnsResponds(SnsEvent.GetProfile, type, profile)
-                        }.executeAsync()
 
-                    } else {
-                        respond.value = SnsResponds(SnsEvent.GetProfile, type, profile)
-                    }*/
                     return
                 }
                 error.value = SnsError(SnsEvent.GetProfile, type)
@@ -64,7 +55,6 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
 
     //FacebookCallback
     override fun onSuccess(loginResult: LoginResult) {
-        loginResult.accessToken
         val user = SnsUser(
             type,
             loginResult.accessToken.userId,

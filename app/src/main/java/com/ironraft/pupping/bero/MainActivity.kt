@@ -54,7 +54,7 @@ import javax.inject.Inject
         loaded()
         scope.createJob()
         AppUtil.getApplicationSignature(this)
-        Places.initialize(applicationContext, "AIzaSyCHDB1mFuj7MEaCwxBSzCLqXGSGtWJ97fA")
+        Places.initialize(applicationContext, "AIzaSyDzK15eqSCVXAMl7JLmJwSO4bzhecqGnW4")
         pageInit() // pagePresenter.pageInit() 가능
     }
 

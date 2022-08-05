@@ -1,5 +1,7 @@
 package com.ironraft.pupping.bero.scene.page.login
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,12 +33,14 @@ class PageLogin : PageFragment() {
         super.onViewCreated(view, savedInstanceState)
         val callback = snsManager.fb.callbackManager
         binding.buttonFb.registerCallback(callback,snsManager.fb)
+        binding.buttonFb
         binding.buttonLoginFb.setOnClickListener{
             binding.buttonFb.callOnClick()
         }
         binding.buttonLoginGoogle.setOnClickListener {
             snsManager.requestLogin(SnsType.Google)
         }
+        snsManager.setup(pagePresenter.activity)
     }
     override fun onCoroutineScope() {
         super.onCoroutineScope()
@@ -68,5 +72,8 @@ class PageLogin : PageFragment() {
         }
     }
 
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        this.snsManager.onActivityResult(requestCode, resultCode, data)
+    }
 }
