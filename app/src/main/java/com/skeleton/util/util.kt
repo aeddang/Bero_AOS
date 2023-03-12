@@ -22,11 +22,11 @@ fun String.decimalFormat(): String {
 }
 
 fun String.toColorCode(): String {
-    val code = this.toUpperCase().replace("0X" ,"#")
+    val code = this.uppercase(Locale.getDefault()).replace("0X", "#")
     if (code.length == 7) return code
     if (code.length == 6) return "#$code"
     if (code.length != 4) return "#000000"
-    val hex = code.replace("#" ,"")
+    val hex = code.replace("#", "")
     return "#$hex"
 }
 

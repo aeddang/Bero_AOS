@@ -12,7 +12,6 @@ import com.lib.util.AppUtil
 import com.lib.util.DataLog
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
-import com.ironraft.pupping.bero.scene.page.viewmodel.FragmentProvider
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.database.DataBaseManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
@@ -39,7 +38,6 @@ class PageRepository (ctx: Context,
                       val dataProvider: DataProvider,
                       val apiManager: ApiManager,
                       val pageModel: ActivityModel,
-                      val pageProvider: FragmentProvider,
                       val pagePresenter: PagePresenter,
                       val shareManager:ShareManager,
                       val snsManager: SnsManager,

@@ -10,12 +10,11 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
-
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.ironraft.pupping.bero.MainActivity
 import com.lib.model.WhereverYouCanGo
 import com.lib.util.Log
-import com.ironraft.pupping.bero.MainActivity
 import com.ironraft.pupping.bero.R
 import java.util.*
 
@@ -88,7 +87,6 @@ class FirebaseMessaging : FirebaseMessagingService() {
             val channel = NotificationChannel("1", name, importance).apply {
                 description = descriptionText
             }
-
             notificationManager.createNotificationChannel(channel)
         }
         notificationManager.notify(reCode, notificationBuilder.build())

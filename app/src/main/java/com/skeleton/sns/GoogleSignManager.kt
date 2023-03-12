@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.ironraft.pupping.bero.R
 import com.lib.page.PageActivity
 import com.lib.util.Log
 import java.util.*
@@ -31,6 +32,7 @@ class GoogleSignManager : Sns{
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .requestProfile()
+            .requestIdToken(ac.getString(R.string.web_client_id))
             .build()
         googleSignInClient = GoogleSignIn.getClient(ac, gso)
     }
@@ -49,10 +51,10 @@ class GoogleSignManager : Sns{
             val acct = GoogleSignIn.getLastSignedInAccount(ac)
             if (acct != null) {
                 val personName = acct.displayName
-                val personGivenName = acct.givenName
-                val personFamilyName = acct.familyName
+                //val personGivenName = acct.givenName
+                //val personFamilyName = acct.familyName
                 val personEmail = acct.email
-                val personId = acct.id
+                //val personId = acct.id
                 val personPhoto: Uri? = acct.photoUrl
 
                 val profile = SnsUserInfo(
@@ -83,11 +85,12 @@ class GoogleSignManager : Sns{
             val account = completedTask.getResult(ApiException::class.java)
 
             // Signed in successfully, show authenticated UI.
-            account.id?.let { id ->
+
+            account.idToken?.let { token ->
                 val user = SnsUser(
                     type,
-                    id,
-                    account.idToken ?: ""
+                    account.id ?: "",
+                    token
                 )
                 respond.value = SnsResponds(SnsEvent.Login, type, user)
             }

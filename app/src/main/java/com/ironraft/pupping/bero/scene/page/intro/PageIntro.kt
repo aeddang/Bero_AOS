@@ -11,12 +11,9 @@ import com.lib.page.*
 
 import com.lib.view.adapter.BaseViewPagerAdapter
 import com.ironraft.pupping.bero.databinding.*
-import com.ironraft.pupping.bero.scene.page.viewmodel.FragmentProvider
-import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import dagger.hilt.android.AndroidEntryPoint
 
-import javax.inject.Inject
 
+/*
 @AndroidEntryPoint
 class PageIntro : PageFragment(){
     private val appTag = javaClass.simpleName
@@ -101,3 +98,5 @@ class PageIntro : PageFragment(){
         }
     }
 }
+
+ */

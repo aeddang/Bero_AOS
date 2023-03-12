@@ -8,7 +8,6 @@ import com.ironraft.pupping.bero.store.api.ApiSuccess
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.model.User
 
-
 class DataProvider {
     val user = User()
     val request = MutableLiveData<ApiQ?>()

@@ -12,8 +12,10 @@ import com.skeleton.module.network.NetworkFactory
 import com.skeleton.sns.SnsUser
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class ApiBridge(
     private val context: Context,
@@ -82,7 +84,7 @@ class ApiBridge(
         var image: MultipartBody.Part? = null
         model?.image?.let {
             val file = it.toFile(context, "profileImage.jpg")
-            val imgBody = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", file.name, imgBody)
         }
         val name: RequestBody? = getRequestBody(model?.nickName)
@@ -93,7 +95,7 @@ class ApiBridge(
         var image: MultipartBody.Part? = null
         img?.let {
             val file = it.toFile(context)
-            val imgBody: RequestBody? = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", "profileImage.jpg" , imgBody)
         }
         pet.put(petId, contents = image)
@@ -129,7 +131,7 @@ class ApiBridge(
         var image: MultipartBody.Part? = null
         profile?.image?.value?.let {
             val file = it.toFile(context)
-            val imgBody: RequestBody? = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", "profileImage.jpg" , imgBody)
         }
         pet.post(userId,name, breed, birthdate, sex, regNumber, level, status, image)
@@ -141,14 +143,14 @@ class ApiBridge(
         var image: MultipartBody.Part? = null
         albumData?.image?.let {
             val file = it.toFile(context)
-            val imgBody: RequestBody? = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             image = MultipartBody.Part.createFormData("contents", "albumImage.jpg" , imgBody)
         }
 
         var thumb: MultipartBody.Part? = null
         albumData?.thumb?.let {
             val file = it.toFile(context)
-            val imgBody: RequestBody? = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             thumb = MultipartBody.Part.createFormData("smallContents", "thumbAlbumImage.jpg" , imgBody)
         }
         album.post(owner, type, thumb, image)
@@ -168,7 +170,7 @@ class ApiBridge(
         var image: MultipartBody.Part? = null
         data?.let {resource->
             val file = resource.toFile(context)
-            val imgBody: RequestBody? = RequestBody.create(MediaType.parse("image/jpeg"),file )
+            val imgBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", "visionImage.jpg" , imgBody)
         }
         vision.post(image)
@@ -176,6 +178,6 @@ class ApiBridge(
 
     private  fun getRequestBody(value:String?):RequestBody?{
         value ?: return null
-        return RequestBody.create(MediaType.parse("text/plain"), value)
+        return RequestBody.create("text/plain".toMediaTypeOrNull(), value)
     }
 }

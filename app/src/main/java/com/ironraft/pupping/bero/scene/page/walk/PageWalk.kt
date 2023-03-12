@@ -12,10 +12,9 @@ import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.skeleton.component.dialog.Alert
 import com.skeleton.sns.*
-import dagger.hilt.android.AndroidEntryPoint
 
 import javax.inject.Inject
-
+/*
 @AndroidEntryPoint
 class PageWalk : PageFragment(), PageRequestPermission{
     private val appTag = javaClass.simpleName
@@ -50,3 +49,5 @@ class PageWalk : PageFragment(), PageRequestPermission{
         ctx ?: return
     }
 }
+
+ */

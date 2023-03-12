@@ -78,5 +78,4 @@
     <dimen name="font_thin">14dp</dimen>
     <dimen name="font_tiny">12dp</dimen>
     <dimen name="font_micro">9dp</dimen>
-
 </resources>

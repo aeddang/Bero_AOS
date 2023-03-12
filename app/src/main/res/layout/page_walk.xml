@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:viewBindingIgnore="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -14,9 +15,6 @@
         android:layout_height="match_parent"
         android:elevation="@dimen/margin_thin"
         android:background="@color/app_white">
-    <com.ironraft.pupping.bero.scene.page.walk.PlayMap
-        android:id="@+id/playMap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
     </com.skeleton.component.view.RoundView>
 </FrameLayout>

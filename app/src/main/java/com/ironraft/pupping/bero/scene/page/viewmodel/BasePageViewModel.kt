@@ -6,31 +6,25 @@ import androidx.lifecycle.ViewModel
 import com.lib.page.*
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.PageRepository
-import com.skeleton.module.Repository
-/*
-enum class ViewModelEventType{
-}
-data class ViewModelEvent(val type: ViewModelEventType, val id: String = "", var data:Any? = null)
-*/
-open class BasePageViewModel(val repo: PageRepository) : ViewModel(), PageViewModel {
-    override val repository: Repository get() = repo
-    override val observable: PageAppViewModel get() = repo.pagePresenter.observable
-    override val presenter:PagePresenter get() = repo.pagePresenter
-    val pageProvider :FragmentProvider get() = repo.pageProvider
-    val dataProvider : DataProvider get() = repo.dataProvider
 
+
+open class BasePageViewModel(repo: PageRepository) : ViewModel(), PageViewModel {
+    override val repository: PageRepository = repo
+    override val observable: PageAppViewModel = repo.pagePresenter.observable
+    override val presenter:PagePresenter = repo.pagePresenter
+    val dataProvider : DataProvider = repo.dataProvider
     var owner: LifecycleOwner? = null; protected set
 
     @CallSuper
     override fun onCreateView(owner: LifecycleOwner, pageObject: PageObject?) {
         this.owner = owner
-        repo.clearEvent()
+        this.repository.clearEvent()
     }
 
     @CallSuper
     override fun onDestroyView(owner: LifecycleOwner , pageObject: PageObject?) {
         if(this.owner != owner) return
-        repository.disposeLifecycleOwner(owner)
+        this.repository.disposeLifecycleOwner(owner)
         this.owner = null
         onDestroyOwner(owner, pageObject)
     }

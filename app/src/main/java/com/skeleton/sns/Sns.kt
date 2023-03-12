@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import com.ironraft.pupping.bero.R
+import java.util.*
 
 interface Sns {
     fun requestLogin(){}
@@ -36,7 +37,7 @@ enum class SnsType(val code:String){
 
     companion object{
         fun getType(value:String?):SnsType?{
-            return when(value?.toLowerCase()){
+            return when(value?.lowercase(Locale.getDefault())){
                 "facebook" -> Fb
                 "apple" -> Apple
                 "google" -> Google

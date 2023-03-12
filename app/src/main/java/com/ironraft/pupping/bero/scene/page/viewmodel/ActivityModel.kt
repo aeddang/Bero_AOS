@@ -6,6 +6,8 @@ import com.lib.page.PageModel
 import com.lib.page.PageObject
 import com.ironraft.pupping.bero.R
 
+
+
 class ActivityModel : PageModel{
     override var isPageInit: Boolean = false
     override var currentPageObject: PageObject? = null

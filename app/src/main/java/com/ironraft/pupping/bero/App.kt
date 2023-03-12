@@ -2,16 +2,9 @@ package com.ironraft.pupping.bero
 
 import android.app.Application
 import com.facebook.stetho.Stetho
-import com.ironraft.pupping.bero.BuildConfig
 import com.lib.util.Log
 
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
-abstract class HiltApp : Application(){
-}
-
-@HiltAndroidApp
-class App @Inject constructor(): HiltApp() {
+class App constructor(): Application() {
     private val appTag = javaClass.simpleName
     override fun onCreate() {
         super.onCreate()

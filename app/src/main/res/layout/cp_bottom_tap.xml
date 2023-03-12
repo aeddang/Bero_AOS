@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:defaultImage="@drawable/ic_profile_user_default"
+            app:defaultImage="@drawable/ic_my_location"
             android:title="@string/gnbMy"
             />
     </LinearLayout>

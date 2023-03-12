@@ -16,11 +16,11 @@ import com.lib.util.Log
 class SnsManager(private val context: Context) : PageLifecycleUser {
     private val appTag = javaClass.simpleName
 
-    val currentSnsType = MutableLiveData<SnsType?>()
+    private val currentSnsType = MutableLiveData<SnsType?>()
     val user = MutableLiveData<SnsUser?>()
     val userInfo = MutableLiveData<SnsUserInfo?>()
 
-    val respond = MutableLiveData<SnsResponds?>()
+    private val respond = MutableLiveData<SnsResponds?>()
     val error = MutableLiveData<SnsError?>()
 
     private var currentManager:Sns? = null
@@ -58,7 +58,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
 
     }
 
-    fun getManager(type:SnsType? = null) : Sns?{
+    private fun getManager(type:SnsType? = null) : Sns?{
         return when(type) {
             SnsType.Fb -> fb
             SnsType.Google -> google
@@ -72,7 +72,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
         when (res.event) {
             SnsEvent.Login -> {
                 currentSnsType.value = res.type
-                currentManager = getManager()
+                currentManager = getManager(type = res.type)
                 user.value = res.data as? SnsUser
                 Log.d(appTag, "login $user")
             }

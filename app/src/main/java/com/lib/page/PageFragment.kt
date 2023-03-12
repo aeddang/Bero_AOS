@@ -41,7 +41,8 @@ abstract class PageFragment: Fragment(), Page, PageViewFragment, PageViewCorouti
         }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        pageChileren?.forEach { it.onActivityResult(requestCode, resultCode, data) }
+         pageChileren?.forEach { it.onActivityResult(requestCode, resultCode, data) }
+
     }
 
     @CallSuper

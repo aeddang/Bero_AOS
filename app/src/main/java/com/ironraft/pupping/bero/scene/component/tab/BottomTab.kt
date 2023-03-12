@@ -4,35 +4,20 @@ import android.content.Context
 import android.graphics.Point
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.lib.page.*
 import com.lib.util.*
 import com.ironraft.pupping.bero.databinding.CpBottomTapBinding
-
-import com.ironraft.pupping.bero.scene.page.viewmodel.FragmentProvider
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.skeleton.component.button.ImageTextButton
-import dagger.hilt.android.AndroidEntryPoint
 
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.math.floor
-
-@AndroidEntryPoint
 class BottomTab : PageComponent {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     private val appTag = javaClass.simpleName
 
-    @Inject lateinit var pagePresenter: PagePresenter
-    @Inject lateinit var pageProvider: FragmentProvider
-    @Inject lateinit var dataProvider: DataProvider
+
 
     private val pageIds = arrayOf(PageID.Walk, PageID.Matching,  PageID.Diary, PageID.My)
     private var btns:Array<ImageTextButton> = arrayOf()
@@ -45,6 +30,7 @@ class BottomTab : PageComponent {
 
     override fun onLifecycleOwner(owner: LifecycleOwner) {
         super.onLifecycleOwner(owner)
+        /*
         pagePresenter.observable.event.observe(owner, Observer{ evt:PageEvent? ->
             evt ?: return@Observer
             var delayShow:Job? = null
@@ -79,6 +65,7 @@ class BottomTab : PageComponent {
                 else -> { }
             }
         })
+         */
     }
 
     override fun onCoroutineScope() {
@@ -86,7 +73,7 @@ class BottomTab : PageComponent {
         btns = arrayOf(binding.btn0, binding.btn1, binding.btn2, binding.btn3)
         btns.forEachIndexed{idx,btn->
             btn.setOnClickListener {
-                pagePresenter.changePage(pageProvider.getPageObject(pageIds[idx]))
+                //pagePresenter.changePage(pageProvider.getPageObject(pageIds[idx]))
             }
         }
         ComponentLog.d("onCoroutineScope ${btns.size}", appTag)

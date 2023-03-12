@@ -1,11 +1,9 @@
 package com.ironraft.pupping.bero.scene.page.login
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import com.facebook.login.LoginFragment
 import com.lib.page.*
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.databinding.*
@@ -13,10 +11,9 @@ import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.skeleton.component.dialog.Alert
 import com.skeleton.sns.*
-import dagger.hilt.android.AndroidEntryPoint
 
-import javax.inject.Inject
 
+/*
 @AndroidEntryPoint
 class PageLogin : PageFragment() {
     private val appTag = javaClass.simpleName
@@ -77,3 +74,5 @@ class PageLogin : PageFragment() {
         this.snsManager.onActivityResult(requestCode, resultCode, data)
     }
 }
+
+ */

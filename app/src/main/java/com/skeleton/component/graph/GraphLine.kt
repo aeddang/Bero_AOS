@@ -6,7 +6,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import com.lib.util.ComponentLog
 import com.lib.view.animate.AnimationUtil
-import dagger.Component
 import kotlin.math.roundToInt
 
 

@@ -1,42 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.walk
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-
-import android.graphics.drawable.Drawable
-import android.location.Location
-import android.os.Bundle
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
-import androidx.lifecycle.LifecycleOwner
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.UiSettings
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.lib.page.PageComponent
-import com.lib.page.PagePresenter
-import com.lib.page.PageView
-import com.lib.page.PageViewModel
-import com.lib.util.cropCircle
-import com.lib.util.size
-import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.databinding.CpGoogleMapBinding
-import com.ironraft.pupping.bero.scene.page.viewmodel.FragmentProvider
-import com.ironraft.pupping.bero.store.provider.model.User
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlin.math.roundToInt
-
-@AndroidEntryPoint
+/*
 class PlayMap : PageComponent {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -174,6 +138,6 @@ class PlayMap : PageComponent {
             }
         }
     }
-
-
 }
+
+ */

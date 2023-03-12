@@ -6,9 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.lib.util.DataLog
 import com.lib.util.Log
-import org.json.JSONObject
+import java.util.*
 
 class FaceBookManager : Sns, FacebookCallback<LoginResult>{
 
@@ -21,7 +20,7 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
     private var accessTokenTracker:AccessTokenTracker? = null
     private var profileTracker:ProfileTracker? = null
     private var accessToken:AccessToken? = null
-
+    val requestCode:Int = UUID.randomUUID().hashCode()
     init {
         callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().registerCallback(callbackManager,this)
@@ -54,18 +53,18 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
     }
 
     //FacebookCallback
-    override fun onSuccess(loginResult: LoginResult) {
+    override fun onSuccess(result: LoginResult) {
         val user = SnsUser(
-            type,
-            loginResult.accessToken.userId,
-            loginResult.accessToken.token
+            this.type,
+            result.accessToken.userId,
+            result.accessToken.token
         )
-        accessToken = loginResult.accessToken
+        accessToken = result.accessToken
         respond.value = SnsResponds(SnsEvent.Login, type, user)
     }
     //FacebookCallback
     override fun onCancel() {
-
+        Log.d(appTag, "onCancel")
     }
     //FacebookCallback
     override fun onError(exception: FacebookException) {

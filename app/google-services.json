@@ -14,21 +14,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "474132217178-oim0f8d0hhttgup67vp21vou5u1v2qk2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ironraft.pupping.bero",
-            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          }
-        },
-        {
           "client_id": "474132217178-k6llvcd7gfk66gdi16iqj41m06fpge22.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBTXL38G2neR0VCSK6MMqyh_P9Yo8qnmeE"
+          "current_key": "AIzaSyDzK15eqSCVXAMl7JLmJwSO4bzhecqGnW4"
         }
       ],
       "services": {

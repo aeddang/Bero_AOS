@@ -12,7 +12,7 @@
     <string name="fcm_title" translatable="false">RaftGroup notice</string>
 
     <!-- For Google -->
-    <string name="server_client_id">474132217178-eisug2vk6vt0hdmt1qaat6hufjqu93ag.apps.googleusercontent.com</string>
+    <string name="web_client_id">474132217178-k6llvcd7gfk66gdi16iqj41m06fpge22.apps.googleusercontent.com</string>
     <string name="map_id">c968f8193ed79966</string>
 
     <!-- For FB -->
