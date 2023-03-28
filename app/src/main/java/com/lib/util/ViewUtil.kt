@@ -19,6 +19,7 @@ fun Toast.showCustomToast(@StringRes messageRes: Int, activity: Activity)
 }
 fun Toast.showCustomToast(message: String, activity: Activity)
 {
+    /*
     val layout = activity.layoutInflater.inflate (
         R.layout.ui_toast,
         activity.findViewById(R.id.toast_container)
@@ -33,5 +34,5 @@ fun Toast.showCustomToast(message: String, activity: Activity)
         view = layout
         setMargin(0f,0f)
         show()
-    }
+    }*/
 }

@@ -8,6 +8,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +24,9 @@ import com.ironraft.pupping.bero.scene.page.PageSplashCompose
 import com.ironraft.pupping.bero.scene.page.PageSplashComposePreview
 import com.ironraft.pupping.bero.scene.page.viewmodel.BasePageViewModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.lib.page.PageComposePresenter
+import com.lib.page.PageObject
+import org.koin.compose.koinInject
 
 
 /**
@@ -35,10 +39,19 @@ fun PageAppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val pagePresenter = koinInject<PageComposePresenter>()
     TopAppBar(
         title = { Text(page.value) },
         modifier = modifier,
         navigationIcon = {
+            IconButton(onClick = {
+                pagePresenter.changePage(PageObject(PageID.Login.value))
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.loginStart)
+                )
+            }
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
                     Icon(
@@ -53,9 +66,8 @@ fun PageAppBar(
 
 @Composable
 fun PageApp(
-    modifier: Modifier = Modifier,
-   // viewModel: BasePageViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentPageID = PageID.valueOf(
@@ -77,15 +89,14 @@ fun PageApp(
             startDestination = PageID.Walk.value,
             modifier = modifier.padding(innerPadding)
         ) {
-
             composable(route = PageID.Walk.value) {
-                PageSplashCompose()
+                PageSplashCompose("Walk")
             }
             composable(route = PageID.My.value) {
-                PageSplashCompose()
+                PageSplashCompose("My")
             }
             composable(route = PageID.Login.value) {
-                PageSplashCompose()
+                PageSplashCompose("Login")
             }
         }
     }

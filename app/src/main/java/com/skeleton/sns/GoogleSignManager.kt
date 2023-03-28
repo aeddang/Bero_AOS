@@ -10,7 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.ironraft.pupping.bero.R
-import com.lib.page.PageActivity
+import com.lib.page.PageComposeable
 import com.lib.util.Log
 import java.util.*
 
@@ -23,11 +23,11 @@ class GoogleSignManager : Sns{
     val error = MutableLiveData<SnsError?>()
     val type = SnsType.Google
     var googleSignInClient: GoogleSignInClient? = null; private set
-    var pageActivity:PageActivity? = null; private set
+    var pageActivity:PageComposeable? = null; private set
     val requestCode:Int = UUID.randomUUID().hashCode()
     init {}
 
-    fun setup(ac:PageActivity){
+    fun setup(ac:PageComposeable){
         pageActivity = ac
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()

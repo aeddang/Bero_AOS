@@ -14,16 +14,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.telephony.TelephonyManager
-import android.util.Base64
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.FileProvider
 import com.google.android.gms.maps.model.LatLng
-import com.lib.page.PageActivity
+import com.lib.page.PageComposeable
 import java.io.File
 import java.security.MessageDigest
 import java.util.*
@@ -119,11 +116,11 @@ object AppUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 id?.let{ takePictureIntent.putExtra("id", id.toString()) }
                 takePictureIntent.resolveActivity(context.packageManager)?.also {
-                    (context as? PageActivity)?.registActivityResult(takePictureIntent, id ?: -1)
+                    (context as? PageComposeable)?.registActivityResult(takePictureIntent, id ?: -1)
                 }
             } else {
                 takePictureIntent.resolveActivity(context.packageManager)?.also {
-                    (context as PageActivity).startActivityForResult(
+                    (context as PageComposeable).startActivityForResult(
                         takePictureIntent,
                         id ?: -1
                     )

@@ -1,8 +1,8 @@
 package com.lib.page
 import android.view.View
 
-open class PageActivityPresenter : PagePresenter{
-    override lateinit var activity: PageActivity
+open class PageComposePresenter : PagePresenter{
+    override lateinit var activity: PageComposeable
     override var isFullScreen: Boolean
         get() = activity.isFullScreen
         set(value) {
@@ -33,10 +33,6 @@ open class PageActivityPresenter : PagePresenter{
     override val prevPage: PageObject?
         get() = activity.prevPage
 
-    override val observable: PageAppViewModel
-        get() = activity.pageAppViewModel
-
-    override fun getPageFragment(pageObject: PageObject?) = activity.getPageFragment(pageObject)
     override fun goHome(idx: Int): PagePresenter {
         activity.goHome(idx)
         return this

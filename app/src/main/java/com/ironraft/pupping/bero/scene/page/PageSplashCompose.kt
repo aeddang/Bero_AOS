@@ -22,6 +22,7 @@ fun dpToSp(dp: Dp) = with(LocalDensity.current) { dp.toSp() }
 
 @Composable
 fun PageSplashCompose(
+    text:String = "Splash",
     modifier: Modifier = Modifier
 ){
     val resources = LocalContext.current.resources
@@ -35,7 +36,7 @@ fun PageSplashCompose(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ){
             Text(
-                text = "Hello, DP!",
+                text = text,
                 color = colorResource(R.color.app_black),
                 fontSize = dpToSp(dimensionResource(R.dimen.font_light).value.dp),
                 overflow = TextOverflow.Ellipsis

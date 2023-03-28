@@ -17,7 +17,7 @@ import com.ironraft.pupping.bero.store.database.DataBaseManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
-import com.skeleton.component.dialog.Alert
+//import com.skeleton.component.dialog.Alert
 import com.skeleton.module.Repository
 import com.skeleton.module.network.ErrorType
 import com.skeleton.sns.SnsManager
@@ -120,9 +120,11 @@ class PageRepository (ctx: Context,
                     val msg =
                         if ( it.errorType != ErrorType.API ) ctx.getString(R.string.alertApiErrorServer)
                         else it.msg
+                    /*
                     val builder = Alert.Builder(pagePresenter.activity)
                     builder.setTitle(R.string.alertApi)
                     builder.setText(msg ?:  ctx.getString(R.string.alertApiErrorServer)).show()
+                    */
                 }
             }
 
@@ -136,7 +138,7 @@ class PageRepository (ctx: Context,
         snsManager.disposeDefaultLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
         accountManager.disposeDefaultLifecycleOwner(owner)
-        pagePresenter.observable.onDestroyView(owner)
+        pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
 
     }
 
@@ -144,7 +146,7 @@ class PageRepository (ctx: Context,
         snsManager.disposeLifecycleOwner(owner)
         accountManager.disposeLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
-        pagePresenter.observable.onDestroyView(owner)
+        pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
     }
 
     private fun setupSetting(){

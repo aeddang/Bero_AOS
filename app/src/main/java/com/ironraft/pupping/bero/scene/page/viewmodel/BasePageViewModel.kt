@@ -10,7 +10,6 @@ import com.ironraft.pupping.bero.store.PageRepository
 
 open class BasePageViewModel(repo: PageRepository) : ViewModel(), PageViewModel {
     override val repository: PageRepository = repo
-    override val observable: PageAppViewModel = repo.pagePresenter.observable
     override val presenter:PagePresenter = repo.pagePresenter
     val dataProvider : DataProvider = repo.dataProvider
     var owner: LifecycleOwner? = null; protected set

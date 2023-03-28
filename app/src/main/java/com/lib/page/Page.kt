@@ -1,8 +1,6 @@
 package com.lib.page
 import android.content.Intent
 import android.view.View
-import androidx.annotation.ColorRes
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -13,17 +11,13 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.coroutines.CoroutineContext
 
-interface Page {
-    @LayoutRes
-    fun getLayoutResID(): Int?
-}
 
 data class PageObject(val pageID:String = "",
                       var pageIDX:Int = 0){
     var params:HashMap<String, Any?>? = null
     var isPopup = false ; internal set
     val key:String = UUID.randomUUID().toString()
-    val fragmentID:String get() { return "$pageID$pageIDX"}
+    val screenID:String get() { return "$pageID$pageIDX"}
     var isTop = false
     var isLayer = false
     var isBottom = false
@@ -47,13 +41,11 @@ interface PagePresenter {
     var hasLayerPopup:Boolean
     var systemBarColor:Int
     var appTheme:Int
-    var activity:PageActivity
+    var activity:PageComposeable
     val currentPage:PageObject?
     val currentTopPage:PageObject?
     val lastPage:PageObject?
     val prevPage:PageObject?
-    val observable:PageAppViewModel
-    fun getPageFragment(pageObject:PageObject?): PageView?
     fun goHome(idx:Int = 0): PagePresenter
     fun goBack(pageObject:PageObject?=null): PagePresenter
     fun clearPageHistory(pageObject:PageObject?=null): PagePresenter
@@ -85,13 +77,8 @@ interface PageModel {
     fun isHistoryPage( page:PageObject ): Boolean = true
     fun isFullScreenPage( page:PageObject ): Boolean = false
     fun isBackStackPage( page:PageObject ): Boolean = true
-    fun isChangedCategory(prevPage:PageObject?, nextPage:PageObject?):Boolean = false
     fun getPageOrientation( page:PageObject ): Int
     fun getCloseExceptions(): List<String> = listOf()
-}
-
-interface PageProvider {
-    fun getPageView( pageObject:PageObject ): PageViewFragment
 }
 
 interface PageDelegate {
@@ -139,7 +126,6 @@ interface PageViewFragment : PageView{
 interface PageViewModel {
     val repository:Repository
     val presenter:PagePresenter
-    val observable:PageAppViewModel
     fun onCreateView(owner: LifecycleOwner, pageObject:PageObject?){}
     fun onDestroyView(owner: LifecycleOwner, pageObject:PageObject?){}
 }

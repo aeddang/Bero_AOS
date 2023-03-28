@@ -10,7 +10,6 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.databinding.*
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.DataProvider
-import com.skeleton.component.dialog.Alert
 import com.skeleton.sns.*
 
 import javax.inject.Inject

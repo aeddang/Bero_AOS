@@ -6,9 +6,10 @@ import androidx.lifecycle.MutableLiveData
 
 enum class PageEventType{
     Init,IntroCompleted,
-    AddPopup, RemovePopup, ChangePage,
+    AddPopup, RemovePopup, ChangePage, ReloadPage,
     AddedPopup, RemovedPopup,
     WillChangePage, ShowKeyboard, HideKeyboard,
+    OnActivityForResult,
     Event
 }
 
@@ -20,7 +21,7 @@ enum class PageNetworkStatus{
     Available, Lost, Undefined
 }
 
-data class PageEvent(val type:PageEventType, val id: String = "", var data:Any? = null, val eventType:String? = null)
+data class PageEvent(val type:PageEventType, val id: String = "", var data:Any? = null, val eventType:String? = null, val hashId: Int = -1)
 
 class PageAppViewModel {
     val event = MutableLiveData<PageEvent?>()

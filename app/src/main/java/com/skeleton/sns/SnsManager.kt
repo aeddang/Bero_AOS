@@ -6,10 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.lib.page.PageActivity
-import com.lib.page.PageFragment
+import com.lib.page.PageComposeable
 import com.lib.page.PageLifecycleUser
 import com.lib.util.Log
 
@@ -27,7 +24,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
 
     val fb:FaceBookManager = FaceBookManager()
     val google:GoogleSignManager = GoogleSignManager()
-    fun setup(ac: PageActivity){
+    fun setup(ac: PageComposeable){
         google.setup(ac)
     }
 
