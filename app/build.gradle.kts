@@ -155,9 +155,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.25.0")
     implementation("androidx.compose.ui:ui:1.4.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.0")
     debugImplementation ("androidx.compose.ui:ui-tooling:1.4.0")
+
     /**
      * system
      */
@@ -201,13 +203,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-urlconnection:5.0.0-alpha.11")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 
+
     /**
-     * Glide
+     * Coil
      */
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    kapt("com.github.bumptech.glide:compiler:4.15.1")
-    implementation("jp.wasabeef:glide-transformations:4.3.0")
-    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.3.0")
 
     /**
      * Exo Player

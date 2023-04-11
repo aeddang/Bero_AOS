@@ -48,34 +48,26 @@ open class PageComposePresenter : PagePresenter{
         return this
     }
 
-    override fun closePopup(key: String?, isAni: Boolean): PagePresenter {
-        key?.let { activity.closePopup(it,isAni) }
+    override fun closePopup(key: String?): PagePresenter {
+        key?.let { activity.closePopup(it) }
         return this
     }
-    override fun closePopupId(id: String?, isAni: Boolean): PagePresenter {
-        id?.let { activity.onClosePopupId(it,isAni) }
+    override fun closePopupId(id: String?): PagePresenter {
+        id?.let { activity.onClosePopupId(it) }
         return this
     }
-    override fun closePopup(pageObject: PageObject, isAni: Boolean): PagePresenter {
-        activity.closePopup(pageObject,isAni)
-        return this
-    }
-
-    override fun closeAllPopup(isAni: Boolean): PagePresenter {
-        activity.closeAllPopup(isAni)
-        return this
-    }
-    override fun closeAllPopup(exception:String,  isAni:Boolean): PagePresenter{
-        activity.closeAllPopup(isAni, listOf(exception))
-        return this
-    }
-    override fun closeAllPopup(exceptions:List<String>,  isAni:Boolean ): PagePresenter{
-        activity.closeAllPopup(isAni, exceptions)
+    override fun closePopup(pageObject: PageObject): PagePresenter {
+        activity.closePopup(pageObject)
         return this
     }
 
-    override fun openPopup(pageObject: PageObject, sharedElement: View?, transitionName: String?): PagePresenter {
-        activity.openPopup(pageObject,sharedElement,transitionName)
+    override fun closeAllPopup(): PagePresenter {
+        activity.closeAllPopup()
+        return this
+    }
+
+    override fun openPopup(pageObject: PageObject): PagePresenter {
+        activity.openPopup(pageObject)
         return this
     }
 
@@ -89,8 +81,8 @@ open class PageComposePresenter : PagePresenter{
         return this
     }
 
-    override fun changePage(pageObject: PageObject, sharedElement: View?, transitionName: String?): PagePresenter {
-        activity.pageChange(pageObject,sharedElement,transitionName)
+    override fun changePage(pageObject: PageObject): PagePresenter {
+        activity.pageChange(pageObject)
         return this
     }
 

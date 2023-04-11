@@ -1,9 +1,9 @@
 package com.ironraft.pupping.bero
 import android.content.Intent
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.animation.ExperimentalAnimationApi
 import com.lib.page.*
-
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.skeleton.sns.SnsManager
@@ -19,17 +19,18 @@ class MainActivity : PageComposeable() {
     private val scope = PageCoroutineScope()
     private var isInit = false
     override fun getPageActivityPresenter(): PageComposePresenter = get()
-    override fun getPageActivityModel(): PageModel  {
+    override fun getPageActivityViewModel(): PageAppViewModel = get()
+    override fun getPageActivityModel(): PageModel{
         val model:ActivityModel = get()
         return model
     }
-    override fun getPageActivityViewModel(): PageAppViewModel = get()
 
+    @OptIn(ExperimentalAnimationApi::class)
     override fun setPageScreen() {
         setContent {
-            val nv = rememberNavController()
-            this.navController = nv
-            run { PageApp(nv) }
+            val pageNv = rememberAnimatedNavController()
+            this.navController = pageNv
+            run { PageApp(pageNv) }
         }
     }
 

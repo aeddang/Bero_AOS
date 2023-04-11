@@ -7,8 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.lib.util.DataLog
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.api.rest.*
-import com.ironraft.pupping.bero.store.mission.Mission
-import com.ironraft.pupping.bero.store.mission.MissionLv
 import com.lib.util.toDate
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
@@ -20,8 +18,8 @@ enum class Gender {
     @DrawableRes
     fun getIcon() : Int {
         return when(this) {
-            Male -> R.drawable.ic_album
-            Female -> R.drawable.ic_album
+            Male -> R.drawable.male
+            Female -> R.drawable.female
         }
     }
     @StringRes
@@ -197,7 +195,6 @@ class History{
     var duration: Double? = null ; private set
     var distance: Double? = null ; private set
     var point: Double? = null ; private set
-    var lv:MissionLv? = null ; private set
     var missionCategory:MissionCategory? = null ; private set
     var index:Int = -1; private set
     var isExpanded:Boolean = false
@@ -207,7 +204,6 @@ class History{
         title = data.title
         imagePath = data.pictureUrl
         description = data.description
-        lv = MissionLv.getMissionLv(data.difficulty)
         duration = data.duration
         distance = data.distance
         point = data.point ?: 0.0

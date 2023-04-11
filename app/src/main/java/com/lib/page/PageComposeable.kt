@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavHostController
+import com.lib.util.PageLog
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -57,8 +58,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         }
     val currentTopPage: PageObject?
         get(){
-            val closeablePopups = popups.filter { !it.isBottom  }
-            return if( closeablePopups.isEmpty() ) currentPage else closeablePopups.last()
+            return if( popups.isEmpty() ) currentPage else popups.last()
         }
     val lastPage: PageObject?
         get(){
@@ -183,20 +183,20 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         } while (pageObject != peek  && !historys.isEmpty())
     }
     @CallSuper
-    open fun openPopup(pageObject: PageObject, sharedElement: View?, transitionName: String?) {
-        onOpenPopup(pageObject, sharedElement, transitionName)
+    open fun openPopup(pageObject: PageObject) {
+        onOpenPopup(pageObject)
     }
     @CallSuper
-    open fun closePopup(pageObject: PageObject, isAni: Boolean) {
-        onClosePopup(pageObject, isAni)
+    open fun closePopup(pageObject: PageObject) {
+        onClosePopup(pageObject)
     }
     @CallSuper
-    open fun closePopup(key: String, isAni: Boolean) {
-        onClosePopup(key, isAni)
+    open fun closePopup(key: String) {
+        onClosePopup(key)
     }
     @CallSuper
-    open fun closeAllPopup(isAni: Boolean, exceptions:List<String> = listOf()){
-        onCloseAllPopup(isAni, exceptions)
+    open fun closeAllPopup(){
+        onCloseAllPopup()
     }
     @CallSuper
     open fun pageInit() {
@@ -209,11 +209,9 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     }
     @CallSuper
     open fun pageChange(
-        pageObject: PageObject,
-        sharedElement: View? = null,
-        transitionName: String? = null
+        pageObject: PageObject
     ){
-        onPageChange(pageObject, false, sharedElement, transitionName)
+        onPageChange(pageObject, false)
     }
     @CallSuper
     open fun goHome(idx: Int = 0){
@@ -222,7 +220,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     @CallSuper
     open fun goBack(pageObject: PageObject? = null){
         if(pageObject != null) clearPageHistory(pageObject)
-        onBackPressed()
+        this.onBackPressed()
     }
 
 
@@ -294,7 +292,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             if( activityModel.currentPageObject == null) goHome()
             else onExitAction()
         }else {
-            onPageChange(historys.pop()!!, false, null, null, true)
+            onPageChange(historys.pop()!!, false)
         }
     }
 
@@ -317,24 +315,25 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     private fun onPageChange(
         pageObject: PageObject,
         isStart: Boolean = false,
-        sharedElement: android.view.View? = null,
-        transitionName: String? = null,
         isBack: Boolean = false
     ) {
+        PageLog.d("onPageChange -> $pageObject", tag = this.appTag)
         if( !isChangePageAble(pageObject) ) return
         if( activityModel.currentPageObject?.pageID == pageObject.pageID ) {
 
             if(pageObject.params == null){
+                PageLog.d("onPageChange -> reload", tag = this.appTag)
                 activityViewModel.event.value = PageEvent(
                     PageEventType.ReloadPage,
                     pageObject.pageID,
                     pageObject
                 )
                 return
-            }else {
+            }else{
                 val currentValues = activityModel.currentPageObject?.params?.map { it.toString() }
                 val values = pageObject.params?.map { it.toString() }
                 if (currentValues == values) {
+                    PageLog.d("onPageChange -> reload", tag = this.appTag)
                     activityViewModel.event.value = PageEvent(
                         PageEventType.ReloadPage,
                         pageObject.pageID,
@@ -344,9 +343,12 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 }
             }
         }
-        onCloseAllPopup(false , activityModel.getCloseExceptions())
+        onCloseAllPopup()
         resetBackPressedAction()
-        onWillChangePage(activityModel.currentPageObject, pageObject)
+        val prev = activityModel.currentPageObject
+        pageObject.isPopup = false
+        activityModel.currentPageObject = pageObject
+        onWillChangePage(prev, pageObject)
         if (isBack) {
             navController?.popBackStack()
         } else {
@@ -358,11 +360,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             }
         }
         if( !isBack ) {
-            activityModel.currentPageObject?.let {
+            prev?.let {
                 if( activityModel.isHistoryPage(it) ) historys.push(it)
             }
         }
-        if(activityModel.currentPageObject == null) activityViewModel.event.value = PageEvent(
+        if(prev == null) activityViewModel.event.value = PageEvent(
             PageEventType.Init,
             pageObject.pageID,
             pageObject.params
@@ -372,14 +374,13 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             pageObject.pageID,
             pageObject.params
         )
-        activityModel.currentPageObject = pageObject
+
+        PageLog.d("onPageChange -> ${pageObject.pageID} completed", tag = this.appTag)
     }
     private var finalAddedPopupID:String? = null
     private var finalOpenPopupTime:Long = 0L
     private fun onOpenPopup(
-        pageObject: PageObject,
-        sharedElement: android.view.View?,
-        transitionName: String?
+        pageObject: PageObject
     ) {
         if( !isChangePageAble(pageObject) ) return
         val cTime =  Date().time
@@ -387,30 +388,25 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         finalAddedPopupID = pageObject.pageID
         finalOpenPopupTime = cTime
         resetBackPressedAction()
-
-        navController?.navigate(pageObject.pageID){
+        pageObject.isPopup = true
+        popups.add(pageObject)
+        navController?.navigate(pageObject.pageID) {
             anim {
                 enter = getPopupIn(pageObject.pageID)
                 exit = getPopupOut(pageObject.pageID)
             }
         }
-
-        popups.add(pageObject)
         activityViewModel.event.value = PageEvent(
             PageEventType.AddPopup,
             pageObject.pageID,
             pageObject.params
         )
-
+        PageLog.d("onOpenPopup -> ${pageObject.pageID} completed", tag = this.appTag)
     }
-    private fun onCloseAllPopup(isAni: Boolean = false, exceptions:List<String> = listOf()) {
-        val remainPopup:ArrayList<PageObject> = arrayListOf()
-        popups.forEach { p ->
-            val f = exceptions.find { p.pageID == it }
-            if (f != null) {
-                remainPopup.add(p)
-                return@forEach
-            }
+    private fun onCloseAllPopup() {
+        val allPopups = popups.map { it }
+        popups.clear()
+        allPopups.forEach { p ->
             navController?.popBackStack()
             activityViewModel.event.value = PageEvent(
                 PageEventType.RemovePopup,
@@ -418,31 +414,23 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 p.params
             )
         }
-        popups.clear()
-        popups.addAll(remainPopup)
-        if (remainPopup.filter{ !it.isBottom }.isEmpty()){
-            onWillChangePage(null, activityModel.currentPageObject)
-        }else{
-            onWillChangePage(null, popups.filter{ !it.isBottom }.last())
-        }
+        onWillChangePage(null, activityModel.currentPageObject)
     }
-    fun onClosePopupId(id: String, isAni: Boolean = true){
+    fun onClosePopupId(id: String){
         val f = popups.find { it.pageID == id }
         f?.let {
-            popups.remove(it)
-            onClosePopup(it, isAni)
+            onClosePopup(it)
         }
     }
-    private fun onClosePopup(key: String, isAni: Boolean = true){
+    private fun onClosePopup(key: String){
         val f = popups.find { it.key == key }
         f?.let {
-            popups.remove(it)
-            onClosePopup(it, isAni)
+            onClosePopup(it)
         }
     }
-    private fun onClosePopup(pageObject: PageObject, isAni: Boolean = true){
+    private fun onClosePopup(pageObject: PageObject){
         popups.remove(pageObject)
-        val nextPage = if(popups.filter { !it.isBottom }.isNotEmpty()) popups.last() else activityModel.currentPageObject
+        val nextPage = if(popups.isNotEmpty()) popups.last() else activityModel.currentPageObject
         onWillChangePage(null, nextPage)
         navController?.popBackStack()
         activityViewModel.event.value = PageEvent(

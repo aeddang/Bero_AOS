@@ -20,7 +20,6 @@ data class PageObject(val pageID:String = "",
     val screenID:String get() { return "$pageID$pageIDX"}
     var isTop = false
     var isLayer = false
-    var isBottom = false
     fun addParam(key:String, value:Any?):PageObject{
         value ?: return this
         if (params == null) {
@@ -49,16 +48,14 @@ interface PagePresenter {
     fun goHome(idx:Int = 0): PagePresenter
     fun goBack(pageObject:PageObject?=null): PagePresenter
     fun clearPageHistory(pageObject:PageObject?=null): PagePresenter
-    fun closePopup(key:String?,isAni:Boolean = true): PagePresenter
-    fun closePopupId(id:String?,isAni:Boolean = true): PagePresenter
-    fun closePopup(pageObject:PageObject,isAni:Boolean = true): PagePresenter
-    fun closeAllPopup(isAni:Boolean = true): PagePresenter
-    fun closeAllPopup(exception:String,  isAni:Boolean = true): PagePresenter
-    fun closeAllPopup(exceptions:List<String>,  isAni:Boolean = true): PagePresenter
-    fun openPopup(pageObject:PageObject, sharedElement: View? = null, transitionName:String? = null): PagePresenter
+    fun closePopup(key:String?): PagePresenter
+    fun closePopupId(id:String?): PagePresenter
+    fun closePopup(pageObject:PageObject): PagePresenter
+    fun closeAllPopup(): PagePresenter
+    fun openPopup(pageObject:PageObject): PagePresenter
     fun pageInit(): PagePresenter
     fun pageStart(pageObject:PageObject): PagePresenter
-    fun changePage(pageObject:PageObject, sharedElement: View? = null, transitionName:String? = null): PagePresenter
+    fun changePage(pageObject:PageObject): PagePresenter
     fun hasPermissions( permissions: Array<out String> ): Pair< Boolean, List<Boolean>>?
     fun requestPermission( permissions: Array<out String>, requester:PageRequestPermission )
     fun loading(isRock:Boolean = false): PagePresenter

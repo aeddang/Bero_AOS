@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
+import com.lib.util.dpToSp
+import com.skeleton.theme.FontSize
 
-@Composable
-fun dpToSp(dp: Dp) = with(LocalDensity.current) { dp.toSp() }
 
 @Composable
 fun PageSplashCompose(
@@ -27,10 +27,7 @@ fun PageSplashCompose(
 ){
     val resources = LocalContext.current.resources
     Box {
-        Image(
-            painter= painterResource(R.drawable.ic_goal),
-            contentDescription=null, // 필수 param
-        )
+
         Column (
             modifier = modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -38,13 +35,13 @@ fun PageSplashCompose(
             Text(
                 text = text,
                 color = colorResource(R.color.app_black),
-                fontSize = dpToSp(dimensionResource(R.dimen.font_light).value.dp),
+                fontSize = dpToSp(FontSize.black.dp),
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = "Hello, SP",
                 color = colorResource(R.color.app_black),
-                fontSize = dimensionResource(R.dimen.font_light).value.sp,
+                fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis
             )
         }

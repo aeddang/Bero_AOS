@@ -1,16 +1,11 @@
-package com.ironraft.pupping.bero.store.mission
+package com.ironraft.pupping.bero.store.provider.model
 
 import android.content.Context
-import android.location.Location
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
 import com.ironraft.pupping.bero.R
 import java.util.*
-import kotlin.math.ceil
-import kotlin.math.min
 
 
 enum class MissionType {
@@ -42,58 +37,7 @@ enum class MissionType {
 
 
 
-enum class MissionLv{
-    Lv1, Lv2, Lv3, Lv4;
-    fun apiDataKey() : String {
-        return when(this) {
-            Lv1 -> "lv1"
-            Lv2 -> "lv2"
-            Lv3 -> "lv3"
-            Lv4 -> "lv4"
-        }
-    }
 
-    fun info() : String {
-        return when(this) {
-            Lv1 -> "Easy"
-            Lv2 -> "Normal"
-            Lv3 -> "Difficult"
-            Lv4 -> "Very Difficult"
-        }
-    }
-    @DrawableRes
-    fun icon() : Int {
-        return when(this) {
-            Lv1 -> R.drawable.ic_difficulty_easy
-            Lv2 -> R.drawable.ic_difficulty_easy
-            Lv3 -> R.drawable.ic_difficulty_hard
-            Lv4 -> R.drawable.ic_difficulty_hard
-        }
-    }
-
-    @ColorRes
-    fun color() : Int{
-        return when(this) {
-            Lv1 -> R.color.brand_secondary
-            Lv2 -> R.color.brand_primary
-            Lv3 -> R.color.brand_thirdly
-            Lv4 -> R.color.brand_thirdly
-        }
-    }
-
-    companion object {
-        fun getMissionLv(value :String?) : MissionLv?
-        {
-            return when(value) {
-                "lv1" -> Lv1
-                "lv2" -> Lv2
-                "lv3" -> Lv3
-                "lv4" -> Lv4
-                else -> null
-            }
-        }
-    }
-}
 
 
 enum class MissionKeyword{
@@ -133,7 +77,6 @@ class Mission(){
     val id:String = UUID.randomUUID().toString()
     // Use fields to define the data types to return.
     var type:MissionType = MissionType.Today; private set
-    var lv:MissionLv = MissionLv.Lv1; private set
     var description:String = ""; private set
     var summary:String = ""; private set
     var recommandPlaces:List<AutocompletePrediction> = arrayListOf(); private set

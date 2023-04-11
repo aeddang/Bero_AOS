@@ -10,44 +10,5 @@
         <item name="colorControlNormal">@color/brand_primary</item>
     </style>
 
-    <!-- font style-->
-    <style name="fontLight">
-        <item name="android:fontFamily">@font/poppins_light</item>
-        <item name="android:textSize">@dimen/font_light</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
 
-    <style name="fontRegular">
-        <item name="android:fontFamily">@font/poppins_regular</item>
-        <item name="android:textSize">@dimen/font_regular</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
-
-    <style name="fontMedium">
-        <item name="android:fontFamily">@font/poppins_medium</item>
-        <item name="android:textSize">@dimen/font_medium</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
-
-    <style name="fontBold">
-        <item name="android:fontFamily">@font/poppins_bold</item>
-        <item name="android:textSize">@dimen/font_bold</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
-    <style name="fontSemiBold">
-        <item name="android:fontFamily">@font/poppins_semibold</item>
-        <item name="android:textSize">@dimen/font_medium</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
-
-    <style name="fontBlack">
-        <item name="android:fontFamily">@font/poppins_black</item>
-        <item name="android:textSize">@dimen/font_black</item>
-        <item name="android:textColor">@color/app_black</item>
-    </style>
-
-    <style name="roundedImageViewRounded">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
 </resources>

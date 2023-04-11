@@ -29,9 +29,9 @@ enum class SnsType(val code:String){
     @DrawableRes
     fun logo() : Int {
         return when(this) {
-            SnsType.Fb -> R.drawable.ic_facebook
-            SnsType.Apple -> R.drawable.ic_apple
-            SnsType.Google -> R.drawable.ic_google
+            SnsType.Fb -> R.drawable.facebook
+            SnsType.Apple -> R.drawable.apple
+            SnsType.Google -> R.drawable.google
         }
     }
 

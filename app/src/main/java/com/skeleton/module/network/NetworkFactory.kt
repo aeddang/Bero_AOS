@@ -1,5 +1,6 @@
 package com.skeleton.module.network
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.lib.util.Log
@@ -32,6 +33,7 @@ class NetworkFactory(val ctx: Context){
                 })
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun getHttpClient(interceptors: List<Interceptor>? = null): OkHttpClient {
         val logger = getLogger()
         logger.level = HttpLoggingInterceptor.Level.BODY
