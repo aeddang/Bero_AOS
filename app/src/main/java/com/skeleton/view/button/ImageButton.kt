@@ -102,10 +102,10 @@ fun ImageButton(
             Box(
                 modifier = Modifier
                     .size(
-                        (size + (padding + DimenIcon.tiny)*2.0f).dp,
+                        (size + (padding + DimenIcon.micro)*2.0f).dp,
                         ((sizeHeight ?: size)
                                 + (if (text == null) 0.0f else (FontSize.tiny+DimenMargin.micro))
-                                + (padding + DimenIcon.tiny)*2.0f).dp
+                                + (padding + DimenIcon.micro)*2.0f).dp
                     )
             ) {
                 TransparentButton(
@@ -130,7 +130,6 @@ fun ImageButtonComposePreview(){
             defaultImage = R.drawable.noimage_1_1,
             activeImage = R.drawable.noimage_1_1,
             text = "Test",
-            iconText = "N",
             isSelected = false
         ) {
 

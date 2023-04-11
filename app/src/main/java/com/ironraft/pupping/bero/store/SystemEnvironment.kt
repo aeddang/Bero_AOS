@@ -1,10 +1,14 @@
 package com.ironraft.pupping.bero.store
 
+import com.ironraft.pupping.bero.store.api.ApiResponse
+
 class SystemEnvironment {
     companion object {
         var model:String = ""
         var systemVersion:String = ""
         var firstLaunch :Boolean = false
         var isTablet = false
+
+        var breedCode = HashMap<String,String>()
     }
 }
