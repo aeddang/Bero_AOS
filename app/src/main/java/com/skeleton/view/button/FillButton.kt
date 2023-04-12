@@ -26,11 +26,12 @@ import com.skeleton.theme.*
 enum class FillButtonType {
     Fill {
         override fun textColor(color:Color):Color = ColorApp.white
+        override fun iconType(color:Color): ColorFilter = ColorFilter.tint(ColorApp.white)
     },
     Stroke{
         override fun bgColor(color:Color):Color = ColorApp.white
-        override fun iconType(color:Color): ColorFilter = ColorFilter.tint(color = color)
         override var strokeWidth: Float = DimenStroke.light
+        override fun iconType(color:Color): ColorFilter = ColorFilter.tint(color = color)
 
     };
     open fun bgColor(color:Color):Color {
@@ -43,22 +44,6 @@ enum class FillButtonType {
         return null
     }
     open var strokeWidth:Float = 0.0f
-}
-
-@Composable
-fun TransparentButton(
-    action:() -> Unit
-){
-    FloatingActionButton(
-        onClick = action,
-        Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(0.dp),
-        backgroundColor = ColorTransparent.clear,
-        contentColor = contentColorFor(ColorTransparent.clear),
-        elevation = FloatingActionButtonDefaults.elevation(0.dp,0.dp)
-    ) {
-
-    }
 }
 
 @Composable
@@ -93,9 +78,7 @@ fun FillButton(
                     width = type.strokeWidth.dp,
                     color = color,
                     shape = RoundedCornerShape(radius.dp)
-                )
-
-                ,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Row(
@@ -145,8 +128,7 @@ fun FillButtonComposePreview(){
         }
         FillButton(
             type = FillButtonType.Fill,
-            iconType = ColorFilter.tint(ColorBrand.primary),
-            icon = R.drawable.noimage_1_1,
+            icon = R.drawable.search,
             text = "FILL BUTTON",
             color = ColorBrand.primary,
             isActive = true
@@ -155,6 +137,8 @@ fun FillButtonComposePreview(){
         }
         FillButton(
             type = FillButtonType.Stroke,
+            iconType = null,
+            icon = R.drawable.search,
             text = "STROKE BUTTON"
         ) {
 

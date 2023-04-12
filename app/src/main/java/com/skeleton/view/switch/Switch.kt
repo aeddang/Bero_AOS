@@ -1,16 +1,20 @@
 package com.skeleton.view.switch
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.skeleton.theme.*
 import com.skeleton.view.button.TransparentButton
@@ -23,21 +27,25 @@ fun Switch(
     defaultColor:Color = ColorApp.grey200,
     action:(Boolean) -> Unit
 ) {
+    val offset: Dp by animateDpAsState(
+        if (isOn) 26.dp else 0.dp,
+        tween()
+    )
     AppTheme {
         Box(
             modifier = Modifier
                 .size(56.dp, 30.dp)
                 .clip(RoundedCornerShape(30.dp))
                 .background(if (isOn) activeColor else defaultColor)
-                .padding(2.dp)
-            ,
-            contentAlignment = if (isOn) Alignment.CenterEnd else Alignment.CenterStart
         ) {
             Box(
                 modifier = Modifier
+                    .padding(2.dp)
+                    .absoluteOffset(x = offset)
                     .size(26.dp)
                     .clip(CircleShape)
                     .background(thumbColor)
+
             )
             TransparentButton(
                 action = {
@@ -53,19 +61,24 @@ fun Switch(
 @Composable
 fun SwitchComposePreview(){
     Column (
-        modifier = Modifier.padding(16.dp).background(ColorApp.white),
+        modifier = Modifier
+            .padding(16.dp)
+            .background(ColorApp.white),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Switch(
-            isOn = true
-        ) {
+        var isOn by remember { mutableStateOf(true) }
 
+        Switch(
+            isOn = isOn
+        ) {
+            isOn = it
         }
-        Switch(
-            isOn = false
-        ) {
 
+        Switch(
+            isOn = !isOn
+        ) {
+            isOn = it
         }
     }
-
 }
+

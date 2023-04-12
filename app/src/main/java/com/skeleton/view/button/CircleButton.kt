@@ -28,14 +28,8 @@ enum class CircleButtonType() {
     Tiny {
         override var size: Float = DimenIcon.thin
     },
-    Icon{
-    },
-    Text{
-    },
-    Image{
-    };
+    Icon, Text, Image;
     open var size:Float = DimenIcon.mediumUltra
-
 }
 
 
