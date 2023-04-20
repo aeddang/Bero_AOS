@@ -70,8 +70,6 @@ fun RadioButton(
     color:Color = ColorBrand.primary,
     action:(Boolean) -> Unit
 ) {
-
-
     AppTheme {
         Box(
             modifier = Modifier
@@ -179,7 +177,7 @@ fun RadioButtonComposePreview(){
     ) {
         RadioButton(
             type = RadioButtonType.Text,
-            isChecked = false,
+            isChecked = true,
             icon = R.drawable.neutralized,
             text = "Radio Button"
         ) {

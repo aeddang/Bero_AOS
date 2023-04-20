@@ -1,5 +1,6 @@
 package com.skeleton.view.button
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -76,6 +77,7 @@ enum class SortButtonSizeType {
 }
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SortButton(
     type:SortButtonType = SortButtonType.Fill,
