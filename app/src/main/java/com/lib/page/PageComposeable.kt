@@ -390,6 +390,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         resetBackPressedAction()
         pageObject.isPopup = true
         popups.add(pageObject)
+        onWillChangePage(null, pageObject)
         navController?.navigate(pageObject.pageID) {
             anim {
                 enter = getPopupIn(pageObject.pageID)

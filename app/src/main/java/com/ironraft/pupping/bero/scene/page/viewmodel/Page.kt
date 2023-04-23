@@ -22,10 +22,10 @@ object PageParam {
 }
 
 enum class PageID(val value: String, val position: Int = 9999){
-    Intro("Intro", 1),
-    Login("Login", 999),
-    Walk("Walk", 100),
-    Matching("Matching", 200),
-    Diary("Diary", 300),
-    My("My", 400)
+    Intro("intro", ),
+    Login("login", ),
+    Walk("walk", 100),
+    Explore("explore", 200),
+    Chat("chat", 300),
+    My("my", 400)
 }

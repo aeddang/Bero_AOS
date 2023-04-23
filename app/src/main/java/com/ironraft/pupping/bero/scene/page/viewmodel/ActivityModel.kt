@@ -55,7 +55,7 @@ class ActivityModel : PageModel{
         return f != -1
     }
 
-    private val useBottomTabPages = arrayOf(PageID.Walk, PageID.Matching, PageID.Diary, PageID.My).map { it.value }
+    private val useBottomTabPages = arrayOf(PageID.Walk, PageID.Explore, PageID.Chat, PageID.My).map { it.value }
     fun useBottomTabPage(pageValue:String): Boolean {
         val f= useBottomTabPages.indexOf(pageValue)
         return f != -1

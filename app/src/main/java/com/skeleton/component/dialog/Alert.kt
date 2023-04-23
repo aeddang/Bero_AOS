@@ -38,7 +38,7 @@ fun Alert(
     buttonColor:Color? = null,
     action:(Int) -> Unit
 ) {
-    MaterialTheme {
+    AppTheme {
         AlertDialog(
             onDismissRequest = {action(-1)},
             title = {

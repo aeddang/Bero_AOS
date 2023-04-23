@@ -106,7 +106,6 @@ fun TextButton(
                             modifier = Modifier.size(imageSize.dp)
                         )
                     }
-
                 }
             }
         }
