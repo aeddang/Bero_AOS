@@ -25,8 +25,11 @@ class MainActivity : PageComposeable() {
         return model
     }
 
+
     @OptIn(ExperimentalAnimationApi::class)
     override fun setPageScreen() {
+        pageModel = get()
+        snsManager = get()
         setContent {
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
@@ -54,6 +57,11 @@ class MainActivity : PageComposeable() {
         repository.disposeLifecycleOwner(this)
         //deepLinkManager.disposeDefaultLifecycleOwner(this)
         //deepLinkManager.disposeLifecycleOwner(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        snsManager.onActivityResult(requestCode, resultCode, data)
     }
 }
 

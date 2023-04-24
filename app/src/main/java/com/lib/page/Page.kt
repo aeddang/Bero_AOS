@@ -4,6 +4,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import com.skeleton.module.Repository
 import kotlinx.coroutines.*
 import java.util.*
@@ -45,6 +46,7 @@ interface PagePresenter {
     val currentTopPage:PageObject?
     val lastPage:PageObject?
     val prevPage:PageObject?
+
     fun goHome(idx:Int = 0): PagePresenter
     fun goBack(pageObject:PageObject?=null): PagePresenter
     fun clearPageHistory(pageObject:PageObject?=null): PagePresenter

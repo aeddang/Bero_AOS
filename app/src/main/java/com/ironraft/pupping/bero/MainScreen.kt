@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -28,8 +29,11 @@ import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.ironraft.pupping.bero.scene.component.tab.BottomTab
 import com.ironraft.pupping.bero.scene.page.PageSplashCompose
+import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
 import com.lib.util.PageLog
@@ -57,7 +61,7 @@ fun PageAppBar(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.btnClose)
+                        contentDescription = stringResource(R.string.button_close)
                     )
                 }
             }
@@ -65,58 +69,6 @@ fun PageAppBar(
     )
 }
 
-@Composable
-fun PageAppNavi(
-    modifier: Modifier = Modifier
-) {
-    val pagePresenter = koinInject<PageComposePresenter>()
-    val pageActivityViewModel = koinInject<PageActivityViewModel>()
-    Column (
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        TextButton({
-            pagePresenter.changePage(PageObject(PageID.Login.value))
-        }){
-            Text(
-                text = PageID.Login.value,
-                color = colorResource(R.color.app_black),
-                fontSize = 20.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        TextButton({
-            pagePresenter.changePage(PageObject(PageID.Walk.value))
-        }){
-            Text(
-                text = PageID.Walk.value,
-                color = colorResource(R.color.app_black),
-                fontSize = 20.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        TextButton({
-            pagePresenter.openPopup(PageObject(PageID.My.value))
-        }){
-            Text(
-                text = PageID.My.value,
-                color = colorResource(R.color.app_black),
-                fontSize = 20.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        TextButton({
-            pageActivityViewModel.onTestChanged(!pageActivityViewModel.isTest.value)
-        }){
-            Text(
-                text = "test",
-                color = colorResource(R.color.app_black),
-                fontSize = 20.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
 
 class PageActivityViewModel {
     private val _isTest = MutableStateFlow<Boolean>(false)
@@ -133,51 +85,31 @@ fun PageApp(
     modifier: Modifier = Modifier
 ) {
     val pagePresenter = koinInject<PageComposePresenter>()
+    val activityModel = koinInject<ActivityModel>()
+    val pageAppViewModel = koinInject<PageAppViewModel>()
     val viewModel = koinInject<PageActivityViewModel>()
-    val isTest by viewModel.isTest.collectAsState()
-    val backStackEntry by pageNavController.currentBackStackEntryAsState()
-
-    val currentPageID = PageID.valueOf(
-        backStackEntry?.destination?.route ?: PageID.Walk.value
-    )
+    val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
+    //val isTest by viewModel.isTest.collectAsState()
+    //val backStackEntry by pageNavController.currentBackStackEntryAsState()
 
     Scaffold(
-        topBar = {
-            Column (
-                modifier = modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                PageAppBar(
-                    page = currentPageID,
-                    canNavigateBack = pageNavController.previousBackStackEntry != null,
-                    navigateUp = { pageNavController.navigateUp() }
-                )
-                PageAppNavi(
-
-                )
+        bottomBar = {
+            currentTopPage?.let {
+                if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
             }
         }
     ) { innerPadding ->
-        val currentPage = pagePresenter.currentTopPage
 
         AnimatedNavHost(
             navController = pageNavController,
-            startDestination = PageID.Walk.value,
+            startDestination = "",
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(ColorApp.blue)
         ) {
-            currentPage?.let {
-                PageLog.d(it, tag = "AnimatedNavHost")
-            }
             PageID.values().forEach {
-                getPageComposable(nav = this, route = it.value,currentPage?.isPopup ?: false)
-            }
-        }
-        if (isTest){
-            Alert(){
-
+                getPageComposable(nav = this, route = it.value,pagePresenter.currentTopPage?.isPopup ?: false)
             }
         }
 

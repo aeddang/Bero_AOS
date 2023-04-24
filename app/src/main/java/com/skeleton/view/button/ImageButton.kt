@@ -75,7 +75,7 @@ fun ImageButton(
                             Text(
                                 it,
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.black, //if (isSelected) activeColor else defaultColor,
+                                color = if (isSelected) activeColor else defaultColor,
                                 textAlign = TextAlign.Center
                             )
                         }

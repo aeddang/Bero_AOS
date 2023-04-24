@@ -20,120 +20,407 @@
     <string name="fb_login_protocol_scheme" translatable="false">fb415565693399214</string>
     <string name="facebook_client_token" translatable="false">a712c78e3bce352aa36d92a32dcefef1</string>
 
-    <string name="app_name">Bero</string>
-
     <string name="noticeAppExit">Press once more to exit.</string>
+    <string name="appName">Bero</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
-    <string name="retry">Retry</string>
-    <string name="close">Close</string>
 
-    <string name="male">male</string>
-    <string name="female">female</string>
-
-    <string name="puppingCoin">Pupping</string>
-    <string name="point">Point</string>
-    <string name="mission">Mission</string>
-    <string name="walk">Walk</string>
-    <string name="year">YY</string>
-    <string name="month">MM</string>
-    <string name="day">DD</string>
-    <string name="step">step</string>
-    <string name="of">of</string>
-
-    <string name="kmPerH">km/h</string>
+    <string name="name">Name</string>
+    <string name="gender">Gender</string>
+    <string name="age">Age</string>
+    <string name="introduction">Introduction</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="neutral">Nonbinary</string>
+    <string name="kmPerH">kmPerH</string>
     <string name="km">km</string>
     <string name="m">m</string>
-    <string name="min">분</string>
-    <string name="redeem">Redeem</string>
+    <string name="cm">cm</string>
+    <string name="min">min</string>
     <string name="kg">kg</string>
-
-
-    <string name="filter">filter</string>
-    <string name="near">near</string>
-
+    <string name="inch">”</string>
+    <string name="exp">EXP</string>
+    <string name="time">Time</string>
+    <string name="years">Years</string>
+    <string name="months">Month</string>
     <string name="weight">Weight</string>
-    <string name="size">Size</string>
-    <string name="owner">\'s</string>
+    <string name="height">Height</string>
+    <string name="immunization">Immunization</string>
+    <string name="animalChip">Animal chip</string>
+    <string name="animalId">Animal ID</string>
+    <string name="microchip">Microchip</string>
+    <string name="today">Today</string>
+    <string name="walk">Walk</string>
+    <string name="walks">Walks</string>
+    <string name="near">Near</string>
+    <string name="likes">Likes</string>
+    <string name="share">Public</string>
+    <string name="missions">Missions</string>
+    <string name="stores">Stores</string>
+    <string name="dogs">Dogs</string>
+    <string name="users">Users</string>
+    <string name="place">Place</string>
+    <string name="filter">Filter</string>
 
-    <string name="snsFacebook">\'s</string>
+    <string name="speed">Speed</string>
+    <string name="distance">Distance</string>
+    <string name="owners">\'s</string>
+    
 
-    /*
-    Button
-    */
-    <string name="btnClose">Close</string>
-    <string name="btnRetry">Retry</string>
-    <string name="btnReset">Reset</string>
-    <string name="btnApply">Apply</string>
-    <string name="btnDelete">Delete</string>
-    <string name="btnModify">Modify</string>
-    <string name="btnMore">more</string>
-    <string name="btnAlbum">Album</string>
-    <string name="btnCamera">Camera</string>
+    <string name="gnb_walk">Walk</string>
+    <string name="gnb_explore">Explore</string>
+    <string name="gnb_chat">Chat</string>
+    <string name="gnb_matching">Matching</string>
+    <string name="gnb_diary">Diary</string>
+    <string name="gnb_my">My</string>
+   
+    <string name="location_notFound">locationNotFound</string>
+    
+    <string name="alert_apns">Bero notification</string>
+    <string name="alert_api">Bero notification</string>
+    <string name="alert_apiErrorServer">Connection lost. Please try again later.</string>
+    <string name="alert_apiErrorClient">Please check the internet connection and try again.</string>
+    <string name="alert_networkError">We\'ve lost your connection.</string>
+    <string name="alert_dataError">No data.</string>
 
-    /*
-    Alert
-    */
-    <string name="alertApns">Pupping notification</string>
-    <string name="alertApi">Pupping notification</string>
-    <string name="alertApiErrorServer">Connection lost. Please try again later.</string>
-    <string name="alertApiErrorClient">Please check the internet connection and try again.</string>
-    <string name="alertNetworkError">Your internet connection is unstable.</string>
-    <string name="alertDataError">No data.</string>
+    <string name="alert_location">Please allow location access.</string>
+    <string name="alert_locationText">According to Apple\'s policy, you must allow location access to send us your location</string>
+    <string name="alert_locationBtn">Go to grant permission</string>
 
-    <string name="alertLocation">Please allow location access.</string>
-    <string name="alertLocationSub">According to Apple\'s policy, you must allow location access to send us your locatoin.</string>
-    <string name="alertLocationBtn">Go to grant permission</string>
-    <string name="alertLocationDisable">Unable to get location information. try again?</string>
-    <string name="alertLocationFind">Retrieving location information. Please wait.</string>
+    <string name="alert_locationDisable">Unable to get location information. try again?</string>
+    <string name="alert_locationFind">Retrieving location information. Please wait.</string>
+    <string name="alert_dragdown">Pull to close this page</string>
 
-    <string name="alertSnsLoginError">After login. Available.</string>
+    <string name="alert_snsLoginError">After login. Available.</string>
+    <string name="alert_getUserProfileError">Failed to retrieve user information, Please try again in a few minutes</string>
 
-    /*
-    Gnb
-    */
-    <string name="gnbWalk">Walk</string>
-    <string name="gnbMatching">Matching</string>
-    <string name="gnbDiary">Diary</string>
-    <string name="gnbMy">My</string>
+    <string name="alert_addDogTitle">Tell us about your dog!</string>
+    <string name="alert_addDogText">Add your dog and start this app.</string>
 
-    /*
-    Location
-    */
-    <string name="locationNotFound">Where Are You?</string>
 
-    /*
-    PartTitle
-    */
-    <string name="titleMy">My</string>
-    <string name="titleExplore">Explore</string>
-    <string name="titleEditProfile">Edit Profile</string>
-    <string name="titleMyRewards">My Rewards</string>
-    <string name="titleMyDogs">My Dogs</string>
-    <string name="titleCommingSoon">Coming soon</string>
-    <string name="titleMission">Start Mission</string>
-    <string name="titleMissionInfo">Preview Mission</string>
-    <string name="titleHistory">History</string>
-    <string name="titleAlbum">Album</string>
-    <string name="titleWalkReport">Walk Report</string>
-    /*
-    PageIntro
-    */
+    <string name="alert_completedError">Save fail. retry.</string>
+    <string name="alert_completedNeedPicture">Capture your moment to get rewards!</string>
+    <string name="alert_completedNeedPictureError">Need picture with your Dog. retry.</string>
+    <string name="alert_completedExitConfirm">If you exit without receiving a reward, the completed walk record will not be saved. Are you sure you want to quit?</string>
+    <string name="alert_completedAndMoveHistoryConfirm">Would you like to check the walk result?</string>
+
+    <string name="alert_noItemsSelected">No items selected.</string>
+
+    <string name="alert_walkDisableRemovePet">You cannot manage dogs while walking.</string>
+    <string name="alert_walkDisableEmptyWithPet">Choose who you would like to walk with. You can switch it on My Page next time.</string>
+
+    <string name="alert_representativePetChangeConfirm">Do you want to switch the main dog?</string>
+    <string name="alert_representativeDisableRemovePet">You cannot delete a main dog.</string>
+
+    <string name="alert_walkFinishWithMissionConfirm">As you cancel, the mission will also end.</string>
+    <string name="alert_missionStartNeedWalkConfirm">You can start the mission while walking. Would you like to start walking?</string>
+    <string name="alert_missionCancelConfirm">Do you want to quit the mission?</string>
+    <string name="alert_missionStartPrevMissionCancel">The mission is already in progress. play mission quit and retry.</string>
+    <string name="alert_missionStart">Start the mission now.</string>
+
+
+    <string name="alert_friendRequest">Friend request has been sent.</string>
+    <string name="alert_friendAccept">Friend request has been accepted</string>
+    <string name="alert_friendDeleteConfirm">Do you want to remove %s as your friend?</string>
+    <string name="alert_friendDeleteConfirmText">Removing user from the list, you may encounter several restricted actions. You may resend its friend request anytime.</string>
+
+    <string name="alert_profileDeleteConfirm">Remove profile photo?</string>
+    <string name="alert_profileDeleteConfirmText">It may not be restored once you delete.</string>
+
+    <string name="alert_chatRoomDeleteConfirm">Do you want to leave the chatroom?</string>
+    <string name="alert_chatRoomDeleteConfirmText">The chat history will be permanently deleted, but still remains on the other user’s chat room.</string>
+
+
+    <string name="alert_chatDeleteConfirm">Do you want to delete message?</string>
+    <string name="alert_chatDeleteConfirmText">The message will be deleted, and it will be shown as “Deleted message” on chatroom.</string>
+
+    <string name="alert_closeConfirm">Do you want to quit?</string>
+    <string name="alert_closeConfirmText">Once you quit, the entered information will disappear.</string>
+
+    <string name="alert_accuseUserConfirm">Do you want to report %s?</string>
+    <string name="alert_accuseUserConfirmText">As your report submitted, Bero administration team will take care of the issue. Continue to submit report.</string>
+    <string name="alert_accuseUserCompleted">Report submitted.</string>
+
+    <string name="alert_accuseAlbumConfirm">Do you want to report this post?</string>
+    <string name="alert_accuseAlbumConfirmText">As your report submitted, Bero administration team will take an action after review shortly.</string>
+    <string name="alert_accuseAlbumCompleted">Report submitted.</string>
+
+    <string name="alert_firstChatMessage">In the case of using inappropriate post or language, i agree that account suspension and use of Bero app may not be possible according to the terms and conditions.</string>
+
+    <string name="alert_needAgreement">You should agree to the terms and conditions before using it.</string>
+
+
+    <string name="alert_blockUserConfirm">Do you want to block %s?</string>
+
+    <string name="alert_blockUserConfirmText">Blocking user means your account may not be found by the user. You may unblock the user from Manage block list.</string>
+    <string name="alert_blockUserCompleted">Blocked.</string>
+
+    <string name="alert_unblockUserConfirm">Do you want to unblock %s?</string>
+    <string name="alert_unblockUserCompleted">Unblocked.</string>
+
+    <string name="alert_deleteAccountCheck">Available after subscriber authentication.</string>
+    <string name="alert_deleteAccountConfirm">Are you sure you want to delete your account?</string>
+    <string name="alert_deleteAccountConfirmText">It will be deactivated for 30 days, and it can be reactivated anytime upon your login. Your data will be stored for 6 months with us.</string>
+    <string name="alert_deleteAccounErrorAnotherSns">The signed in account is different from the linked account</string>
+
+
+    <string name="alert_deleteDogTitle">Are you sure you want to delete %s’s profile?</string>
+    <string name="alert_deleteDogText">It may not be restored, once all of data, information, and history of selected dog deleted.</string>
+    <string name="alert_deleteConfirm">Delete</string>
+
+    <string name="alert_exposeConfirm">Would you upload this photo</string>
+    <string name="alert_exposed">Public view</string>
+    <string name="alert_unExposed">Friends view only</string>
+
+    <string name="alert_comingSoon">Coming soon</string>
+    <string name="alert_supportAction">Support action</string>
+
+    <string name="alert_signOutConfirm">Are you sure you want to sign out?</string>
+    <string name="alert_signOutConfirmText">Once you sign out, you can sign back in whenever you want. See you soon!</string>
+
+    <string name="alert_welcome">Welcome!</string>
+    <string name="alert_welcomeText">You’ve earned the welcome rewards!</string>
+
+    <string name="alert_itsMe">It\'s me.</string>
+    <string name="alert_itsNotYourPoint">It\'s not your point, don\'t touch it.</string>
+
+    <string name="alert_needCameraAccess">This will let you take photos for profile. explore and during walk.</string>
+    <string name="alert_needLocationAccess">This will let us show your current location, record walks, show other users and suggest point of interests near you.</string>
+
+    <string name="button_later">Maybe Later</string>
+    <string name="button_ok">Okay</string>
+    <string name="button_prev">Prev</string>
+    <string name="button_next">Next</string>
+    <string name="button_skipNow">Skip for now</string>
+    <string name="button_close">Close</string>
+    <string name="button_complete">Complete</string>
+    <string name="button_goBack">Go Back</string>
+    <string name="button_save">Save</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_reset">Reset</string>
+    <string name="button_apply">Apply</string>
+    <string name="button_more">more</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_request">Request</string>
+    <string name="button_remove">Remove</string>
+    <string name="button_modify">Modify</string>
+    <string name="button_selectAlbum">Select from Gallery</string>
+    <string name="button_takeCamera">Take a photo</string>
+    <string name="button_calendar">Calendar</string>
+    <string name="button_album">Album</string>
+    <string name="button_startWalking">Start the walk</string>
+    <string name="button_startMission">Start mission</string>
+    <string name="button_finish">Finish</string>
+    <string name="button_finishTheWalk">Finish the walk</string>
+    <string name="button_missionComplete">Mission Complete</string>
+    <string name="button_walkComplete">Walk Complete</string>
+    <string name="button_information">Information</string>
+    <string name="button_unregistered">Unregistered</string>
+    <string name="button_logOut">Sign out</string>
+    <string name="button_push">Push</string>
+
+    <string name="button_edit">Edit</string>
+
+    <string name="button_viewMore">View more</string>
+    <string name="button_terms">Terms</string>
+    <string name="button_manageDogs">Manage dogs</string>
+    <string name="button_addFriend">Add friend</string>
+    <string name="button_requestFriend">Request friend</string>
+    <string name="button_removeFriend">Remove friend</string>
+    <string name="button_chat">Chat</string>
+    <string name="button_requestSent">Request sent</string>
+    <string name="button_all">All</string>
+    <string name="button_returnToAllPosts">Return to all posts</string>
+    <string name="button_reject">Reject</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_checkAll">Check All</string>
+    <string name="button_reply">Reply</string>
+    <string name="button_accepAndClose">Accept and close</string>
+    <string name="button_takeAnotherPhoto">Take another photo</string>
+    <string name="button_visitProfile">Visit profile</string>
+    <string name="button_leaveAmark">Leave a mark</string>
+    <string name="button_hitTheArea">Hit the area</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_redeemReward">Redeem reward</string>
+    <string name="button_privacyAgreement">Privacy usage agreement</string>
+    <string name="button_accuse">Report</string>
+    <string name="button_share">Share</string>
+    <string name="button_deleteRoom">Delete room</string>
+    <string name="button_accuseUser">Report user</string>
+    <string name="button_block">Block</string>
+    <string name="button_unblock">Unblock</string>
+    <string name="button_deleteAccount">Delete account</string>
+    <string name="button_viewProfile">View profile</string>
+    <string name="button_learnMore">Learn more</string>
+    <string name="button_manageChat">Manage Chat</string>
+    <string name="button_searchArea">Search this area</string>
+    
+
+    <string name="sort_all">All</string>
+    <string name="sort_notUsed">notUsed</string>
+    <string name="sort_friends">Friends</string>
+    <string name="sort_myFriends">My friends</string>
+    <string name="sort_aroundMe">Around me</string>
+    <string name="sort_new">New</string>
+    <string name="sort_complete">Complete</string>
+    <string name="sort_restaurant">Restaurant</string>
+    <string name="sort_cafe">Cafe</string>
+    <string name="sort_hospital">Hospital</string>
+    <string name="sort_hotel">Hotel</string>
+    <string name="sort_shop">Shop</string>
+    <string name="sort_vet">Hospital</string>
+    <string name="sort_salon">Salon</string>
+    <string name="sort_friendsText">My friends’ posts only</string>
+    <string name="sort_notUsedText">invisible</string>
+    <string name="sort_restaurantText">Restaurant</string>
+    <string name="sort_cafeText">Cafe</string>
+    <string name="sort_hospitalText">Hospital</string>
+    <string name="sort_hotelText">Hotel</string>
+    <string name="sort_shopText">Shop</string>
+    <string name="sort_vetText">Hospital</string>
+    <string name="sort_salonText">Salon</string>
+
+
+    <string name="pageTitle_my">My</string>
+    <string name="pageTitle_setup">Setup</string>
+    <string name="pageTitle_explore">Explore</string>
+    <string name="pageTitle_chat">Chat</string>
+    <string name="pageTitle_addDog">Add a Dog</string>
+    <string name="pageTitle_history">History</string>
+    <string name="pageTitle_album">Album</string>
+    <string name="pageTitle_tag">Tags</string>
+    <string name="pageTitle_physicalInformation">Physical Information</string>
+    <string name="pageTitle_friends">Friends</string>
+    <string name="pageTitle_friendRequest">Friend Request</string>
+    <string name="pageTitle_usersFriends">%s\'s Friends</string>
+    <string name="pageTitle_chatRoom">Chat Room</string>
+    <string name="pageTitle_myPoint">Point</string>
+    <string name="pageTitle_myDogs">My Family</string>
+    <string name="pageTitle_myProfile">My Profile</string>
+    <string name="pageTitle_myLv">Walk Level</string>
+    <string name="pageTitle_dogProfile">Dog Profile</string>
+    <string name="pageTitle_healthInformation">Health Information</string>
+    <string name="pageTitle_usersDogs">%s’s Family</string>
+    <string name="pageTitle_walkHistory">Walk History</string>
+    <string name="pageTitle_walkReport">Walk Report</string>
+    <string name="pageTitle_walkSummary">Walk Summary</string>
+    <string name="pageTitle_walkPicture">Walk Picture</string>
+    <string name="pageTitle_completedMissions">Completed Missions</string>
+
+    <string name="pageTitle_privacy">Privacy Usage Agreement</string>
+    <string name="pageTitle_service">Terms of Service Agreement</string>
+    <string name="pageTitle_blockUser">Manage Block List</string>
+    <string name="pageTitle_myAccount">My Account</string>
+    <string name="pageTitle_alarm">Notification</string>
+    
+  
     <string name="introText1_1">Walk your dog\nwith fun missions.</string>
-    <string name="introText1_2">Walking dogs never been this\nfun! Explore new routes with\nthe daily and monthly missions.</string>
-    <string name="introText2_1">Earn Encrypted\nCoins as you walk.</string>
-    <string name="introText2_2">Walk your dog and earn\nfinancial rewards. The coins are\ndesignated to your dog!</string>
-    <string name="introText3_1">Make a local dog\ncommunity.</string>
-    <string name="introText3_2">Find new local dog friends to\nwalk with and share\ninformation.</string>
+    <string name="introText1_2">Meet other friends on the walk and\nget rewards from daily missions.</string>
+    <string name="introText2_1">Save the\nunforgettable walk.</string>
+    <string name="introText2_2">Capture the moments with your\ndog on the calendar.</string>
+    <string name="introText3_1">Find dog-friendly\nplaces near you.</string>
+    <string name="introText3_2">Filter places for your dog and leave\ntraces of your visits.</string>
     <string name="introComplete">Let’s explore!</string>
 
-
-    /*
-    PageLogin
-    */
     <string name="loginText">Let’s walk\nour dogs together!</string>
-    <string name="loginStart">Let’s Start!</string>
+    <string name="loginButtonText">Continue with</string>
 
+    <string name="addDogCompletedText1">Nice to meet you</string>
+    <string name="addDogCompletedText2">Are you ready to go through the fun walks and meet other friends?</string>
+    <string name="addDogCompletedConfirm">Let\'s explore!</string>
+    <string name="addDogEmpty">No dog added yet.</string>
+
+    <string name="myLvText">Earn friendship to level up your heart!</string>
+    <string name="myLvText1">How to earn friendship</string>
+    <string name="myLvText2">Hi %s!</string>
+    <string name="myLvText3">Welcome to %s!</string>
+    <string name="myLvText4">Earn +%s friendship to level up!</string>
+
+    <string name="myPointText1">Collect rewards by walking your dog and change it into our virtual currency.</string>
+    <string name="myPointText2">Store is coming soon</string>
+
+    <string name="earningHistory">Earning History</string>
+
+    <string name="walkHistoryText1">Walked in total</string>
+    <string name="missionHistoryText1">completed in total</string>
+    <string name="walkHistorySeletReport">Whose report do you want to see?</string>
+
+    <string name="reportWalkSummaryWeekly">Weekly</string>
+    <string name="reportWalkSummaryMonthly">Monthly</string>
+    <string name="reportWalkDayUnit">days</string>
+    <string name="reportWalkDayText">You’ve walked</string>
+    <string name="reportWalkDayWeek">in total this week.</string>
+    <string name="reportWalkDayMonth">in total this month.</string>
+
+    <string name="reportWalkDayCompleted">You achieved the goal! Good job!</string>
+    <string name="reportWalkDayContinue">Walk %s days</string>
+
+    <string name="reportWalkDayCompareText1">This is</string>
+    <string name="reportWalkDayCompareText2">walking days with others.</string>
+    <string name="reportWalkDayCompareLess">below the average of</string>
+    <string name="reportWalkDayCompareMore">above the average of</string>
+    <string name="reportWalkDayCompareSame">right about the same</string>
+
+    <string name="reportWalkDayCompareMe">You</string>
+    <string name="reportWalkDayCompareOthers">Others</string>
+
+
+    <string name="reportWalkRecentlyUnit">mins</string>
+    <string name="reportWalkRecentlyText1">You recently walked</string>
+    <string name="reportWalkRecentlyText2">in average for each walk.</string>
+    <string name="reportWalkRecentlyTip">The recommended time for each walk\nis between 20-40 mins.</string>
+
+    <string name="exploreSeletReport">Feed filter</string>
+
+    <string name="recommandUser">Friends recommendation</string>
+    <string name="aroundUser">Friends around me</string>
+    <string name="needTag">In order to recommend a friend with a similar personality to my dog First, you need to register your dog\'s personality tag.</string>
+
+    <string name="needRoute">Path creation failed.</string>
+
+
+    <string name="introductionDefault">Hello, I am @%s. Let’s be friends!</string>
+    <string name="historyCompleted">%s completed</string>
+
+    <string name="walkLocationNotFound">Where Are You?</string>
+    <string name="walkPlayText">Today’s walk</string>
+    <string name="walkStartText">Hi, %s.\nReady to walk?</string>
+    <string name="walkMissionCompletedText">%s missions today</string>
+
+    <string name="walkFinishCheckDistance">A minimum distance of %sm is required to complete the walk</string>
+    <string name="walkFinishConfirm">Finish the Walk?</string>
+    <string name="walkFinishSuccessTitle">Here is the Rewards!</string>
+    <string name="walkFinishSuccessText">Hope to see you next time!</string>
+
+    <string name="walkFinishFailTitle">Oops...\nThe image didn’t work.</string>
+    <string name="walkFinishFailText">Take another photo with your dog’s face clearly shown in the center.</string>
+
+    <string name="missionSuccessTitle">Mission complete!</string>
+    <string name="missionSuccessText">You visited %s during your walk. Receive the reward and continue walking.</string>
+
+    <string name="walkStartChooseDogTitle">Start the walk?</string>
+    <string name="walkStartChooseDogText">Choose who you would like to walk with. You can switch it on My Page next time.</string>
+    <string name="walkPlaceMarkText">See who’ve visited in this place</string>
+    <string name="walkPlaceNoMarkText">No marks are found yet.</string>
+    <string name="walkMapMarkText">%s marks left</string>
+    <string name="walkVisitorTitle">%s marks left</string>
+    <string name="walkMissionTitleText">Visit %s</string>
+
+    <string name="walkPlaceMarkDisAbleTitle">You’re not near the place.</string>
+    <string name="walkPlaceMarkDisAbleText">Move closer to the place and let the GPS pinpoint your location.</string>
+
+    <string name="chatRoomText">Welcome! Say hello to your new friend. They are excited to hear from you!</string>
+    <string name="chatRoomDeletedMessage">Deleted message</string>
+    <string name="setupNotification">Announce Notification?</string>
+    <string name="levelUpText">Level up!</string>
+
+    <string name="setupExpose">auto expose?</string>
+    <string name="walkImageLimitedUpdate">Up to %s photos can be updated</string>
+    
+
+    <string name="lockScreen_start">Today’s walk start</string>
+    <string name="lockScreen_walking">Currently walking...</string>
+    <string name="lockScreen_end">Today’s walk</string>
 
 
 </resources>

@@ -118,7 +118,7 @@ class PageRepository (ctx: Context,
                 if (!it.isOptional) {
                     pagePresenter.loaded()
                     val msg =
-                        if ( it.errorType != ErrorType.API ) ctx.getString(R.string.alertApiErrorServer)
+                        if ( it.errorType != ErrorType.API ) ctx.getString(R.string.alert_apiErrorServer)
                         else it.msg
                     /*
                     val builder = Alert.Builder(pagePresenter.activity)

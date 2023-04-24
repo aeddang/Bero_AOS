@@ -38,7 +38,7 @@ fun PageWalkCompose(
             modifier = Modifier.fillMaxWidth(),
             onClick = {  }
         ) {
-            Text(stringResource(R.string.btnMore))
+            Text(stringResource(R.string.button_more))
         }
     }
 }

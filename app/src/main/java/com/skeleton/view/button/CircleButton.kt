@@ -26,7 +26,7 @@ import com.skeleton.theme.*
 
 enum class CircleButtonType() {
     Tiny {
-        override var size: Float = DimenIcon.thin
+        override var size: Float = DimenIcon.microUltra
     },
     Icon, Text, Image;
     open var size:Float = DimenIcon.mediumUltra
@@ -60,7 +60,9 @@ fun CircleButton(
         Box(
             modifier = Modifier
                 .clip(CircleShape)
-                .background(if (isSelected) activeColor else ColorApp.white)
+                .background(
+                    if (isSelected) activeColor
+                    else if(type == CircleButtonType.Tiny) defaultColor else ColorApp.white)
                 .border(
                     width = strokeWidth.dp,
                     color = if (isSelected) ColorApp.white else ColorApp.grey200,

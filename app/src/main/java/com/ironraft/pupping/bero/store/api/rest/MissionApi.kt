@@ -21,7 +21,7 @@ enum class MissionCategory {
     fun getView():Int? {
         return when (this){
             MissionCategory.Walk -> R.string.walk
-            MissionCategory.Mission -> R.string.mission
+            MissionCategory.Mission -> null
             MissionCategory.All -> null
         }
     }

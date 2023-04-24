@@ -312,6 +312,19 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         )
     }
 
+    @CallSuper
+    protected open fun onChangedPage(){
+        currentTopPage?.let {
+            activityViewModel.currentTopPage.value = it
+            activityViewModel.event.value = PageEvent(
+                PageEventType.ChangedPage,
+                it.pageID,
+                it
+            )
+        }
+        getPageActivityPresenter()
+    }
+
     private fun onPageChange(
         pageObject: PageObject,
         isStart: Boolean = false,
@@ -320,7 +333,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         PageLog.d("onPageChange -> $pageObject", tag = this.appTag)
         if( !isChangePageAble(pageObject) ) return
         if( activityModel.currentPageObject?.pageID == pageObject.pageID ) {
-
             if(pageObject.params == null){
                 PageLog.d("onPageChange -> reload", tag = this.appTag)
                 activityViewModel.event.value = PageEvent(
@@ -374,7 +386,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             pageObject.pageID,
             pageObject.params
         )
-
+        onChangedPage()
         PageLog.d("onPageChange -> ${pageObject.pageID} completed", tag = this.appTag)
     }
     private var finalAddedPopupID:String? = null
@@ -402,11 +414,13 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             pageObject.pageID,
             pageObject.params
         )
+        onChangedPage()
         PageLog.d("onOpenPopup -> ${pageObject.pageID} completed", tag = this.appTag)
     }
     private fun onCloseAllPopup() {
         val allPopups = popups.map { it }
         popups.clear()
+        onWillChangePage(null, activityModel.currentPageObject)
         allPopups.forEach { p ->
             navController?.popBackStack()
             activityViewModel.event.value = PageEvent(
@@ -415,7 +429,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 p.params
             )
         }
-        onWillChangePage(null, activityModel.currentPageObject)
+        onChangedPage()
     }
     fun onClosePopupId(id: String){
         val f = popups.find { it.pageID == id }
@@ -439,6 +453,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             pageObject.pageID,
             pageObject.params
         )
+        onChangedPage()
     }
 
     /*
