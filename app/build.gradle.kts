@@ -117,6 +117,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.core:core-ktx:1.10.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -144,10 +145,10 @@ dependencies {
      * compose
      */
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.activity:activity-compose:1.7.0")
-    implementation("androidx.compose.runtime:runtime:1.4.1")
-    implementation("androidx.compose.runtime:runtime-livedata:1.4.1")
-    implementation("androidx.compose.material:material:1.4.1")
+    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.compose.runtime:runtime:1.4.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.2")
+    implementation("androidx.compose.material:material:1.4.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
@@ -155,9 +156,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation ("com.google.accompanist:accompanist-navigation-animation:0.25.0")
-    implementation("androidx.compose.ui:ui:1.4.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.1")
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.4.1")
+    implementation("androidx.compose.ui:ui:1.4.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.4.2")
+    implementation("com.google.accompanist:accompanist-webview:0.24.13-rc")
+    debugImplementation ("androidx.compose.ui:ui-tooling:1.4.2")
 
     /**
      * system

@@ -1,145 +1,204 @@
 
 package com.ironraft.pupping.bero
 
+import android.annotation.SuppressLint
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
+import com.ironraft.pupping.bero.activityui.ActivityAlertController
 import com.ironraft.pupping.bero.scene.component.tab.BottomTab
-import com.ironraft.pupping.bero.scene.page.PageSplashCompose
+import com.ironraft.pupping.bero.scene.page.intro.PageIntro
+import com.ironraft.pupping.bero.scene.page.login.PageLogin
+import com.ironraft.pupping.bero.scene.page.PageSplash
+import com.ironraft.pupping.bero.scene.page.PageTest
+import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import com.lib.page.PageAppViewModel
-import com.lib.page.PageComposePresenter
-import com.lib.page.PageObject
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.store.RepositoryEvent
+import com.ironraft.pupping.bero.store.RepositoryStatus
+import com.ironraft.pupping.bero.store.SystemEnvironment
+import com.lib.page.*
 import com.lib.util.PageLog
-import com.skeleton.component.dialog.Alert
+import com.skeleton.theme.AppTheme
 import com.skeleton.theme.ColorApp
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.skeleton.theme.ColorBrand
 import org.koin.compose.koinInject
-/**
- * Composable that displays the topBar and displays back button if back navigation is possible.
- */
-@Composable
-fun PageAppBar(
-    page: PageID,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val pagePresenter = koinInject<PageComposePresenter>()
-    TopAppBar(
-        title = { Text(page.value) },
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.button_close)
-                    )
-                }
-            }
-        }
-    )
+
+enum class SceneEventType {
+    Initate, Check,
+    SetupChat, CloseChat, SendChat
+}
+data class SceneEvent(val type: SceneEventType,
+                      val value:String? = null,
+                      @DrawableRes val imgRes:Int? = null,
+                      var isOn:Boolean = true,
+                      val handler: (() -> Unit)? = null)
+
+
+class AppSceneObserver {
+    val event = MutableLiveData<SceneEvent?>(null)
+    val alert = MutableLiveData<ActivitAlertEvent?>(null)
 }
 
-
-class PageActivityViewModel {
-    private val _isTest = MutableStateFlow<Boolean>(false)
-    val isTest: StateFlow<Boolean> = _isTest
-    fun onTestChanged(test: Boolean) {
-        _isTest.value = test
-    }
-}
-
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PageApp(
     pageNavController: NavHostController = rememberAnimatedNavController(),
     modifier: Modifier = Modifier
 ) {
-    val pagePresenter = koinInject<PageComposePresenter>()
+    val tag = "PageApp"
+    val repository = koinInject<PageRepository>()
     val activityModel = koinInject<ActivityModel>()
+    val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
-    val viewModel = koinInject<PageActivityViewModel>()
-    val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
-    //val isTest by viewModel.isTest.collectAsState()
-    //val backStackEntry by pageNavController.currentBackStackEntryAsState()
+    val viewModel = koinInject<AppSceneObserver>()
 
-    Scaffold(
-        bottomBar = {
-            currentTopPage?.let {
-                if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
+    val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
+
+    var isInit by remember { mutableStateOf(false) }
+    var isLaunching by remember { mutableStateOf(false) }
+    var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
+    var isLoading by remember { mutableStateOf(false) }
+    var isLock by remember { mutableStateOf(false) }
+
+    fun onStoreInit():Boolean{
+        if (SystemEnvironment.firstLaunch && !isLaunching) {
+            isLaunching = true
+            isLoading = false
+            pagePresenter.pageStart(
+                PageProvider.getPageObject(PageID.Intro)
+            )
+            return true
+        }
+        return false
+    }
+    fun onPageInit(){
+        isLoading = false
+        PageLog.d("onPageInit", tag = tag)
+        if (!repository.isLogin) {
+            isInit = false
+            if (pagePresenter.currentPage?.pageID != PageID.Login.value) {
+                pagePresenter.changePage(
+                    PageProvider.getPageObject(PageID.Login)
+                )
+            }
+            return
+        }
+        if (isInit && pagePresenter.currentPage?.pageID != PageID.Login.value) {
+            PageLog.d("onPageInit already init", tag = tag)
+            return
+        }
+        isInit = true
+        pagePresenter.changePage(
+            PageProvider.getPageObject(PageID.Walk)
+        )
+        /*
+        if !self.appObserverMove(self.appObserver.page) {
+            self.pagePresenter.changePage(
+                PageProvider.getPageObject(.walk)
+            )
+        }
+
+        if self.appObserver.apns != nil  {
+            self.appSceneObserver.event = .debug("apns exist")
+            self.appSceneObserver.alert = .recivedApns
+        }
+        */
+    }
+
+    val repositoryEvent = repository.event.observeAsState()
+    val repositoryStatus = repository.status.observeAsState()
+    val event = viewModel.event.observeAsState()
+    event.value.let { evt ->
+        evt?.let {
+            when (it.type){
+                SceneEventType.Initate -> onPageInit()
+                else -> {}
             }
         }
-    ) { innerPadding ->
-
-        AnimatedNavHost(
-            navController = pageNavController,
-            startDestination = "",
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(ColorApp.blue)
-        ) {
-            PageID.values().forEach {
-                getPageComposable(nav = this, route = it.value,pagePresenter.currentTopPage?.isPopup ?: false)
-            }
+    }
+    repositoryStatus.value.let {status ->
+        when (status){
+            RepositoryStatus.Ready ->
+                if ( !onStoreInit() ) onPageInit()
+            else -> {}
         }
 
     }
+    repositoryEvent.value.let { evt ->
+        when (evt){
+            RepositoryEvent.LoginUpdate -> {}
+            else -> {}
+        }
+    }
+    //val isTest by viewModel.isTest.collectAsState()
+    //val backStackEntry by pageNavController.currentBackStackEntryAsState()
+    Box(modifier = Modifier.fillMaxSize()){
+        Scaffold(
+            bottomBar = {
+                currentTopPage?.let {
+                    if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
+                }
+            }
+        ) { innerPadding ->
+            val currentPage = pagePresenter.currentTopPage
+            AnimatedNavHost(
+                navController = pageNavController,
+                startDestination = PageID.Splash.value,
+                modifier = modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(ColorBrand.bg)
+            ) {
+                PageID.values().forEach {
+                    getPageComposable(nav = this, routePage = it, currentPage = currentPage)
+                }
+            }
+        }
+        ActivityAlertController()
+    }
+
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun getPageComposable(nav:NavGraphBuilder, route:String, isPopup:Boolean){
-    nav.composable(route = route,
-        enterTransition = {
-            if(isPopup) slideInVertically (tween(1500))
-            else fadeIn(animationSpec = tween(1500))
-        },
-        exitTransition = {
-            if(isPopup) slideOutVertically (tween(1500))
-            else fadeOut(animationSpec = tween(1500))
-        },
-        popEnterTransition = {
-            fadeIn(animationSpec = tween(1500))
-        },
-        popExitTransition = {
-            if(isPopup) slideOutVertically(tween(1500))
-            else fadeOut(animationSpec = tween(1500))
-        }
+fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObject?){
+    val currentRoutePage = if(currentPage?.pageID == routePage.value) currentPage else null
+    val page = currentRoutePage ?: PageProvider.getPageObject(routePage)
+    val ani = page.animationType
+    val duration = PageAnimationType.duration
+    nav.composable(route = routePage.value,
+        enterTransition = {ani.enter},
+        exitTransition = {ani.exit},
+        popEnterTransition = {fadeIn(animationSpec = tween(duration)) },
+        popExitTransition = {ani.exit}
     ) {
-        when (route) {
-            PageID.Walk.value -> PageSplashCompose("Walk", Modifier.fillMaxSize())
-            PageID.My.value -> PageSplashCompose("My", Modifier.fillMaxSize())
-            PageID.Login.value -> PageSplashCompose("Login", Modifier.fillMaxSize())
-            else -> PageSplashCompose("Walk", Modifier.fillMaxSize())
+        AppTheme {
+            when (routePage.value) {
+                PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
+                PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
+                PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.My.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
+                PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
+            }
         }
     }
 }

@@ -68,11 +68,12 @@ fun RadioButton(
     text:String? = null,
     description:String? = null,
     color:Color = ColorBrand.primary,
+    modifier: Modifier = Modifier,
     action:(Boolean) -> Unit
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(DimenRadius.thinExtra.dp))

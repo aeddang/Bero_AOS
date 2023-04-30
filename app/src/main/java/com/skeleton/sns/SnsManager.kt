@@ -26,6 +26,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
     val google:GoogleSignManager = GoogleSignManager()
     fun setup(ac: PageComposeable){
         google.setup(ac)
+        fb.setup(ac)
     }
 
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {

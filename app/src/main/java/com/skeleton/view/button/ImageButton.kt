@@ -37,11 +37,12 @@ fun ImageButton(
     padding:Float = 0.0f,
     index:Int = 0,
     isSelected:Boolean = false,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .wrapContentSize(),
             contentAlignment = Alignment.Center
         ) {

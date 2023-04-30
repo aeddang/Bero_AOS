@@ -82,14 +82,15 @@ enum class SortButtonSizeType {
 fun SortButton(
     type:SortButtonType = SortButtonType.Fill,
     sizeType:SortButtonSizeType = SortButtonSizeType.Small,
-    userProgile:UserProfile? = null,
-    petProgile:PetProfile? = null,
+    userProfile:UserProfile? = null,
+    petProfile:PetProfile? = null,
     @DrawableRes icon:Int? = null,
     isOriginIcon:Boolean = false,
     text:String = "",
     color:Color = ColorApp.black,
     isSort:Boolean = true,
     isSelected:Boolean = false,
+    modifier: Modifier = Modifier,
     action:() -> Unit
 
 ) {
@@ -98,7 +99,7 @@ fun SortButton(
     ) {
         AppTheme {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentSize()
                     .clip(RoundedCornerShape(sizeType.radius.dp))
                     .background(type.bgColor(color))
@@ -122,7 +123,7 @@ fun SortButton(
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    petProgile?.let {
+                    petProfile?.let {
                         ProfileImage(
                             image = it.image.value,
                             imagePath = it.imagePath,
@@ -130,7 +131,7 @@ fun SortButton(
                             emptyImagePath= R.drawable.profile_dog_default
                         )
                     }
-                    userProgile?.let {
+                    userProfile?.let {
                         ProfileImage(
                             image = it.image.value,
                             imagePath = it.imagePath,

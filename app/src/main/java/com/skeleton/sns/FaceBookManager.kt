@@ -6,6 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.ironraft.pupping.bero.R
+import com.lib.page.PageComposeable
 import com.lib.util.Log
 import java.util.*
 
@@ -20,11 +24,11 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
     private var accessTokenTracker:AccessTokenTracker? = null
     private var profileTracker:ProfileTracker? = null
     private var accessToken:AccessToken? = null
+    var pageActivity:PageComposeable? = null; private set
     val requestCode:Int = UUID.randomUUID().hashCode()
     init {
         callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().registerCallback(callbackManager,this)
-
         accessTokenTracker = object : AccessTokenTracker() {
             override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
                 accessTokenTracker?.stopTracking()
@@ -51,7 +55,9 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
             }
         }
     }
-
+    fun setup(ac: PageComposeable){
+        pageActivity = ac
+    }
     //FacebookCallback
     override fun onSuccess(result: LoginResult) {
         val user = SnsUser(
@@ -96,12 +102,20 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
     override fun requestUnlink() {
         Log.e(appTag, "Not supported")
     }
+
     override fun requestLogin(fragment: Fragment) {
         Log.d(appTag, "requestLogin")
         accessTokenTracker?.startTracking()
         LoginManager.getInstance().logIn(fragment, listOf("public_profile", "email"))
     }
 
+    override fun requestLogin() {
+        Log.d(appTag, "requestLogin")
+        pageActivity?.let {
+            LoginManager.getInstance().logIn(it, listOf("public_profile", "email"))
+        }
+
+    }
     override fun requestLogOut() {
         Log.d(appTag, "requestLogOut")
         LoginManager.getInstance().logOut()

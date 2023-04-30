@@ -1,6 +1,5 @@
 package com.lib.page
-import android.view.View
-import androidx.lifecycle.MutableLiveData
+
 
 open class PageComposePresenter : PagePresenter{
     override lateinit var activity: PageComposeable
@@ -9,9 +8,6 @@ open class PageComposePresenter : PagePresenter{
         set(value) {
             activity.isFullScreen = value
         }
-    override var hasLayerPopup: Boolean
-        get() = activity.hasLayerPopup
-        set(value) {}
 
     override var systemBarColor:Int
         get() = activity.systemBarColor
@@ -34,10 +30,6 @@ open class PageComposePresenter : PagePresenter{
     override val prevPage: PageObject?
         get() = activity.prevPage
 
-    override fun goHome(idx: Int): PagePresenter {
-        activity.goHome(idx)
-        return this
-    }
 
     override fun goBack(pageObject: PageObject?): PagePresenter {
         activity.goBack(pageObject)
@@ -69,11 +61,6 @@ open class PageComposePresenter : PagePresenter{
 
     override fun openPopup(pageObject: PageObject): PagePresenter {
         activity.openPopup(pageObject)
-        return this
-    }
-
-    override fun pageInit(): PagePresenter {
-        activity.pageInit()
         return this
     }
 

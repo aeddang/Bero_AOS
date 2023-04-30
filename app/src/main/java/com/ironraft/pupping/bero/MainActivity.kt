@@ -30,11 +30,15 @@ class MainActivity : PageComposeable() {
     override fun setPageScreen() {
         pageModel = get()
         snsManager = get()
+        repository = get()
+        snsManager.setup(this)
         setContent {
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
             run { PageApp(pageNv) }
+            this.repository.setDefaultLifecycleOwner(this)
         }
+
     }
 
     override fun onNewIntent(intent: Intent) {

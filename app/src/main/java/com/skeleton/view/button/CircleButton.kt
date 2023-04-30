@@ -44,6 +44,7 @@ fun CircleButton(
     activeColor: Color = ColorBrand.primary,
     index:Int = 0,
     isSelected:Boolean = false,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
     var painter: AsyncImagePainter? = null
@@ -58,7 +59,7 @@ fun CircleButton(
 
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .clip(CircleShape)
                 .background(
                     if (isSelected) activeColor

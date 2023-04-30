@@ -52,12 +52,13 @@ fun RectButton(
     defaultColor:Color = ColorApp.grey500,
     bgColor:Color = ColorApp.white,
     isSelected:Boolean = false,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(type.bgSize.dp)
                 .clip(RoundedCornerShape(type.radius.dp))

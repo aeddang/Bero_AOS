@@ -25,6 +25,7 @@ fun Switch(
     thumbColor:Color = ColorApp.white,
     activeColor:Color = ColorApp.green,
     defaultColor:Color = ColorApp.grey200,
+    modifier: Modifier = Modifier,
     action:(Boolean) -> Unit
 ) {
     val offset: Dp by animateDpAsState(
@@ -33,7 +34,7 @@ fun Switch(
     )
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .size(56.dp, 30.dp)
                 .clip(RoundedCornerShape(30.dp))
                 .background(if (isOn) activeColor else defaultColor)

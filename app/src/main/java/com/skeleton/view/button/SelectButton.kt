@@ -53,12 +53,13 @@ fun SelectButton(
     useStroke:Boolean = true,
     useMargin:Boolean = true,
     isSelected:Boolean = false,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(type.height.dp)
                 .clip(RoundedCornerShape(type.radius.dp))

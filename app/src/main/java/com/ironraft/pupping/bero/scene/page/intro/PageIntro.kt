@@ -1,4 +1,4 @@
-package com.ironraft.pupping.bero.scene.page
+package com.ironraft.pupping.bero.scene.page.intro
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,10 +15,11 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.SceneEvent
+import com.ironraft.pupping.bero.SceneEventType
 import com.lib.page.PageComposePresenter
-import com.lib.page.PageObject
 import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenMargin
@@ -40,6 +41,7 @@ fun PageIntro(
     modifier: Modifier = Modifier
 ){
     val pagePresenter = koinInject<PageComposePresenter>()
+    val appSceneObserver = koinInject<AppSceneObserver>()
     data class IntroData (
         var idx:Int = -1,
         @androidx.annotation.RawRes var ani:Int,
@@ -120,7 +122,7 @@ fun PageIntro(
                 text = if (isComplete) stringResource(R.string.introComplete) else stringResource(R.string.button_next),
                 color = if (isComplete) ColorBrand.primary else ColorApp.black
             ) {
-                if (isComplete) pagePresenter.changePage(PageObject(PageID.Walk.value, PageID.Walk.position))
+                if (isComplete) appSceneObserver.event.value = SceneEvent(SceneEventType.Initate)
                 else movePage(1)
             }
         }

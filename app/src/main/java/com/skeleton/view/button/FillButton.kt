@@ -50,7 +50,7 @@ enum class FillButtonType {
 fun FillButton(
     type:FillButtonType = FillButtonType.Fill,
     @DrawableRes icon:Int? = null,
-    iconType:ColorFilter? = null,
+    isOriginIcon:Boolean = false,
     text:String = "",
     index:Int = 0,
     size:Float = DimenButton.mediumExtra,
@@ -60,12 +60,13 @@ fun FillButton(
     gradient:Brush? = null,
     textSize:Float = FontSize.light,
     isActive:Boolean = true,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(size.dp)
                 .clip(RoundedCornerShape(radius.dp))
@@ -76,7 +77,7 @@ fun FillButton(
                 )
                 .border(
                     width = type.strokeWidth.dp,
-                    color = color,
+                    color = color.copy(if (isActive) 1.0f else 0.3f),
                     shape = RoundedCornerShape(radius.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -93,8 +94,9 @@ fun FillButton(
                         painterResource(it),
                         contentDescription = "",
                         contentScale = ContentScale.Fit,
-                        colorFilter = iconType ?: type.iconType(color),
-                        modifier = Modifier.size(DimenIcon.light.dp, DimenIcon.light.dp)
+                        colorFilter = if (isOriginIcon) null else type.iconType(color),
+                        modifier = Modifier.size(DimenIcon.light.dp, DimenIcon.light.dp),
+                        alpha = if(isActive) 1.0f else 0.3f
                     )
                 }
                 Text(
@@ -137,7 +139,7 @@ fun FillButtonComposePreview(){
         }
         FillButton(
             type = FillButtonType.Stroke,
-            iconType = null,
+            isOriginIcon = true,
             icon = R.drawable.search,
             text = "STROKE BUTTON"
         ) {

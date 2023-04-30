@@ -36,8 +36,7 @@ class DeepLinkManager(val activity: Activity, val repo: PageRepository) : Fireba
                 shareable.pageID.position,
                 shareable.params,
                 shareable.isPopup
-                    )
-
+            )
             repo.shareManager.share.value = null
         })
     }
@@ -94,7 +93,6 @@ class DeepLinkManager(val activity: Activity, val repo: PageRepository) : Fireba
         Log.d(appTag, "goPage $iwillGo")
         val pageObj = iwillGo.page
         pageObj ?: return
-        if( repo.pageModel.isHomePage(pageObj.pageID) ) pageObj.isPopup = false
         repo.pagePresenter.changePage(pageObj)
     }
 

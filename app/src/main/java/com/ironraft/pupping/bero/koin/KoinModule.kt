@@ -1,6 +1,6 @@
 package com.ironraft.pupping.bero.koin
 
-import com.ironraft.pupping.bero.PageActivityViewModel
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.BasePageViewModel
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -12,8 +12,12 @@ import com.ironraft.pupping.bero.store.Topic
 import com.ironraft.pupping.bero.store.database.DataBaseManager
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageAppViewModel
+import com.lib.page.PagePresenter
+import com.ironraft.pupping.bero.store.ShareManager
+import com.skeleton.sns.SnsManager
 import com.skeleton.module.network.NetworkFactory
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -26,10 +30,12 @@ val pageModelModule = module {
     singleOf(::DataBaseManager)
     singleOf(::NetworkFactory)
     singleOf(::ApiInterceptor)
-    singleOf(::PageActivityViewModel)
+    singleOf(::AppSceneObserver)
     singleOf(::ApiManager)
-    singleOf(::PageComposePresenter)//{ bind<PagePresenter>() } 인터페이스 지정 필요시
+    singleOf(::ShareManager)
     singleOf(::Topic)
+    singleOf(::PageComposePresenter){ bind<PagePresenter>() } //인터페이스 지정 필요시
+    singleOf(::SnsManager)
     singleOf(::PageRepository)
     //
     viewModelOf(::BasePageViewModel)

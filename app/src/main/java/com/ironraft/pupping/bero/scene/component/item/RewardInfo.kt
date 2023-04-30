@@ -67,11 +67,12 @@ fun RewardInfo(
     type:RewardInfoType = RewardInfoType.Point,
     sizeType:RewardInfoSizeType = RewardInfoSizeType.Small,
     value:Int,
-    isActive:Boolean = false
+    isActive:Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     AppTheme {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .size(sizeType.boxSize.width.dp, sizeType.boxSize.height.dp)
                 .clip(RoundedCornerShape(DimenRadius.regular.dp))
                 .background(if (isActive) type.bgcolor else ColorApp.grey100)

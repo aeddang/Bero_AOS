@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,15 +18,17 @@ import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavHostController
 import com.lib.util.PageLog
+import com.lib.util.showCustomToast
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
+import kotlin.system.exitProcess
 
 abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     private val appTag = javaClass.simpleName
     abstract fun getPageActivityPresenter(): PageComposePresenter
-    abstract fun getPageActivityModel(): PageModel
     abstract fun getPageActivityViewModel(): PageAppViewModel
+    abstract fun getPageActivityModel(): PageModel
     abstract fun setPageScreen()
     protected open fun isGobackAble(prevPage:PageObject? = null, nextPage:PageObject? = null):Boolean = true
     protected open fun isChangePageAble(pageObject: PageObject):Boolean = true
@@ -44,32 +47,31 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     open fun loaded(){}
 
 
-    protected lateinit var activityModel : PageModel
     protected lateinit var activityViewModel : PageAppViewModel
+    protected lateinit var activityModel : PageModel
     protected var navController: NavHostController? = null
     protected val historys = Stack<PageObject>  ()
     protected val popups = ArrayList<PageObject>()
 
     private var currentRequestPermissions = HashMap<Int, PageRequestPermission>()
 
+    protected var currentPageObject: PageObject? = null
     val currentPage: PageObject?
         get(){
-            return activityModel.currentPageObject
+            return currentPageObject
         }
     val currentTopPage: PageObject?
         get(){
-            return if( popups.isEmpty() ) currentPage else popups.last()
+            return if( popups.isEmpty() ) currentPageObject else popups.last()
         }
     val lastPage: PageObject?
         get(){
-            return if( popups.isEmpty() ) currentPage else popups.last()
+            return if( popups.isEmpty() ) currentPageObject else popups.last()
         }
     val prevPage: PageObject?
         get(){
             return if( historys.isEmpty() ) null else historys.last()
         }
-    val hasLayerPopup: Boolean
-        get() = popups.find { it.isTop } != null
 
 
     @Suppress("DEPRECATION")
@@ -165,7 +167,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         super.onDestroy()
         popups.clear()
         historys.clear()
-        activityModel.currentPageObject = null
+        currentPageObject = null
         currentRequestPermissions.clear()
     }
 
@@ -199,11 +201,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         onCloseAllPopup()
     }
     @CallSuper
-    open fun pageInit() {
-        activityModel.isPageInit = true
-
-    }
-    @CallSuper
     open fun pageStart(pageObject: PageObject){
         onPageChange(pageObject, true)
     }
@@ -213,13 +210,10 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     ){
         onPageChange(pageObject, false)
     }
-    @CallSuper
-    open fun goHome(idx: Int = 0){
-        pageChange(activityModel.getHome(idx))
-    }
+
     @CallSuper
     open fun goBack(pageObject: PageObject? = null){
-        if(pageObject != null) clearPageHistory(pageObject)
+        //if(pageObject != null) clearPageHistory(pageObject)
         this.onBackPressed()
     }
 
@@ -260,39 +254,36 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     }
     @CallSuper
     override fun onBackPressed() {
-        val closeablePopups = popups.filter { !it.isLayer }
-        if(closeablePopups.isNotEmpty()){
-            val last = closeablePopups.last()
+        if(popups.isNotEmpty()){
+            val last = popups.last()
             if (!isGobackAble(last)) return
             popups.remove(last)
             onClosePopup(last)
             return
         }
-        activityModel.currentPageObject ?: return
-        if (!isGobackAble(activityModel.currentPageObject)) return
-        if( activityModel.isHomePage(activityModel.currentPageObject!!) ) onExitAction()
+        currentPageObject ?: return
+        if (!isGobackAble(currentPageObject)) return
+        if( currentPageObject?.isHome == true ) onExitAction()
         else onBackPressedAction()
     }
 
     private var finalExitActionTime:Long = 0L
     private fun resetBackPressedAction() { finalExitActionTime = 0L }
     protected open fun onExitAction() {
-        super.onBackPressedDispatcher.onBackPressed()
-        /*
+        //super.onBackPressedDispatcher.onBackPressed()
         val cTime =  Date().time
         if( abs(cTime - finalExitActionTime) < 3000L ) { exitProcess(-1) }
         else {
             finalExitActionTime = cTime
             Toast(this).showCustomToast(activityModel.getPageExitMessage(), this)
-        }*/
+        }
     }
 
     protected open fun onBackPressedAction() {
         if( historys.isEmpty()) {
-            if( activityModel.currentPageObject == null) goHome()
-            else onExitAction()
+            onExitAction()
         }else {
-            onPageChange(historys.pop()!!, false)
+            onPageChange(historys.pop()!!, isBack = true)
         }
     }
 
@@ -332,7 +323,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     ) {
         PageLog.d("onPageChange -> $pageObject", tag = this.appTag)
         if( !isChangePageAble(pageObject) ) return
-        if( activityModel.currentPageObject?.pageID == pageObject.pageID ) {
+        if( currentPageObject?.pageID == pageObject.pageID ) {
             if(pageObject.params == null){
                 PageLog.d("onPageChange -> reload", tag = this.appTag)
                 activityViewModel.event.value = PageEvent(
@@ -342,7 +333,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 )
                 return
             }else{
-                val currentValues = activityModel.currentPageObject?.params?.map { it.toString() }
+                val currentValues = currentPageObject?.params?.map { it.toString() }
                 val values = pageObject.params?.map { it.toString() }
                 if (currentValues == values) {
                     PageLog.d("onPageChange -> reload", tag = this.appTag)
@@ -357,9 +348,9 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         }
         onCloseAllPopup()
         resetBackPressedAction()
-        val prev = activityModel.currentPageObject
+        val prev = currentPageObject
         pageObject.isPopup = false
-        activityModel.currentPageObject = pageObject
+        currentPageObject = pageObject
         onWillChangePage(prev, pageObject)
         if (isBack) {
             navController?.popBackStack()
@@ -420,7 +411,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     private fun onCloseAllPopup() {
         val allPopups = popups.map { it }
         popups.clear()
-        onWillChangePage(null, activityModel.currentPageObject)
+        onWillChangePage(null, currentPageObject)
         allPopups.forEach { p ->
             navController?.popBackStack()
             activityViewModel.event.value = PageEvent(
@@ -445,7 +436,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     }
     private fun onClosePopup(pageObject: PageObject){
         popups.remove(pageObject)
-        val nextPage = if(popups.isNotEmpty()) popups.last() else activityModel.currentPageObject
+        val nextPage = if(popups.isNotEmpty()) popups.last() else currentPageObject
         onWillChangePage(null, nextPage)
         navController?.popBackStack()
         activityViewModel.event.value = PageEvent(
@@ -460,7 +451,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     Permission
     */
     open fun hasPermissions(permissions: Array<out String>): Pair<Boolean, List<Boolean>>? {
-        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return null
         val permissionResults = ArrayList<Boolean>()
         var resultAll = true
         for (permission in permissions) {
@@ -475,7 +465,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     {
         val grantResult = currentRequestPermissions.size
         currentRequestPermissions[grantResult] = requester
-        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { requestPermissionResult(grantResult, true); return }
         hasPermissions(permissions)?.let {
             if ( !it.first ) requestPermissions(permissions, grantResult) else requestPermissionResult(
                 grantResult,
@@ -500,7 +489,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     )
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
         hasPermissions(permissions)?.let { requestPermissionResult(requestCode, it.first, it.second) }
     }
 

@@ -21,7 +21,7 @@ import com.skeleton.view.button.ImageButton
 
 
 data class AlertBtnData(
-    val title:String,
+    var title:String? = null,
     @DrawableRes var img:Int? = null,
     val index :Int
 )
@@ -33,8 +33,8 @@ fun Alert(
     subText: String? = null,
     tipText: String? = null,
     referenceText: String? = null,
-    imgButtons:ArrayList<AlertBtnData>? = null,
-    buttons: ArrayList<AlertBtnData>? = null,
+    imgButtons:List<AlertBtnData>? = null,
+    buttons: List<AlertBtnData>? = null,
     buttonColor:Color? = null,
     action:(Int) -> Unit
 ) {
@@ -136,7 +136,7 @@ fun Alert(
                                     FillButton(
                                         type = FillButtonType.Fill,
                                         icon = btn.img,
-                                        text = btn.title,
+                                        text = btn.title ?: "",
                                         color = if (btn.index % 2 == 1) buttonColor
                                             ?: ColorBrand.primary else ColorApp.grey200
                                     ) {

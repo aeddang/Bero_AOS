@@ -63,6 +63,7 @@ fun TextButton(
     imageSize:Float = DimenIcon.tiny,
     isOriginImage:Boolean = true,
     spacing:Float = DimenMargin.tiny,
+    modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
     WrapTransparentButton(
@@ -72,7 +73,7 @@ fun TextButton(
     ){
         AppTheme {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentSize()
                     .clip(RoundedCornerShape(type.bgRadius.dp))
                     .background(type.bgColor)

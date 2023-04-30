@@ -1,10 +1,10 @@
 package com.lib.page
 import android.content.Intent
-import android.view.View
 import androidx.annotation.StringRes
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import com.skeleton.module.Repository
 import kotlinx.coroutines.*
 import java.util.*
@@ -12,15 +12,42 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.coroutines.CoroutineContext
 
+enum class PageAnimationType {
+    None, Vertical, Horizontal, Opacity, ReverseVertical, ReverseHorizontal;
+    companion object {
+        const val duration:Int  = 300
+    }
 
+    val enter : EnterTransition?
+        get() = when(this) {
+            Vertical -> slideInVertically (tween(duration), initialOffsetY = {it})
+            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it})
+            Opacity -> fadeIn(animationSpec = tween(duration))
+            ReverseVertical -> slideInVertically (tween(duration), initialOffsetY = {-it})
+            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it})
+            None -> null
+        }
+
+    val exit : ExitTransition?
+        get() = when(this) {
+            Vertical -> slideOutVertically (tween(duration), targetOffsetY  = {it})
+            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it})
+            Opacity -> fadeOut(animationSpec = tween(duration))
+            ReverseVertical -> slideOutVertically (tween(duration), targetOffsetY = {-it})
+            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it})
+            None -> null
+        }
+}
 data class PageObject(val pageID:String = "",
                       var pageIDX:Int = 0){
     var params:HashMap<String, Any?>? = null
     var isPopup = false ; internal set
+    var isHome = false
+    var animationType:PageAnimationType = PageAnimationType.Opacity
+
     val key:String = UUID.randomUUID().toString()
     val screenID:String get() { return "$pageID$pageIDX"}
-    var isTop = false
-    var isLayer = false
+
     fun addParam(key:String, value:Any?):PageObject{
         value ?: return this
         if (params == null) {
@@ -38,7 +65,6 @@ data class PageObject(val pageID:String = "",
 
 interface PagePresenter {
     var isFullScreen:Boolean
-    var hasLayerPopup:Boolean
     var systemBarColor:Int
     var appTheme:Int
     var activity:PageComposeable
@@ -47,7 +73,6 @@ interface PagePresenter {
     val lastPage:PageObject?
     val prevPage:PageObject?
 
-    fun goHome(idx:Int = 0): PagePresenter
     fun goBack(pageObject:PageObject?=null): PagePresenter
     fun clearPageHistory(pageObject:PageObject?=null): PagePresenter
     fun closePopup(key:String?): PagePresenter
@@ -55,7 +80,6 @@ interface PagePresenter {
     fun closePopup(pageObject:PageObject): PagePresenter
     fun closeAllPopup(): PagePresenter
     fun openPopup(pageObject:PageObject): PagePresenter
-    fun pageInit(): PagePresenter
     fun pageStart(pageObject:PageObject): PagePresenter
     fun changePage(pageObject:PageObject): PagePresenter
     fun hasPermissions( permissions: Array<out String> ): Pair< Boolean, List<Boolean>>?
@@ -69,13 +93,10 @@ interface PagePresenter {
 interface PageModel {
     var isPageInit:Boolean
     var currentPageObject:PageObject?
-    fun getHome(idx:Int = 0):PageObject
     @StringRes
     fun getPageExitMessage(): Int
-    fun isHomePage( page:PageObject ): Boolean
     fun isHistoryPage( page:PageObject ): Boolean = true
     fun isFullScreenPage( page:PageObject ): Boolean = false
-    fun isBackStackPage( page:PageObject ): Boolean = true
     fun getPageOrientation( page:PageObject ): Int
     fun getCloseExceptions(): List<String> = listOf()
 }

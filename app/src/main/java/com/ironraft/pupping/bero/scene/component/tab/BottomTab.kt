@@ -58,21 +58,30 @@ fun BottomTab(
     val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
 
     AppTheme {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            pages.forEach { page ->
-                ImageButton(
-                    isSelected = page.idx == currentTopPage?.pageIDX,
-                    defaultImage = page.icon,
-                    text = page.text,
-                    iconText = if( page.id == PageID.Chat ) "N" else null,
-                    defaultColor = ColorApp.grey200,
-                    activeColor = ColorBrand.primary
-                ){
-                    pagePresenter.changePage(PageObject(page.id.value, page.idx))
+            Spacer(
+                modifier = Modifier.fillMaxWidth().height(DimenLine.light.dp)
+                    .background(ColorApp.grey50)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                pages.forEach { page ->
+                    ImageButton(
+                        isSelected = page.idx == currentTopPage?.pageIDX,
+                        defaultImage = page.icon,
+                        text = page.text,
+                        iconText = if (page.id == PageID.Chat) "N" else null,
+                        defaultColor = ColorApp.grey200,
+                        activeColor = ColorBrand.primary
+                    ) {
+                        pagePresenter.changePage(PageObject(page.id.value, page.idx))
+                    }
                 }
             }
         }
@@ -81,7 +90,7 @@ fun BottomTab(
 
 @Preview
 @Composable
-fun RewardInfoComposePreview() {
+fun BottomTabComposePreview() {
     Column(
         modifier = Modifier.padding(16.dp).width(320.dp).background(ColorApp.white),
         verticalArrangement = Arrangement.spacedBy(8.dp)
