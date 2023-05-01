@@ -17,6 +17,7 @@ import com.ironraft.pupping.bero.store.database.DataBaseManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
+import com.lib.model.SingleLiveData
 //import com.skeleton.component.dialog.Alert
 import com.skeleton.module.Repository
 import com.skeleton.module.network.ErrorType
@@ -51,7 +52,7 @@ class PageRepository (ctx: Context,
     }
     private val appTag = "Repository"
     val status = MutableLiveData<RepositoryStatus>(RepositoryStatus.Initate)
-    val event = MutableLiveData<RepositoryEvent?>(null)
+    val event = SingleLiveData<RepositoryEvent?>(null)
     private val accountManager = AccountManager(dataProvider.user)
 
     fun clearEvent(){
@@ -131,7 +132,6 @@ class PageRepository (ctx: Context,
         })
         setupSetting()
         autoSnsLogin()
-        status.value = RepositoryStatus.Ready
     }
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
@@ -197,13 +197,15 @@ class PageRepository (ctx: Context,
         snsManager.requestAllLogOut()
         event.value = RepositoryEvent.LoginUpdate
         pagePresenter.loaded()
+        status.value = RepositoryStatus.Initate
+        status.value = RepositoryStatus.Ready
 
+        //retryRegisterPushToken()
     }
 
     private fun autoSnsLogin() {
         val user = dataProvider.user.snsUser
         val token = storage.authToken
-
         DataLog.d("$user",appTag)
         DataLog.d("token " + (token ?: ""),appTag)
         if ( user != null && token.isNotEmpty() ) {
@@ -211,27 +213,27 @@ class PageRepository (ctx: Context,
         } else {
             clearLogin()
         }
-
     }
 
     private fun loginCompleted() {
         DataLog.d("loginCompleted ${interceptor.accesstoken}", appTag)
         pagePresenter.loaded()
-        storage.authToken = interceptor.accesstoken
         event.value = RepositoryEvent.LoginUpdate
-        updateMyData()
+        status.value = RepositoryStatus.Initate
+        onReady()
     }
-    fun updateMyData(isForce:Boolean = false){
-        dataProvider.user.snsUser?.let { user->
-            if (dataProvider.user.currentProfile.type.value == null || isForce) {
-                val userQ = ApiQ(appTag, ApiType.GetUser, isOptional = true, requestData = user)
-                apiManager.load(userQ)
-            }
-            if (dataProvider.user.pets.value?.isEmpty() != false || isForce) {
-                val petQ = ApiQ(appTag, ApiType.GetPets, isOptional = true, requestData = user)
-                apiManager.load(petQ)
-            }
+
+    private fun onReady() {
+        storage.authToken = interceptor.accesstoken
+        status.value = RepositoryStatus.Ready
+        dataProvider.user.snsUser?.let {
+            apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, requestData = it))
+            apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, requestData = it))
+            //self.dataProvider.requestData(q: .init(id: self.tag, type: .getChatRooms(page: 0), isOptional: true))
+            //self.dataProvider.requestData(q: .init(id: self.tag, type: .getAlarm(page: 0)))
         }
+        //retryRegisterPushToken()
+
     }
 
     val isLogin: Boolean get() {

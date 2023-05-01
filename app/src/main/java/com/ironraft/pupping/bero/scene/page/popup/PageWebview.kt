@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.popup
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -23,6 +24,7 @@ import org.koin.compose.koinInject
  * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked] lambda
  * that triggers canceling the order and passes the final order to [onSendButtonClicked] lambda
  */
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun PageWebview(
     modifier: Modifier = Modifier,
@@ -36,7 +38,11 @@ fun PageWebview(
     Box (
         modifier = modifier.fillMaxSize().background(ColorBrand.bg)
     ) {
-        WebView(state = webViewState)
+        WebView(
+            state = webViewState,
+            onCreated = { it.settings.javaScriptEnabled = true }
+
+        )
     }
 }
 

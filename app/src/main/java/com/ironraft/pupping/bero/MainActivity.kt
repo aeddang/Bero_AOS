@@ -64,8 +64,9 @@ class MainActivity : PageComposeable() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        snsManager.onActivityResult( requestCode, resultCode, data, activityRequstId)
         super.onActivityResult(requestCode, resultCode, data)
-        snsManager.onActivityResult(requestCode, resultCode, data)
+
     }
 }
 

@@ -40,7 +40,6 @@ fun PageLogin(
     modifier: Modifier = Modifier
 ){
     val repository = koinInject<PageRepository>()
-    val pagePresenter = koinInject<PageComposePresenter>()
     val appSceneObserver = koinInject<AppSceneObserver>()
     val snsManager = koinInject<SnsManager>()
     var isAgree by remember { mutableStateOf(false) }
@@ -52,7 +51,6 @@ fun PageLogin(
 
 
     fun join() {
-        if (snsUser.value == null) return
         snsUser.value?.let {
             repository.registerSnsLogin(it, info = snsUserInfo.value)
             return

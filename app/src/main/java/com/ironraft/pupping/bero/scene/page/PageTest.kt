@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
 import com.skeleton.theme.ColorBrand
@@ -26,6 +27,7 @@ fun PageTest(
     modifier: Modifier = Modifier,
     page:PageObject? = null
 ){
+    val repository = koinInject<PageRepository>()
     val pagePresenter = koinInject<PageComposePresenter>()
     val resources = LocalContext.current.resources
     Column (
@@ -38,7 +40,7 @@ fun PageTest(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                pagePresenter.goBack(page)
+                repository.clearLogin()
             }
         ) {
             Text(stringResource(R.string.button_more))

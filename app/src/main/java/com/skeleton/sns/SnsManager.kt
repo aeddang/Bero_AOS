@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.lib.model.SingleLiveData
 import com.lib.page.PageComposeable
 import com.lib.page.PageLifecycleUser
 import com.lib.util.Log
@@ -18,7 +19,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
     val userInfo = MutableLiveData<SnsUserInfo?>()
 
     private val respond = MutableLiveData<SnsResponds?>()
-    val error = MutableLiveData<SnsError?>()
+    val error = SingleLiveData<SnsError?>(null)
 
     private var currentManager:Sns? = null
 
@@ -104,9 +105,9 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
         }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-        fb.onActivityResult(requestCode,resultCode, data)
-        google.onActivityResult(requestCode,resultCode, data)
+    fun onActivityResult(requestCode: Int,  resultCode: Int, data: Intent?, activityRequstId:Int? = null): Boolean {
+        fb.onActivityResult(requestCode,resultCode, data, activityRequstId)
+        google.onActivityResult(requestCode,resultCode, data, activityRequstId)
         return false
     }
 

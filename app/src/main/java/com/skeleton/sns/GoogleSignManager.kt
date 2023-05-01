@@ -70,8 +70,8 @@ class GoogleSignManager : Sns{
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-        if ( requestCode != this.requestCode  ) return false
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?, activityRequestCode:Int?): Boolean {
+        if ( activityRequestCode != this.requestCode  ) return false
         data?.let { data ->
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)

@@ -95,7 +95,7 @@ class FaceBookManager : Sns, FacebookCallback<LoginResult>{
         profileTracker?.startTracking()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?, activityRequestCode:Int?): Boolean {
         return callbackManager?.onActivityResult(requestCode, resultCode, data) ?: false
     }
 

@@ -15,7 +15,7 @@ interface Sns {
     fun getAccessTokenInfo()
     fun getUserInfo()
     fun requestUnlink()
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?, activityRequestCode:Int? = null): Boolean
     fun destroy()
 }
 

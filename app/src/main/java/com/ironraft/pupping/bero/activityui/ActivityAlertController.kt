@@ -42,14 +42,11 @@ fun ActivityAlertController(){
     val viewModel = koinInject<AppSceneObserver>()
     var isShow by remember { mutableStateOf(false) }
     var currentEvent: ActivitAlertEvent? by remember { mutableStateOf(null) }
-    val alert = viewModel.alert.observeAsState()
     var imgButtons:List<AlertBtnData>? by remember { mutableStateOf(null) }
     var buttons: List<AlertBtnData>? by remember { mutableStateOf(null) }
     var buttonColor:Color? by remember { mutableStateOf(null) }
-    fun reset(){
-        isShow = false
-    }
 
+    val alert = viewModel.alert.observeAsState()
     alert.value.let {
         it?.let {evt ->
             imgButtons = null
@@ -75,12 +72,13 @@ fun ActivityAlertController(){
                     )
                 }
                 ActivitAlertType.Cancel -> {
-                    reset()
+                    isShow = false
                     return
                 }
             }
             currentEvent = evt
             isShow = true
+            viewModel.alert.value = null
         }
     }
 
@@ -92,10 +90,7 @@ fun ActivityAlertController(){
                 subText = currentEvent?.subText,
                 //tipText = "tipText",
                 //referenceText = "referenceText",
-                imgButtons = arrayListOf<AlertBtnData>(
-                    AlertBtnData(title = "btn0", index = 0),
-                    AlertBtnData(title = "btn1", index = 1)
-                ),
+                imgButtons = imgButtons,
                 buttons = buttons,
                 buttonColor = ColorBrand.primary,
             ) {selected ->

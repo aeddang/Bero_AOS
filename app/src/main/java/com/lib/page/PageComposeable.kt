@@ -229,7 +229,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         )
     }
     private lateinit var startActivityForResult: ActivityResultLauncher<Intent>; private set
-    private var activityRequstId:Int = -1
+    protected var activityRequstId:Int = -1
     private fun setupActivityResult(){
         startActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
