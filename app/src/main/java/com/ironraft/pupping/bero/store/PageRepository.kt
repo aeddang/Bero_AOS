@@ -30,7 +30,7 @@ enum class RepositoryStatus{
 }
 
 enum class RepositoryEvent{
-    LoginUpdate
+    LoginUpdate, LoginUpdated
 }
 
 class PageRepository (ctx: Context,
@@ -131,7 +131,6 @@ class PageRepository (ctx: Context,
 
         })
         setupSetting()
-        autoSnsLogin()
     }
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
@@ -185,6 +184,8 @@ class PageRepository (ctx: Context,
         dataProvider.user.registUser(user)
         pagePresenter.loading(true)
         apiManager.joinAuth(user, info)
+        status.value = RepositoryStatus.Initate
+        event.value = RepositoryEvent.LoginUpdate
     }
     fun clearLogin() {
         DataLog.d("clearLogin", appTag)
@@ -195,20 +196,21 @@ class PageRepository (ctx: Context,
         apiManager.clearApi()
         dataProvider.user.clearUser()
         snsManager.requestAllLogOut()
-        event.value = RepositoryEvent.LoginUpdate
         pagePresenter.loaded()
-        status.value = RepositoryStatus.Initate
         status.value = RepositoryStatus.Ready
-
+        event.value = RepositoryEvent.LoginUpdate
+        event.value = RepositoryEvent.LoginUpdated
         //retryRegisterPushToken()
     }
 
-    private fun autoSnsLogin() {
+   fun autoSnsLogin() {
+
         val user = dataProvider.user.snsUser
         val token = storage.authToken
         DataLog.d("$user",appTag)
         DataLog.d("token " + (token ?: ""),appTag)
         if ( user != null && token.isNotEmpty() ) {
+            event.value = RepositoryEvent.LoginUpdate
             apiManager.initateApi(token, user)
         } else {
             clearLogin()
@@ -218,14 +220,13 @@ class PageRepository (ctx: Context,
     private fun loginCompleted() {
         DataLog.d("loginCompleted ${interceptor.accesstoken}", appTag)
         pagePresenter.loaded()
-        event.value = RepositoryEvent.LoginUpdate
-        status.value = RepositoryStatus.Initate
         onReady()
     }
 
     private fun onReady() {
         storage.authToken = interceptor.accesstoken
         status.value = RepositoryStatus.Ready
+        event.value = RepositoryEvent.LoginUpdated
         dataProvider.user.snsUser?.let {
             apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, requestData = it))
             apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, requestData = it))

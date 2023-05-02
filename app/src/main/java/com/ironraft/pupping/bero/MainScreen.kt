@@ -55,13 +55,14 @@ data class SceneEvent(val type: SceneEventType,
 class AppSceneObserver {
     val event = MutableLiveData<SceneEvent?>(null)
     val alert = MutableLiveData<ActivitAlertEvent?>(null)
+
 }
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PageApp(
-    pageNavController: NavHostController = rememberAnimatedNavController(),
+    pageNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val tag = "PageApp"
@@ -80,10 +81,8 @@ fun PageApp(
     var isLock by remember { mutableStateOf(false) }
 
     fun onStoreInit():Boolean{
-        if (SystemEnvironment.firstLaunch && !isLaunching) {
-            isLaunching = true
-            isLoading = false
-            pagePresenter.pageStart(
+        if ( SystemEnvironment.firstLaunch && !isLaunching) {
+            pagePresenter.changePage(
                 PageProvider.getPageObject(PageID.Intro)
             )
             return true
@@ -92,6 +91,7 @@ fun PageApp(
     }
     fun onPageInit(){
         isLoading = false
+        isLaunching = true
         PageLog.d("onPageInit", tag = tag)
         if (!repository.isLogin) {
             isInit = false
@@ -125,7 +125,6 @@ fun PageApp(
     }
 
     val repositoryEvent = repository.event.observeAsState()
-    val repositoryStatus = repository.status.observeAsState()
     val event = viewModel.event.observeAsState()
     event.value.let { evt ->
         evt?.let {
@@ -135,17 +134,11 @@ fun PageApp(
             }
         }
     }
-    repositoryStatus.value.let {status ->
-        when (status){
-            RepositoryStatus.Ready ->
-                if ( !onStoreInit() ) onPageInit()
-            else -> {}
-        }
 
-    }
     repositoryEvent.value.let { evt ->
         when (evt){
-            RepositoryEvent.LoginUpdate -> {}
+            RepositoryEvent.LoginUpdated ->
+                if ( !onStoreInit() ) onPageInit()
             else -> {}
         }
     }

@@ -1,12 +1,16 @@
 package com.ironraft.pupping.bero
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.lib.page.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.skeleton.sns.SnsManager
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 
 
@@ -25,18 +29,31 @@ class MainActivity : PageComposeable() {
         return model
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        scope.createJob()
+        super.onCreate(savedInstanceState)
+    }
 
-    @OptIn(ExperimentalAnimationApi::class)
     override fun setPageScreen() {
         pageModel = get()
         snsManager = get()
         repository = get()
         snsManager.setup(this)
+        repository.setDefaultLifecycleOwner(this)
+        setupComposeScreen()
+    }
+    @OptIn(ExperimentalAnimationApi::class)
+    private fun setupComposeScreen(){
         setContent {
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
-            run { PageApp(pageNv) }
-            this.repository.setDefaultLifecycleOwner(this)
+            scope.run {
+                PageApp(pageNv)
+            }
+        }
+        scope.launch {
+            delay(100)
+            repository.autoSnsLogin()
         }
 
     }

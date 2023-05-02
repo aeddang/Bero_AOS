@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +25,7 @@ import com.ironraft.pupping.bero.scene.component.button.AgreeButton
 import com.ironraft.pupping.bero.scene.component.button.AgreeButtonType
 import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.PageComposePresenter
+import com.lib.util.showCustomToast
 import com.skeleton.sns.SnsError
 import com.skeleton.sns.SnsEvent
 import com.skeleton.sns.SnsManager
@@ -39,6 +42,7 @@ import org.koin.compose.koinInject
 fun PageLogin(
     modifier: Modifier = Modifier
 ){
+    val pagePresenter = koinInject<PageComposePresenter>()
     val repository = koinInject<PageRepository>()
     val appSceneObserver = koinInject<AppSceneObserver>()
     val snsManager = koinInject<SnsManager>()
@@ -73,8 +77,6 @@ fun PageLogin(
     }
     snsUser.value?.let {snsManager.getUserInfo() }
     snsUserInfo.value?.let { join() }
-    //repository.clearLogin()
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -122,6 +124,13 @@ fun PageLogin(
                 isActive = isAgree,
                 modifier = Modifier.padding(horizontal = DimenMargin.regular.dp)
             ){
+                if (!isAgree) {
+                    Toast(pagePresenter.activity).showCustomToast(
+                        R.string.alert_needAgreement,
+                        pagePresenter.activity
+                    )
+                    return@FillButton
+                }
                 snsManager.requestLogin(SnsType.Google)
             }
             FillButton(
@@ -131,6 +140,13 @@ fun PageLogin(
                 isActive = isAgree,
                 modifier = Modifier.padding(horizontal = DimenMargin.regular.dp)
             ){
+                if (!isAgree) {
+                    Toast(pagePresenter.activity).showCustomToast(
+                        R.string.alert_needAgreement,
+                        pagePresenter.activity
+                    )
+                    return@FillButton
+                }
                 snsManager.requestLogin(SnsType.Fb)
             }
 

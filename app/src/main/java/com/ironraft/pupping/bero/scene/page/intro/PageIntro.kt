@@ -40,7 +40,6 @@ import org.koin.compose.koinInject
 fun PageIntro(
     modifier: Modifier = Modifier
 ){
-    val pagePresenter = koinInject<PageComposePresenter>()
     val appSceneObserver = koinInject<AppSceneObserver>()
     data class IntroData (
         var idx:Int = -1,

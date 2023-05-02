@@ -52,7 +52,8 @@ class PageProvider {
 
         fun getType(pageID:PageID): PageAnimationType{
             return when (pageID){
-                PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat  -> PageAnimationType.Opacity
+                PageID.Splash, PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat -> PageAnimationType.None
+                //PageID.Privacy, PageID.ServiceTerms -> PageAnimationType.Vertical
                 else -> PageAnimationType.Horizontal
             }
         }

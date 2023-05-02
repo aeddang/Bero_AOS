@@ -18,7 +18,8 @@ import com.lib.page.PageObject
 import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
-import com.skeleton.view.WebViewPage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 
@@ -26,45 +27,55 @@ import org.koin.compose.koinInject
  * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked] lambda
  * that triggers canceling the order and passes the final order to [onSendButtonClicked] lambda
  */
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @Composable
 fun PageServiceTerms(
     modifier: Modifier = Modifier,
     page:PageObject? = null
 ){
+    val coroutineScope = rememberCoroutineScope()
     val pagePresenter = koinInject<PageComposePresenter>()
+    var isInit by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
     val webViewState =
         rememberWebViewState(
             url = "https://bero.dog/termsofservice",
             additionalHttpHeaders = emptyMap()
         )
+    coroutineScope.launch {
+        delay(300)
+        isInit = true
+    }
     Box (
         modifier = modifier
             .fillMaxSize()
             .background(ColorBrand.bg)
     ) {
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
-            WebView(
-                modifier = Modifier
-                    .padding(top = DimenApp.top.dp)
-                    .fillMaxSize()
-                    .background(ColorApp.white),
-                state = webViewState,
-                onCreated = {
-                    it.settings.javaScriptEnabled = true
-                    isLoading = false
-                }
-            )
-            if(isLoading){
-                Spacer(
+
+            if (isInit){
+                WebView(
                     modifier = Modifier
+                        .padding(top = DimenApp.top.dp)
                         .fillMaxSize()
-                        .background(ColorApp.white)
+                        .background(ColorApp.white),
+                    state = webViewState,
+                    onCreated = {
+                        it.settings.javaScriptEnabled = true
+                        isLoading = false
+                    }
                 )
+                AnimatedVisibility(visible = isLoading) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(ColorApp.white)
+                    )
+                }
             }
             TitleTab(
                 useBack = true
@@ -81,6 +92,7 @@ fun PageServiceTerms(
 @Preview
 @Composable
 fun PageServiceTermsPreview(){
+
     PageServiceTerms(
     )
 }
