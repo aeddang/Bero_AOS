@@ -1,4 +1,5 @@
 package com.skeleton.module.firebase
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,34 +10,31 @@ import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ironraft.pupping.bero.MainActivity
-import com.lib.model.WhereverYouCanGo
-import com.lib.util.Log
 import com.ironraft.pupping.bero.R
+import com.lib.model.WhereverYouCanGo
+import com.lib.util.DataLog
+import com.lib.util.Log
 import java.util.*
 
 
-class FirebaseMessaging : FirebaseMessagingService() {
+class FirebaseMessaging()  : FirebaseMessagingService() {
     companion object{
         const val PUSH_PAGE_KEY = "page"
-        var pushTokenObservable: MutableLiveData<String?> = MutableLiveData(null)
     }
 
     private var appTag = javaClass.simpleName
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         var pageJson:String? = null
+        val iwillGo =  WhereverYouCanGo.parseJsonIwillGo(remoteMessage.data)
         remoteMessage.data.isNotEmpty().let {
-            pageJson = WhereverYouCanGo.parseJsonIwillGo(remoteMessage.data).stringfy()
+            pageJson = iwillGo.stringfy()
         }
         remoteMessage.notification?.let {
-            Log.i(
-                appTag,
-                "Message Notification forground : ${remoteMessage.data} , remoteMessage.notification : " +
-                        "${remoteMessage.notification}"
+            DataLog.d("Message Notification forground : ${remoteMessage.data} , remoteMessage.notification : " +
+                        "${remoteMessage.notification}" , appTag
             )
             createNotification(it.title, it.body,  pageJson)
         }
@@ -44,7 +42,6 @@ class FirebaseMessaging : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         Log.d(appTag, "onNewToken $token")
-        pushTokenObservable.postValue(token)
     }
 
     private fun handleNow(messageParam: HashMap<String, Any>) {
@@ -52,16 +49,29 @@ class FirebaseMessaging : FirebaseMessagingService() {
     }
 
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun createNotification(title:String?, text:String?, pageJson:String?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(PUSH_PAGE_KEY , pageJson)
 
+        if (pageJson != null) {
+            DataLog.d(pageJson, appTag)
+        }
+
+        var pendingIntent:PendingIntent? = null
         val reCode = rand(1, 1000)
-        val pendingIntent = PendingIntent.getActivity(
-            this,  /* Request code */reCode, intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity(
+                this,  /* Request code */reCode, intent,
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            pendingIntent = PendingIntent.getActivity(
+                this,  /* Request code */reCode, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -80,15 +90,13 @@ class FirebaseMessaging : FirebaseMessagingService() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "channel"
-            val descriptionText = "description"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("1", name, importance).apply {
-                description = descriptionText
-            }
-            notificationManager.createNotificationChannel(channel)
+        val name = "channel"
+        val descriptionText = "description"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel("1", name, importance).apply {
+            description = descriptionText
         }
+        notificationManager.createNotificationChannel(channel)
         notificationManager.notify(reCode, notificationBuilder.build())
 
     }

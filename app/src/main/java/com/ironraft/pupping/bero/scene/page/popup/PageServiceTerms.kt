@@ -33,50 +33,43 @@ fun PageServiceTerms(
     modifier: Modifier = Modifier,
     page:PageObject? = null
 ){
-    val coroutineScope = rememberCoroutineScope()
+
     val pagePresenter = koinInject<PageComposePresenter>()
-    var isInit by remember { mutableStateOf(false) }
+
     var isLoading by remember { mutableStateOf(true) }
     val webViewState =
         rememberWebViewState(
             url = "https://bero.dog/termsofservice",
             additionalHttpHeaders = emptyMap()
         )
+    /*
+    var isInit by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     coroutineScope.launch {
         delay(300)
         isInit = true
     }
+    */
     Box (
         modifier = modifier
             .fillMaxSize()
             .background(ColorBrand.bg)
     ) {
-
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
-
-            if (isInit){
-                WebView(
-                    modifier = Modifier
-                        .padding(top = DimenApp.top.dp)
-                        .fillMaxSize()
-                        .background(ColorApp.white),
-                    state = webViewState,
-                    onCreated = {
-                        it.settings.javaScriptEnabled = true
-                        isLoading = false
-                    }
-                )
-                AnimatedVisibility(visible = isLoading) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(ColorApp.white)
-                    )
+            WebView(
+                modifier = Modifier
+                    .padding(top = DimenApp.top.dp)
+                    .fillMaxSize()
+                    .background(ColorApp.white),
+                state = webViewState,
+                onCreated = {
+                    it.settings.javaScriptEnabled = true
+                    isLoading = false
                 }
-            }
+            )
             TitleTab(
                 useBack = true
             ){

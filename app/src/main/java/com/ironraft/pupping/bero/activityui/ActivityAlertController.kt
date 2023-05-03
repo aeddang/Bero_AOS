@@ -17,6 +17,9 @@ import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
 import org.koin.compose.koinInject
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.store.api.ApiType
+import com.skeleton.module.network.ErrorType
+
 enum class ActivitAlertType {
     Confirm, Select, Alert,
     RecivedApns, ApiError,
@@ -31,7 +34,7 @@ data class ActivitAlertEvent(
     var buttons:ArrayList<String>? = null,
     @DrawableRes var imgButtons:ArrayList<Int>? = null,
     var isNegative:Boolean = true,
-    var error:ApiError<Any>? = null,
+    var error:ApiError<ApiType>? = null,
     var handler: ((Int) -> Unit)? = null
 )
 
@@ -45,19 +48,29 @@ fun ActivityAlertController(){
     var imgButtons:List<AlertBtnData>? by remember { mutableStateOf(null) }
     var buttons: List<AlertBtnData>? by remember { mutableStateOf(null) }
     var buttonColor:Color? by remember { mutableStateOf(null) }
+    var title:String? by remember { mutableStateOf(null) }
+    var text:String? by remember { mutableStateOf(null) }
 
     val alert = viewModel.alert.observeAsState()
     alert.value.let {
         it?.let {evt ->
+            title = null
+            text = null
             imgButtons = null
             buttons = (evt.buttons?.mapIndexed { index, btn -> AlertBtnData(title = btn, index = index) } )
             imgButtons = (evt.imgButtons?.mapIndexed { index, btn -> AlertBtnData(img = btn, index = index) } )
             buttonColor = if (evt.isNegative) ColorApp.black else ColorBrand.primary
             when (evt.type) {
                 ActivitAlertType.RecivedApns -> {
+
+                    title = stringResource(R.string.alert_apns)
                 }
                 ActivitAlertType.ApiError -> {
-
+                    title = stringResource(R.string.alert_api)
+                    text =
+                        if ( evt.error?.errorType != ErrorType.API ) stringResource(R.string.alert_apiErrorServer)
+                        else evt.error?.msg
+                    if (buttons == null) buttons = listOf(AlertBtnData(title = stringResource(id = R.string.confirm),index = 1))
                 }
                 ActivitAlertType.Select -> {
 
@@ -85,8 +98,8 @@ fun ActivityAlertController(){
     Box(modifier = Modifier.fillMaxSize()) {
         AnimatedVisibility(visible = isShow) {
             Alert(
-                title = currentEvent?.title,
-                text = currentEvent?.text,
+                title = title ?: currentEvent?.title,
+                text = text ?: currentEvent?.text,
                 subText = currentEvent?.subText,
                 //tipText = "tipText",
                 //referenceText = "referenceText",

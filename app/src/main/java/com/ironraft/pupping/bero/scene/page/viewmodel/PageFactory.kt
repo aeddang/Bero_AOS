@@ -11,15 +11,22 @@ object PageAcvityEvent {
 }
 
 object PageParam {
-    const val requestCode = "requestCode"
-    const val title = "title"
-    const val image = "image"
-    const val type = "type"
+    const val idx = "idx"
     const val id = "id"
     const val subId = "subId"
-    const val idx = "idx"
+    const val link = "link"
+    const val userData = "userData"
     const val data = "data"
     const val datas = "datas"
+    const val subData = "subData"
+    const val type = "type"
+    const val subType = "subType"
+    const val title = "title"
+    const val text = "text"
+    const val subText = "subText"
+    const val isFriend = "isFriend"
+    const val isEdit = "isEdit"
+    const val isInitAction = "isInitAction"
 }
 
 enum class PageID(val value: String, val position: Int = 9999){
@@ -30,6 +37,7 @@ enum class PageID(val value: String, val position: Int = 9999){
     Explore("explore", 200),
     Chat("chat", 300),
     My("my", 400),
+    Webview("webview"),
     Privacy("privacy"),
     ServiceTerms("serviceTerms")
 }
@@ -53,7 +61,7 @@ class PageProvider {
         fun getType(pageID:PageID): PageAnimationType{
             return when (pageID){
                 PageID.Splash, PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat -> PageAnimationType.None
-                //PageID.Privacy, PageID.ServiceTerms -> PageAnimationType.Vertical
+                PageID.Privacy, PageID.ServiceTerms, PageID.Webview-> PageAnimationType.None
                 else -> PageAnimationType.Horizontal
             }
         }

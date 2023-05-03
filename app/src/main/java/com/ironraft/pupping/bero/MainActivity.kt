@@ -1,27 +1,38 @@
 package com.ironraft.pupping.bero
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.core.content.ContextCompat
 import com.lib.page.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.android.gms.tasks.OnCompleteListener
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.store.RepositoryEvent
 import com.ironraft.pupping.bero.store.SystemEnvironment
+import com.lib.util.AppUtil
+import com.lib.util.DataLog
+import com.lib.util.PageLog
 import com.skeleton.sns.SnsManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
-
-
 class MainActivity : PageComposeable() {
+    //lateinit val appObserver: PageAppObserver
     lateinit var repository: PageRepository
     lateinit var pageModel: ActivityModel
     lateinit var pagePresenter: PagePresenter
     lateinit var snsManager: SnsManager
+    lateinit var appSceneObserver:AppSceneObserver
     private val appTag = javaClass.simpleName
     private val scope = PageCoroutineScope()
-    private var isInit = false
+
     override fun getPageActivityPresenter(): PageComposePresenter = get()
     override fun getPageActivityViewModel(): PageAppViewModel = get()
     override fun getPageActivityModel(): PageModel{
@@ -31,6 +42,7 @@ class MainActivity : PageComposeable() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         scope.createJob()
+        AppUtil.getApplicationSignature(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -38,12 +50,16 @@ class MainActivity : PageComposeable() {
         pageModel = get()
         snsManager = get()
         repository = get()
+        pagePresenter = get()
+        appSceneObserver = get()
         snsManager.setup(this)
         repository.setDefaultLifecycleOwner(this)
         setupComposeScreen()
+        setupObserver()
     }
     @OptIn(ExperimentalAnimationApi::class)
     private fun setupComposeScreen(){
+        requsetNotificationPermission()
         setContent {
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
@@ -55,9 +71,69 @@ class MainActivity : PageComposeable() {
             delay(100)
             repository.autoSnsLogin()
         }
-
     }
 
+    var isInit = false
+    var isLaunching = false
+    private fun setupObserver (){
+        repository.event.observe(this){evt ->
+            when (evt){
+                RepositoryEvent.LoginUpdated ->
+                    if ( !onStoreInit() ) onPageInit()
+                else -> {}
+            }
+        }
+
+        appSceneObserver.event.observe(this) { event ->
+            event?.let { evt ->
+                when (evt.type) {
+                    SceneEventType.Initate -> onPageInit()
+                    else -> {}
+                }
+            }
+        }
+    }
+    private fun onStoreInit():Boolean{
+        if ( SystemEnvironment.firstLaunch && !isLaunching) {
+            pagePresenter.changePage(
+                PageProvider.getPageObject(PageID.Intro)
+            )
+            return true
+        }
+        return false
+    }
+    private fun onPageInit(){
+        isLaunching = true
+        PageLog.d("onPageInit", appTag)
+        if (!repository.isLogin) {
+            isInit = false
+            if (pagePresenter.currentPage?.pageID != PageID.Login.value) {
+                pagePresenter.changePage(
+                    PageProvider.getPageObject(PageID.Login)
+                )
+            }
+            return
+        }
+        if (isInit && pagePresenter.currentPage?.pageID != PageID.Login.value) {
+            PageLog.d("onPageInit already init", appTag)
+            return
+        }
+        isInit = true
+        pagePresenter.changePage(
+            PageProvider.getPageObject(PageID.Walk)
+        )
+        /*
+        if !self.appObserverMove(self.appObserver.page) {
+            self.pagePresenter.changePage(
+                PageProvider.getPageObject(.walk)
+            )
+        }
+        if self.appObserver.apns != nil  {
+            self.appSceneObserver.event = .debug("apns exist")
+            self.appSceneObserver.alert = .recivedApns
+        }
+        */
+    }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         //if (currentPage != null) { deepLinkManager.changeActivityIntent(intent) }
@@ -84,6 +160,48 @@ class MainActivity : PageComposeable() {
         snsManager.onActivityResult( requestCode, resultCode, data, activityRequstId)
         super.onActivityResult(requestCode, resultCode, data)
 
+    }
+
+    private fun requestToken(){
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                DataLog.d("Fetching FCM registration token failed" + task.exception, appTag)
+                return@OnCompleteListener
+            }
+            val token = task.result
+            DataLog.d("Fetching FCM registration token -> $token", appTag)
+        })
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            requestToken()
+        } else {
+            DataLog.d("FCM SDK requestPermissionLauncher denied.", tag = appTag)
+        }
+    }
+
+    private fun requsetNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+
+                DataLog.d("FCM SDK (and your app) can post notifications.", tag = appTag)
+                requestToken()
+
+            } else if (shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS)) {
+                DataLog.d("FCM SDK (and your app) can not post notifications.", tag = appTag)
+            } else {
+                // Directly ask for the permission
+                DataLog.d("FCM SDK (and your app) request.", tag = appTag)
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            requestToken()
+        }
     }
 }
 

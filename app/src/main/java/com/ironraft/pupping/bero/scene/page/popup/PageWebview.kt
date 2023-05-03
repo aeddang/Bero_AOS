@@ -5,7 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -14,9 +15,14 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.component.tab.TitleTab
+import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
+import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
+import com.skeleton.theme.DimenApp
 import org.koin.compose.koinInject
 
 
@@ -30,19 +36,43 @@ fun PageWebview(
     modifier: Modifier = Modifier,
     page:PageObject? = null
 ){
+    val pagePresenter = koinInject<PageComposePresenter>()
+    var isLoading by remember { mutableStateOf(true) }
+    val link:String = (page?.params?.get(PageParam.link) as? String) ?: ""
     val webViewState =
         rememberWebViewState(
-            url = "www.naver.com",
+            url = link,
             additionalHttpHeaders = emptyMap()
         )
     Box (
-        modifier = modifier.fillMaxSize().background(ColorBrand.bg)
+        modifier = modifier
+            .fillMaxSize()
+            .background(ColorBrand.bg)
     ) {
-        WebView(
-            state = webViewState,
-            onCreated = { it.settings.javaScriptEnabled = true }
-
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            WebView(
+                modifier = Modifier
+                    .padding(top = DimenApp.top.dp)
+                    .fillMaxSize()
+                    .background(ColorApp.white),
+                state = webViewState,
+                onCreated = {
+                    it.settings.javaScriptEnabled = true
+                    isLoading = false
+                }
+            )
+            TitleTab(
+                useBack = true
+            ){
+                when(it){
+                    TitleTabButtonType.Back -> pagePresenter.goBack()
+                    else -> {}
+                }
+            }
+        }
     }
 }
 

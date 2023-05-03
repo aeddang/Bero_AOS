@@ -94,7 +94,7 @@ object ApiField {
 }
 
 enum class ApiType{
-    AuthLogin, AuthReflash , GetUser, UpdateUser,
+    AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush,
     GetWeather,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,

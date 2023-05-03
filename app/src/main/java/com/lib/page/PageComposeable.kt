@@ -313,7 +313,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 it
             )
         }
-        getPageActivityPresenter()
     }
 
     private fun onPageChange(
@@ -356,7 +355,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             navController?.popBackStack()
         } else {
             navController?.navigate(pageObject.pageID){
-
                 anim {
                     enter = if (isStart) getPageStart() else getPageIn(pageObject.pageID)
                     exit = getPageOut(pageObject.pageID)

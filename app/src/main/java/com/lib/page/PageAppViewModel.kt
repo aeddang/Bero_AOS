@@ -2,6 +2,7 @@ package com.lib.page
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import com.lib.model.IwillGo
 
 
 enum class PageEventType{
@@ -19,6 +20,11 @@ enum class PageStatus{
 
 enum class PageNetworkStatus{
     Available, Lost, Undefined
+}
+
+open class AppObserver {
+    val page = MutableLiveData<IwillGo?>(null)
+    val pushToken: MutableLiveData<String?> = MutableLiveData(null)
 }
 
 data class PageEvent(val type:PageEventType, val id: String = "", var data:Any? = null, val eventType:String? = null, val hashId: Int = -1)

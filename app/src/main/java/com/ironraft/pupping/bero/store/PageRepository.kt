@@ -6,11 +6,13 @@ import android.provider.Settings
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.jaredrummler.android.device.DeviceName
 import com.lib.page.PagePresenter
 import com.lib.util.AppUtil
 import com.lib.util.DataLog
-import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
+import com.ironraft.pupping.bero.activityui.ActivitAlertType
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.database.DataBaseManager
@@ -18,9 +20,8 @@ import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
 import com.lib.model.SingleLiveData
-//import com.skeleton.component.dialog.Alert
+import com.lib.page.AppObserver
 import com.skeleton.module.Repository
-import com.skeleton.module.network.ErrorType
 import com.skeleton.sns.SnsManager
 import com.skeleton.sns.SnsUser
 import com.skeleton.sns.SnsUserInfo
@@ -33,19 +34,20 @@ enum class RepositoryEvent{
     LoginUpdate, LoginUpdated
 }
 
-class PageRepository (ctx: Context,
-                      val storage: StoragePreference,
-                      val dataBaseManager: DataBaseManager,
-                      val dataProvider: DataProvider,
-                      val apiManager: ApiManager,
-                      val pageModel: ActivityModel,
-                      val pagePresenter: PagePresenter,
-                      val shareManager:ShareManager,
-                      val snsManager: SnsManager,
-                      val topic:Topic,
-                      private val interceptor: ApiInterceptor
-
-
+class PageRepository (
+    ctx: Context,
+    val storage: StoragePreference,
+    val dataBaseManager: DataBaseManager,
+    val dataProvider: DataProvider,
+    val apiManager: ApiManager,
+    val pageModel: ActivityModel,
+    val pagePresenter: PagePresenter,
+    val appObserver: AppObserver,
+    val appSceneObserver: AppSceneObserver,
+    val shareManager:ShareManager,
+    val snsManager: SnsManager,
+    val topic:Topic,
+    private val interceptor: ApiInterceptor
 ) : Repository(ctx){
     companion object {
         var deviceID:String = "" ; private set
@@ -68,36 +70,20 @@ class PageRepository (ctx: Context,
         dataProvider.request.observe(owner, Observer{apiQ: ApiQ?->
             apiQ?.let {
                 apiManager.load(it)
-                if(!it.isOptional) {
-                    if (it.isLock) {
-                        pagePresenter.loading(true)
-                    } else {
-                        pagePresenter.loading(false)
-                    }
-                }
+                if(!it.isOptional) pagePresenter.loading(it.isLock)
                 dataProvider.request.value = null
             }
-
         })
 
         apiManager.event.observe(owner, Observer{ evt ->
             evt?.let {
                 when (it){
                     ApiEvent.Join -> {
-                        DataLog.d("apiManager initate", appTag)
                         loginCompleted()
-                        dataProvider.user.snsUser?.let { snsUser->
-                            apiManager.initateApi(snsUser)
-                        }
+                        dataProvider.user.snsUser?.let { snsUser->  apiManager.initateApi(snsUser) }
                     }
-                    ApiEvent.Initate -> {
-                        DataLog.d("apiManager initate", appTag)
-                        loginCompleted()
-                    }
-                    ApiEvent.Error -> {
-                        DataLog.d("apiManager error", appTag)
-                        clearLogin()
-                    }
+                    ApiEvent.Initate -> { loginCompleted() }
+                    ApiEvent.Error -> { clearLogin() }
                 }
                 apiManager.event.value = null
             }
@@ -118,9 +104,7 @@ class PageRepository (ctx: Context,
                 dataProvider.error.postValue(null)
                 if (!it.isOptional) {
                     pagePresenter.loaded()
-                    val msg =
-                        if ( it.errorType != ErrorType.API ) ctx.getString(R.string.alert_apiErrorServer)
-                        else it.msg
+                    appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.ApiError, error = it)
                     /*
                     val builder = Alert.Builder(pagePresenter.activity)
                     builder.setTitle(R.string.alertApi)
@@ -128,6 +112,10 @@ class PageRepository (ctx: Context,
                     */
                 }
             }
+
+        })
+
+        appObserver.pushToken.observe(owner, Observer{ token ->
 
         })
         setupSetting()
@@ -198,13 +186,11 @@ class PageRepository (ctx: Context,
         snsManager.requestAllLogOut()
         pagePresenter.loaded()
         status.value = RepositoryStatus.Ready
-        event.value = RepositoryEvent.LoginUpdate
         event.value = RepositoryEvent.LoginUpdated
-        //retryRegisterPushToken()
+        retryRegisterPushToken()
     }
 
    fun autoSnsLogin() {
-
         val user = dataProvider.user.snsUser
         val token = storage.authToken
         DataLog.d("$user",appTag)
@@ -242,6 +228,61 @@ class PageRepository (ctx: Context,
         DataLog.d("isLogin token $token", appTag)
         DataLog.d("isLogin token ${token.isNotEmpty()}", appTag)
         return token.isNotEmpty()
+    }
+
+
+    fun setupPush(isOn:Boolean){
+        storage.isReceivePush = isOn
+        if (isOn) {
+            retryRegisterPushToken()
+        } else {
+            val token = storage.registPushToken
+            storage.registPushToken = ""
+            storage.retryPushToken = token
+            registPushToken("")
+        }
+    }
+
+    private fun retryRegisterPushToken(){
+        if (!storage.isReceivePush) {
+            return
+        }
+        if (storage.retryPushToken.isNotEmpty()) {
+            DataLog.d("retryRegisterPushToken " + storage.retryPushToken, appTag)
+            registPushToken(storage.retryPushToken)
+        }
+    }
+    fun onCurrentPushToken(token:String) {
+        if (!storage.isReceivePush) {
+            storage.retryPushToken = token
+            return
+        }
+        if (storage.registPushToken == token) return
+        DataLog.d("onCurrentPushToken", appTag)
+        when (status.value) {
+            RepositoryStatus.Initate -> storage.retryPushToken = token
+            RepositoryStatus.Ready -> registPushToken(token)
+            else -> {}
+        }
+    }
+
+    private fun registPushToken(token:String) {
+        storage.retryPushToken = ""
+        storage.registPushToken = token
+        val params = HashMap<String, Any>()
+        params["deviceId"] = deviceID
+        params["token"] = token
+        params["platform"] = SystemEnvironment.platform
+        val q = ApiQ(appTag, ApiType.RegistPush, body = params, isOptional = true)
+        dataProvider.requestData(q)
+    }
+    private fun registedPushToken(token:String) {
+        DataLog.d("registedPushToken", appTag)
+    }
+    private fun registFailPushToken(token:String) {
+        storage.retryPushToken = token
+        storage.registPushToken = ""
+        DataLog.d("registFailPushToken", appTag)
     }
 
 }

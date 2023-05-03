@@ -55,8 +55,9 @@ data class SceneEvent(val type: SceneEventType,
 class AppSceneObserver {
     val event = MutableLiveData<SceneEvent?>(null)
     val alert = MutableLiveData<ActivitAlertEvent?>(null)
-
 }
+
+
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalAnimationApi::class)
@@ -65,83 +66,18 @@ fun PageApp(
     pageNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val tag = "PageApp"
-    val repository = koinInject<PageRepository>()
     val activityModel = koinInject<ActivityModel>()
     val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
-    val viewModel = koinInject<AppSceneObserver>()
 
     val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
 
-    var isInit by remember { mutableStateOf(false) }
-    var isLaunching by remember { mutableStateOf(false) }
+    val viewModel = koinInject<AppSceneObserver>()
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
     var isLoading by remember { mutableStateOf(false) }
     var isLock by remember { mutableStateOf(false) }
 
-    fun onStoreInit():Boolean{
-        if ( SystemEnvironment.firstLaunch && !isLaunching) {
-            pagePresenter.changePage(
-                PageProvider.getPageObject(PageID.Intro)
-            )
-            return true
-        }
-        return false
-    }
-    fun onPageInit(){
-        isLoading = false
-        isLaunching = true
-        PageLog.d("onPageInit", tag = tag)
-        if (!repository.isLogin) {
-            isInit = false
-            if (pagePresenter.currentPage?.pageID != PageID.Login.value) {
-                pagePresenter.changePage(
-                    PageProvider.getPageObject(PageID.Login)
-                )
-            }
-            return
-        }
-        if (isInit && pagePresenter.currentPage?.pageID != PageID.Login.value) {
-            PageLog.d("onPageInit already init", tag = tag)
-            return
-        }
-        isInit = true
-        pagePresenter.changePage(
-            PageProvider.getPageObject(PageID.Walk)
-        )
-        /*
-        if !self.appObserverMove(self.appObserver.page) {
-            self.pagePresenter.changePage(
-                PageProvider.getPageObject(.walk)
-            )
-        }
 
-        if self.appObserver.apns != nil  {
-            self.appSceneObserver.event = .debug("apns exist")
-            self.appSceneObserver.alert = .recivedApns
-        }
-        */
-    }
-
-    val repositoryEvent = repository.event.observeAsState()
-    val event = viewModel.event.observeAsState()
-    event.value.let { evt ->
-        evt?.let {
-            when (it.type){
-                SceneEventType.Initate -> onPageInit()
-                else -> {}
-            }
-        }
-    }
-
-    repositoryEvent.value.let { evt ->
-        when (evt){
-            RepositoryEvent.LoginUpdated ->
-                if ( !onStoreInit() ) onPageInit()
-            else -> {}
-        }
-    }
     //val isTest by viewModel.isTest.collectAsState()
     //val backStackEntry by pageNavController.currentBackStackEntryAsState()
     Box(modifier = Modifier.fillMaxSize()){

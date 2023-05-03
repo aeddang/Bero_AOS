@@ -9,7 +9,9 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
     companion object {
         private const val VS = "1.000"
         private const val initate = "initate" + VS
+        private const val isReceivePush = "isReceivePush" + VS
         private const val retryPushToken = "retryPushToken" + VS
+        private const val registPushToken = "registPushToken" + VS
         private const val loginType = "loginType" + VS
         private const val loginToken = "loginToken" + VS
         private const val loginId = "loginId" + VS
@@ -23,9 +25,17 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         get(){ return get(StoragePreference.initate, false) as Boolean }
         set(value:Boolean){ put(StoragePreference.initate, value) }
 
+    var isReceivePush:Boolean
+        get(){ return get(StoragePreference.isReceivePush, true) as Boolean }
+        set(value:Boolean){ put(StoragePreference.isReceivePush, value) }
+
     var retryPushToken:String
         get(){ return get(StoragePreference.retryPushToken, "") as String }
         set(value:String){ put(StoragePreference.retryPushToken, value) }
+
+    var registPushToken:String
+        get(){ return get(StoragePreference.registPushToken, "") as String }
+        set(value:String){ put(StoragePreference.registPushToken, value) }
 
     var loginType:String
         get(){ return get(StoragePreference.loginType, "") as String }

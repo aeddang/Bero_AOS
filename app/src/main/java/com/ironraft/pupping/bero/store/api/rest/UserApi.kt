@@ -20,6 +20,12 @@ interface UserApi {
         @Part("name") name: RequestBody? = null,
         @Part contents: MultipartBody.Part?
     ): ApiResponse<Any?>?
+
+    @GET(Api.User.User)
+    suspend fun post(
+        @Body params: Map<String, String>
+    ): ApiResponse<Any?>?
+
 }
 
 data class UserData(

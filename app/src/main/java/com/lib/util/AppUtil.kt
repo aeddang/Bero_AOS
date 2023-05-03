@@ -283,7 +283,7 @@ object AppUtil {
             val systemProperties = Class.forName("android.os.SystemProperties")
             val md = systemProperties.getMethod("get", String::class.java, String::class.java)
             val result = md.invoke(systemProperties, "persist.sys.homet.debug", "0") as String
-//            Log.e(appTag, "getDebugLevel() value [$result]")
+            //Log.e(appTag, "getDebugLevel() value [$result]")
             if (result != "1") 0
             else 1
         } catch (e: Exception) {

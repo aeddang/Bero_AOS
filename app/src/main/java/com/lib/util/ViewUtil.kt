@@ -23,7 +23,6 @@ fun Toast.showCustomToast(message: String, activity: Activity)
         R.layout.ui_toast,
         activity.findViewById(R.id.toast_container)
     )
-
     val textView = layout.findViewById<TextView>(R.id.toast_text)
     textView.text = message
     this.apply {

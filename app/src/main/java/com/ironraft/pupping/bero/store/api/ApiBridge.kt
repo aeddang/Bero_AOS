@@ -48,6 +48,7 @@ class ApiBridge(
             ApiType.AuthReflash -> auth.reflash(apiQ.body as Map<String, String>)
             ApiType.GetUser -> user.get((apiQ.requestData as? SnsUser)?.snsID ?: "")
             ApiType.UpdateUser -> getUpdateUserProfile( snsUser?.snsID,  apiQ.requestData as? ModifyUserProfileData )
+            ApiType.RegistPush -> user.post(apiQ.body as Map<String, String>)
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
             ApiType.GetMission -> mission.getMissions(
                 apiQ.query?.get(ApiField.userId), apiQ.query?.get(ApiField.petId), apiQ.query?.get(ApiField.missionCategory),
