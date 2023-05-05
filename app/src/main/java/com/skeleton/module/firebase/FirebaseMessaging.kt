@@ -15,6 +15,9 @@ import com.google.firebase.messaging.RemoteMessage
 import com.ironraft.pupping.bero.MainActivity
 import com.ironraft.pupping.bero.R
 import com.lib.model.WhereverYouCanGo
+import com.lib.page.AppObserver
+import com.lib.page.PageApns
+import com.lib.page.PageComposeable
 import com.lib.util.DataLog
 import com.lib.util.Log
 import java.util.*
@@ -32,16 +35,19 @@ class FirebaseMessaging()  : FirebaseMessagingService() {
         remoteMessage.data.isNotEmpty().let {
             pageJson = iwillGo.stringfy()
         }
+
         remoteMessage.notification?.let {
             DataLog.d("Message Notification forground : ${remoteMessage.data} , remoteMessage.notification : " +
                         "${remoteMessage.notification}" , appTag
             )
-            createNotification(it.title, it.body,  pageJson)
+            if (PageComposeable.active) AppObserver.pageApns.postValue(PageApns(it.title, it.body, iwillGo))
+            else createNotification(it.title, it.body,  pageJson)
         }
     }
 
     override fun onNewToken(token: String) {
         Log.d(appTag, "onNewToken $token")
+        AppObserver.pushToken.postValue(token)
     }
 
     private fun handleNow(messageParam: HashMap<String, Any>) {
@@ -54,7 +60,6 @@ class FirebaseMessaging()  : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(PUSH_PAGE_KEY , pageJson)
-
         if (pageJson != null) {
             DataLog.d(pageJson, appTag)
         }
@@ -64,7 +69,7 @@ class FirebaseMessaging()  : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getActivity(
                 this,  /* Request code */reCode, intent,
-                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_ONE_SHOT
             )
         } else {
             pendingIntent = PendingIntent.getActivity(
@@ -72,6 +77,7 @@ class FirebaseMessaging()  : FirebaseMessagingService() {
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
+
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)

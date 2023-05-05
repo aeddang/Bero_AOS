@@ -35,7 +35,7 @@ fun Radio(
     title:String? = null,
     description:String? = null,
     isMultiSelectAble:Boolean = false,
-    buttons: ArrayList<RadioBtnData>? = null,
+    buttons: List<RadioBtnData>? = null,
     cancel:() -> Unit,
     action:(Int, Boolean) -> Unit
 ) {
@@ -81,13 +81,13 @@ fun Radio(
                     }
                     Column(
                         Modifier.wrapContentSize(),
-                        verticalArrangement = Arrangement.spacedBy(DimenMargin.tiny.dp)
+                        verticalArrangement = Arrangement.spacedBy(DimenMargin.micro.dp)
                     ) {
                         buttons?.let { btns ->
                             btns.forEach { btn ->
                                 var isCheck by remember { mutableStateOf(btn.isSelected) }
                                 RadioButton(
-                                    type = RadioButtonType.CheckOn,
+                                    type = RadioButtonType.Text,
                                     isChecked = isCheck,
                                     icon = btn.icon,
                                     text = btn.title,
@@ -95,6 +95,7 @@ fun Radio(
                                 ) {
                                     isCheck = !isCheck
                                     btn.isSelected = isCheck
+                                    action(btn.index, isCheck)
 
                                 }
                             }
@@ -148,7 +149,9 @@ fun RadioComposePreview(){
                 RadioBtnData(title = "btn1", index = 1)
             ),
             cancel = {
-
+                coroutineScope.launch {
+                    modalSheetState.hide()
+                }
             },
             action = { idx , isSelect ->
 

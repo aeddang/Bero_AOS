@@ -1,5 +1,4 @@
-package com.ironraft.pupping.bero.scene.page
-
+package com.ironraft.pupping.bero.scene.page.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -18,18 +17,12 @@ import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
 import com.lib.util.ComponentLog
 import com.skeleton.theme.ColorBrand
-import kotlinx.coroutines.selects.select
 import org.koin.compose.koinInject
 
-
-/**
- * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked] lambda
- * that triggers canceling the order and passes the final order to [onSendButtonClicked] lambda
- */
 @Composable
-fun PageTest(
+fun PageAddDog(
     modifier: Modifier = Modifier,
-    page:PageObject? = null
+    page: PageObject? = null
 ){
     val repository = koinInject<PageRepository>()
     val appSceneObserver = koinInject<AppSceneObserver>()
@@ -99,7 +92,7 @@ fun PageTest(
 
 @Preview
 @Composable
-fun PageTestPreview(){
-    PageTest(
+fun PageAddDogPreview(){
+    com.ironraft.pupping.bero.scene.page.PageTest(
     )
 }

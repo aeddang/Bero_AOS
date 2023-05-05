@@ -53,7 +53,8 @@ data class ApiSuccess<T>(
 data class ApiError<T>(
     val type:T , val errorType:ErrorType ,
     val code:String?, val msg:String? = null,
-    val id: String? = null,  val isOptional:Boolean = false
+    val id: String? = null,  val isOptional:Boolean = false,
+    val requestData:Any? = null
 )
 data class ApiGroup<T>(
     val type:T, var group: ArrayList<ApiSuccess<T>>,

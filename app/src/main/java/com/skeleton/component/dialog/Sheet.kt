@@ -52,7 +52,7 @@ fun Sheet(
     @DrawableRes image:Int? = null,
     point:Int? = null,
     exp:Double? = null,
-    buttons: ArrayList<SheetBtnData>? = null,
+    buttons: List<SheetBtnData>? = null,
     buttonColor: Color? = null,
     cancel:() -> Unit,
     action:(Int) -> Unit
@@ -104,7 +104,7 @@ fun Sheet(
                             painterResource(it),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            modifier = Modifier.height(146.dp)
+                            modifier = Modifier.fillMaxWidth().height(146.dp)
                         )
                     }
                     if (point != null || exp != null ) {
@@ -217,9 +217,10 @@ fun SheetComposePreview(){
             sheetState = modalSheetState,
             title = "SheetRadio",
             description = "description",
+            image = R.drawable.onboarding_img_0,
             exp = 100.0,
             point = 99,
-            buttons = arrayListOf<SheetBtnData>(
+            buttons = listOf<SheetBtnData>(
                 SheetBtnData(title = "btn0", index = 0),
                 SheetBtnData(title = "btn1", index = 1)
             ),

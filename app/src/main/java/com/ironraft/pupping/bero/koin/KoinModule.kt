@@ -10,7 +10,7 @@ import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiManager
 import com.ironraft.pupping.bero.store.Topic
 import com.ironraft.pupping.bero.store.database.DataBaseManager
-
+import com.ironraft.pupping.bero.store.DeepLinkManager
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageAppViewModel
 import com.lib.page.PagePresenter
@@ -35,11 +35,11 @@ val pageModelModule = module {
     singleOf(::ApiInterceptor)
     singleOf(::AppSceneObserver)
     singleOf(::ApiManager)
-    singleOf(::ShareManager)
     singleOf(::Topic)
     singleOf(::PageComposePresenter) { bind<PagePresenter>() } //인터페이스 지정 필요시
     singleOf(::SnsManager)
     singleOf(::PageRepository)
+    singleOf(::DeepLinkManager)
     //
     viewModelOf(::BasePageViewModel)
     //scope<MainActivity>(){} 싱글 activity 확장시 사용

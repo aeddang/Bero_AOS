@@ -3,6 +3,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.*
 import android.net.ConnectivityManager.*
 import android.os.Build
@@ -20,11 +21,14 @@ import androidx.navigation.NavHostController
 import com.lib.util.PageLog
 import com.lib.util.showCustomToast
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.system.exitProcess
 
 abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
+    companion object {
+        var active = false
+    }
+
     private val appTag = javaClass.simpleName
     abstract fun getPageActivityPresenter(): PageComposePresenter
     abstract fun getPageActivityViewModel(): PageAppViewModel
@@ -491,6 +495,14 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         hasPermissions(permissions)?.let { requestPermissionResult(requestCode, it.first, it.second) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        PageComposeable.active = true
+    }
 
+    override fun onStop() {
+        super.onStop()
+        PageComposeable.active = false
+    }
 
 }

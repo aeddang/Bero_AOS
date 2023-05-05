@@ -19,8 +19,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
-import com.ironraft.pupping.bero.activityui.ActivityAlertController
+import com.ironraft.pupping.bero.activityui.*
 import com.ironraft.pupping.bero.scene.component.tab.BottomTab
 import com.ironraft.pupping.bero.scene.page.intro.PageIntro
 import com.ironraft.pupping.bero.scene.page.login.PageLogin
@@ -55,6 +54,9 @@ data class SceneEvent(val type: SceneEventType,
 class AppSceneObserver {
     val event = MutableLiveData<SceneEvent?>(null)
     val alert = MutableLiveData<ActivitAlertEvent?>(null)
+    val sheet = MutableLiveData<ActivitSheetEvent?>(null)
+    val select = MutableLiveData<ActivitSelectEvent?>(null)
+    val radio = MutableLiveData<ActivitRadioEvent?>(null)
 }
 
 
@@ -76,7 +78,6 @@ fun PageApp(
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
     var isLoading by remember { mutableStateOf(false) }
     var isLock by remember { mutableStateOf(false) }
-
 
     //val isTest by viewModel.isTest.collectAsState()
     //val backStackEntry by pageNavController.currentBackStackEntryAsState()
@@ -102,7 +103,11 @@ fun PageApp(
                 }
             }
         }
+        ActivitySelectController()
+        ActivityRadioController()
+        ActivitySheetController()
         ActivityAlertController()
+
     }
 
 }

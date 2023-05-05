@@ -1,32 +1,52 @@
-package com.ironraft.pupping.bero.scene.page
+package com.ironraft.pupping.bero.store
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.lib.model.IwillGo
+import com.lib.model.SingleLiveData
 import com.lib.model.WhereverYouCanGo
 import com.lib.page.PageLifecycleUser
+import com.lib.page.PagePresenter
 import com.lib.util.Log
 import com.lib.util.showCustomToast
 import com.skeleton.module.firebase.FirebaseDynamicLink
-import com.ironraft.pupping.bero.store.Shareable
 
 
-class DeepLinkManager(val activity: Activity, val repo: PageRepository) : FirebaseDynamicLink.Delegate, PageLifecycleUser {
+data class Shareable (
+    val pageID:PageID = PageID.Intro,
+    var params:HashMap<String,Any?>? = null,
+    val text:String? = null,
+    var image:String? = null,
+    val isPopup:Boolean = true,
+    val shareImage:Bitmap? = null
+)
+
+class ShareManager {
+    val share = SingleLiveData<Shareable?>(null)
+}
+
+class DeepLinkManager(
+    val pagePresenter: PagePresenter
+) : FirebaseDynamicLink.Delegate, PageLifecycleUser
+
+{
+    val shareManager: ShareManager = ShareManager()
     private var appTag = javaClass.simpleName
-    private var dynamicLink: FirebaseDynamicLink = FirebaseDynamicLink(activity)
+    private var dynamicLink: FirebaseDynamicLink = FirebaseDynamicLink(pagePresenter.activity)
 
     init {
         dynamicLink.setOnDynamicLinkListener(this)
     }
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner){
-        repo.shareManager.share.observe(owner, Observer{shareable: Shareable?->
+        shareManager.share.observe(owner, Observer{shareable: Shareable?->
             shareable ?: return@Observer
             sendSns(
                 String(),
@@ -37,12 +57,12 @@ class DeepLinkManager(val activity: Activity, val repo: PageRepository) : Fireba
                 shareable.params,
                 shareable.isPopup
             )
-            repo.shareManager.share.value = null
+            shareManager.share.value = null
         })
     }
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner){
-        repo.shareManager.share.removeObservers(owner)
+        shareManager.share.removeObservers(owner)
     }
 
     fun changeActivityIntent(intent: Intent) {
@@ -57,16 +77,16 @@ class DeepLinkManager(val activity: Activity, val repo: PageRepository) : Fireba
     }
 
     override fun onCreateDynamicLinkComplete(dynamicLink: String) {
-        repo.pagePresenter.loaded()
+        pagePresenter.loaded()
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.putExtra(Intent.EXTRA_TEXT, dynamicLink)
         shareIntent.type = "text/plain"
-        activity.startActivity(Intent.createChooser(shareIntent, "share"))
+        pagePresenter.activity.startActivity(Intent.createChooser(shareIntent, "share"))
     }
 
     override fun onCreateDynamicLinkError() {
-        repo.pagePresenter.loaded()
-        Toast(activity).showCustomToast("DynamicLinkError", activity)
+        pagePresenter.loaded()
+        Toast(pagePresenter.activity).showCustomToast("DynamicLinkError", pagePresenter.activity)
     }
 
     fun sendSns(
@@ -91,10 +111,10 @@ class DeepLinkManager(val activity: Activity, val repo: PageRepository) : Fireba
 
     fun goPage(iwillGo: IwillGo) {
         Log.d(appTag, "goPage $iwillGo")
-        val pageObj = iwillGo.page
+        val pageObj = PageProvider.getPageObject(iwillGo)
         pageObj ?: return
-        repo.pagePresenter.changePage(pageObj)
+        if (pageObj.isHome) pagePresenter.changePage(pageObj)
+        else pagePresenter.openPopup(pageObj)
     }
 
 }
-

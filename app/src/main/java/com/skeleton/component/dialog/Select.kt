@@ -6,8 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +19,7 @@ import kotlinx.coroutines.launch
 data class SelectBtnData(
     val title:String,
     val index :Int,
+    var isSelected:Boolean = false,
     var tip:String? = null,
     @DrawableRes var icon:Int? = null
 
@@ -30,7 +30,7 @@ data class SelectBtnData(
 @Composable
 fun Select(
     sheetState: ModalBottomSheetState,
-    buttons: ArrayList<SelectBtnData>? = null,
+    buttons: List<SelectBtnData>? = null,
     cancel:() -> Unit,
     action:(Int) -> Unit
 ) {
@@ -45,12 +45,17 @@ fun Select(
                 ) {
                     buttons?.let { btns ->
                         btns.forEach { btn ->
+                            var isSelect by remember { mutableStateOf(btn.isSelected) }
+
                             SelectButton(
                                 type = SelectButtonType.Small,
                                 icon = btn.icon,
                                 text = btn.title,
-                                description = btn.tip
+                                description = btn.tip,
+                                isSelected = isSelect
                             ) {
+                                isSelect = !isSelect
+                                btn.isSelected = isSelect
                                 action(btn.index)
                             }
                         }
@@ -81,9 +86,21 @@ fun SelectComposePreview(){
     Box(modifier = Modifier
         .fillMaxSize()
         .background(ColorApp.white)) {
+        Button(
+            onClick = {
+                coroutineScope.launch {
+                    if (modalSheetState.isVisible)
+                        modalSheetState.hide()
+                    else
+                        modalSheetState.show()
+                }
+            },
+        ) {
+            Text(text = "Open Select")
+        }
         Select(
             sheetState = modalSheetState,
-            buttons = arrayListOf<SelectBtnData>(
+            buttons = listOf<SelectBtnData>(
                 SelectBtnData(title = "btn0", index = 0),
                 SelectBtnData(title = "btn1", index = 1)
             ),

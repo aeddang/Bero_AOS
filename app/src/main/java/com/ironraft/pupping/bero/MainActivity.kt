@@ -10,12 +10,16 @@ import androidx.core.content.ContextCompat
 import com.lib.page.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.tasks.OnCompleteListener
+import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
+import com.ironraft.pupping.bero.activityui.ActivitAlertType
+import com.ironraft.pupping.bero.store.DeepLinkManager
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.RepositoryEvent
 import com.ironraft.pupping.bero.store.SystemEnvironment
+import com.lib.model.IwillGo
 import com.lib.util.AppUtil
 import com.lib.util.DataLog
 import com.lib.util.PageLog
@@ -30,6 +34,7 @@ class MainActivity : PageComposeable() {
     lateinit var pagePresenter: PagePresenter
     lateinit var snsManager: SnsManager
     lateinit var appSceneObserver:AppSceneObserver
+    lateinit var deepLinkManager: DeepLinkManager
     private val appTag = javaClass.simpleName
     private val scope = PageCoroutineScope()
 
@@ -52,14 +57,15 @@ class MainActivity : PageComposeable() {
         repository = get()
         pagePresenter = get()
         appSceneObserver = get()
+        deepLinkManager = get()
         snsManager.setup(this)
         repository.setDefaultLifecycleOwner(this)
+        deepLinkManager.setDefaultLifecycleOwner(this)
         setupComposeScreen()
         setupObserver()
     }
     @OptIn(ExperimentalAnimationApi::class)
     private fun setupComposeScreen(){
-        requsetNotificationPermission()
         setContent {
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
@@ -104,6 +110,7 @@ class MainActivity : PageComposeable() {
     }
     private fun onPageInit(){
         isLaunching = true
+        requsetNotificationPermission()
         PageLog.d("onPageInit", appTag)
         if (!repository.isLogin) {
             isInit = false
@@ -119,24 +126,39 @@ class MainActivity : PageComposeable() {
             return
         }
         isInit = true
+
+        AppObserver.pageApns.value?.let {apns ->
+            if (!appObserverMove(apns.page)) {
+                pagePresenter.changePage(
+                    PageProvider.getPageObject(PageID.Walk)
+                )
+                appSceneObserver.alert.value = ActivitAlertEvent(
+                    ActivitAlertType.RecivedApns, apns = apns
+                )
+            }
+            AppObserver.pageApns.value = null
+            return
+        }
         pagePresenter.changePage(
             PageProvider.getPageObject(PageID.Walk)
         )
-        /*
-        if !self.appObserverMove(self.appObserver.page) {
-            self.pagePresenter.changePage(
-                PageProvider.getPageObject(.walk)
-            )
+    }
+    private fun appObserverMove(iwg:IwillGo? = null) : Boolean {
+        iwg?.let {iwg ->
+            val apnsPage = PageProvider.getPageObject(iwg)
+            apnsPage?.let { page->
+                if (page.isHome) pagePresenter.changePage(page)
+                else pagePresenter.openPopup(page)
+                return page.isHome
+            }
         }
-        if self.appObserver.apns != nil  {
-            self.appSceneObserver.event = .debug("apns exist")
-            self.appSceneObserver.alert = .recivedApns
-        }
-        */
+        return false
     }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        //if (currentPage != null) { deepLinkManager.changeActivityIntent(intent) }
+        if (currentPage != null) {
+            deepLinkManager.changeActivityIntent(intent)
+        }
     }
 
     override fun onResume() {
@@ -152,8 +174,8 @@ class MainActivity : PageComposeable() {
         scope.destoryJob()
         repository.disposeDefaultLifecycleOwner(this)
         repository.disposeLifecycleOwner(this)
-        //deepLinkManager.disposeDefaultLifecycleOwner(this)
-        //deepLinkManager.disposeLifecycleOwner(this)
+        deepLinkManager.disposeDefaultLifecycleOwner(this)
+        deepLinkManager.disposeLifecycleOwner(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -170,6 +192,7 @@ class MainActivity : PageComposeable() {
             }
             val token = task.result
             DataLog.d("Fetching FCM registration token -> $token", appTag)
+            AppObserver.pushToken.value = token
         })
     }
 

@@ -89,10 +89,9 @@ class ApiManager(
                     if ( accountManager?.respondApi(success) != true ){
                         result.postValue(success)
                     }
-
                 },
                 { type , code , msg ->
-                    val e = ApiError(apiQ.type, type, code, msg, apiQ.id, apiQ.isOptional)
+                    val e = ApiError(apiQ.type, type, code, msg, apiQ.id, apiQ.isOptional, apiQ.requestData)
                     DataLog.e(e,appTag)
                     if (code == ApiCode.invalidToken && apiQ.type != ApiType.AuthReflash) {
                         apiQs.add(apiQ)

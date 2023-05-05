@@ -44,7 +44,6 @@ class PageRepository (
     val pagePresenter: PagePresenter,
     val appObserver: AppObserver,
     val appSceneObserver: AppSceneObserver,
-    val shareManager:ShareManager,
     val snsManager: SnsManager,
     val topic:Topic,
     private val interceptor: ApiInterceptor
@@ -114,9 +113,18 @@ class PageRepository (
             }
 
         })
-
-        appObserver.pushToken.observe(owner, Observer{ token ->
-
+        AppObserver.pushToken.observe(owner, Observer{ token ->
+            token?.let {
+                onCurrentPushToken(it)
+            }
+        })
+        AppObserver.pageApns.observe(owner, Observer{ apns ->
+            apns?.let {
+                appSceneObserver.alert.value = ActivitAlertEvent(
+                    ActivitAlertType.RecivedApns, apns = apns
+                )
+                AppObserver.pageApns.value = null
+            }
         })
         setupSetting()
     }
@@ -126,6 +134,7 @@ class PageRepository (
         dataProvider.removeObserve(owner)
         accountManager.disposeDefaultLifecycleOwner(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
+        AppObserver.disposeDefaultLifecycleOwner(owner)
 
     }
 
@@ -163,6 +172,34 @@ class PageRepository (
             storage.loginType)
     }
 
+
+    private fun respondApi(res:ApiSuccess<ApiType>){
+        //self.accountManager.respondApi(res, appSceneObserver: appSceneObserver)
+        //self.walkManager.respondApi(res)
+        when (res.type) {
+            ApiType.RegistPush -> {
+                val token = res.requestData as? String?
+                token?.let { registedPushToken(it) }
+            }
+            //ApiType.getChatRooms(let page, _) -> if page == 0 { self.onMassageUpdated(res) }
+            //ApiType.getAlarm(let page, _) -> if page == 0 { self.onAlarmUpdated(res) }
+            //ApiType.sendReport(let reportType, _, _) -> self.appSceneObserver?.event = .toast(reportType.completeMessage)
+            //case .blockUser(_, let isBlock) : self.appSceneObserver?.event = .toast(isBlock ? String.alert.blockUserCompleted : String.alert.unblockUserCompleted)
+            //self.walkManager.resetMapStatus(userFilter: .all)
+            else -> {}
+        }
+    }
+    private fun errorApi(err:ApiError<ApiType>){
+        //self.accountManager.errorApi(err, appSceneObserver: self.appSceneObserver)
+        //self.walkManager.errorApi(err, appSceneObserver: self.appSceneObserver)
+        when (err.type) {
+            ApiType.RegistPush -> {
+                val token = err.requestData as? String?
+                token?.let { registFailPushToken(token) }
+            }
+            else -> {}
+        }
+    }
 
     fun registerSnsLogin(user:SnsUser, info:SnsUserInfo?) {
         DataLog.d("registerSnsLogin $user", appTag)
@@ -219,7 +256,7 @@ class PageRepository (
             //self.dataProvider.requestData(q: .init(id: self.tag, type: .getChatRooms(page: 0), isOptional: true))
             //self.dataProvider.requestData(q: .init(id: self.tag, type: .getAlarm(page: 0)))
         }
-        //retryRegisterPushToken()
+        retryRegisterPushToken()
 
     }
 
@@ -273,7 +310,7 @@ class PageRepository (
         params["deviceId"] = deviceID
         params["token"] = token
         params["platform"] = SystemEnvironment.platform
-        val q = ApiQ(appTag, ApiType.RegistPush, body = params, isOptional = true)
+        val q = ApiQ(appTag, ApiType.RegistPush, body = params, isOptional = true, requestData = token)
         dataProvider.requestData(q)
     }
     private fun registedPushToken(token:String) {

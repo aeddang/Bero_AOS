@@ -17,7 +17,12 @@ import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
 import org.koin.compose.koinInject
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiType
+import com.lib.page.PageApns
+import com.lib.page.PageComposePresenter
+import com.lib.page.PageObject
 import com.skeleton.module.network.ErrorType
 
 enum class ActivitAlertType {
@@ -35,6 +40,7 @@ data class ActivitAlertEvent(
     @DrawableRes var imgButtons:ArrayList<Int>? = null,
     var isNegative:Boolean = true,
     var error:ApiError<ApiType>? = null,
+    var apns:PageApns? = null,
     var handler: ((Int) -> Unit)? = null
 )
 
@@ -42,6 +48,7 @@ data class ActivitAlertEvent(
 
 @Composable
 fun ActivityAlertController(){
+    val pagePresenter = koinInject<PageComposePresenter>()
     val viewModel = koinInject<AppSceneObserver>()
     var isShow by remember { mutableStateOf(false) }
     var currentEvent: ActivitAlertEvent? by remember { mutableStateOf(null) }
@@ -50,26 +57,41 @@ fun ActivityAlertController(){
     var buttonColor:Color? by remember { mutableStateOf(null) }
     var title:String? by remember { mutableStateOf(null) }
     var text:String? by remember { mutableStateOf(null) }
-
+    var movePage:PageObject? by remember { mutableStateOf(null) }
     val alert = viewModel.alert.observeAsState()
-    alert.value.let {
-        it?.let {evt ->
+    alert.value.let { alertEvt ->
+        alertEvt?.let {evt ->
             title = null
             text = null
             imgButtons = null
+            movePage = null
             buttons = (evt.buttons?.mapIndexed { index, btn -> AlertBtnData(title = btn, index = index) } )
             imgButtons = (evt.imgButtons?.mapIndexed { index, btn -> AlertBtnData(img = btn, index = index) } )
             buttonColor = if (evt.isNegative) ColorApp.black else ColorBrand.primary
             when (evt.type) {
                 ActivitAlertType.RecivedApns -> {
-
-                    title = stringResource(R.string.alert_apns)
+                    evt.apns?.let {apns ->
+                        title = apns.title ?: stringResource(R.string.alert_apns)
+                        text = apns.text
+                        movePage = PageProvider.getPageObject(apns.page)
+                        if (buttons == null) {
+                            buttons = if (movePage == null) {
+                                listOf(AlertBtnData(title = stringResource(id = R.string.confirm),index = 1))
+                            } else {
+                                listOf(
+                                    AlertBtnData(title = stringResource(id = R.string.cancel),index = 0),
+                                    AlertBtnData(title = stringResource(id = R.string.confirm),index = 1)
+                                )
+                            }
+                        }
+                    }
+                    
                 }
                 ActivitAlertType.ApiError -> {
                     title = stringResource(R.string.alert_api)
                     text =
                         if ( evt.error?.errorType != ErrorType.API ) stringResource(R.string.alert_apiErrorServer)
-                        else evt.error?.msg
+                        else evt.error?.msg ?: stringResource(R.string.alert_apiErrorServer)
                     if (buttons == null) buttons = listOf(AlertBtnData(title = stringResource(id = R.string.confirm),index = 1))
                 }
                 ActivitAlertType.Select -> {
@@ -101,16 +123,26 @@ fun ActivityAlertController(){
                 title = title ?: currentEvent?.title,
                 text = text ?: currentEvent?.text,
                 subText = currentEvent?.subText,
-                //tipText = "tipText",
-                //referenceText = "referenceText",
                 imgButtons = imgButtons,
                 buttons = buttons,
                 buttonColor = ColorBrand.primary,
             ) {selected ->
                 isShow = false
-                currentEvent?.handler?.let {
-                    it(selected)
+                currentEvent?.let { evt ->
+                    evt.handler?.let {
+                        it(selected)
+                        return@Alert
+                    }
+                    movePage?.let {page ->
+                        if (selected == 1)
+                            if ( page.isHome) pagePresenter.changePage(page)
+                            else pagePresenter.openPopup(page)
+                        return@Alert
+                    }
                 }
+
+
+
             }
         }
 

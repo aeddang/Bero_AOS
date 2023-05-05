@@ -23,11 +23,19 @@ enum class PageNetworkStatus{
 }
 
 open class AppObserver {
-    val page = MutableLiveData<IwillGo?>(null)
-    val pushToken: MutableLiveData<String?> = MutableLiveData(null)
+    companion object {
+        val pushToken: MutableLiveData<String?> = MutableLiveData(null)
+        val pageApns: MutableLiveData<PageApns?> = MutableLiveData(null)
+
+        fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
+            pushToken.removeObservers(owner)
+            pageApns.removeObservers(owner)
+        }
+    }
 }
 
 data class PageEvent(val type:PageEventType, val id: String = "", var data:Any? = null, val eventType:String? = null, val hashId: Int = -1)
+data class PageApns(val title:String?, val text: String? , val page:IwillGo)
 
 class PageAppViewModel {
     val event = MutableLiveData<PageEvent?>()

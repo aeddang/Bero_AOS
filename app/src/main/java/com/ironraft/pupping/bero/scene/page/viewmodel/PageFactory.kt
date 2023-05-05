@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.viewmodel
 
+import com.lib.model.IwillGo
 import com.lib.page.PageAnimationType
 import com.lib.page.PageObject
 
@@ -50,7 +51,16 @@ class PageProvider {
             pobj.animationType = animationType ?: getType(pageID)
             return pobj
         }
-
+        fun getPageObject(iwillgo:IwillGo, animationType: PageAnimationType? = null) : PageObject? {
+            PageID.values().find { it.value.equals(iwillgo.pageID) }?.let { pageID ->
+                val pobj = PageObject(iwillgo.pageID, iwillgo.pageIDX )
+                pobj.isHome = isHome(pageID)
+                pobj.params = iwillgo.param
+                pobj.animationType = animationType ?: getType(pageID)
+                return pobj
+            }
+            return null
+        }
         fun isHome(pageID:PageID) : Boolean{
             return when (pageID){
                 PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat  -> true

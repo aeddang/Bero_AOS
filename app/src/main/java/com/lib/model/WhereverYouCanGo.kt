@@ -1,6 +1,7 @@
 package com.lib.model
 
 import android.net.Uri
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.lib.page.PageObject
 import com.lib.util.Log
 import org.json.JSONException
@@ -13,14 +14,6 @@ data class IwillGo(
     var isPopup: Boolean = true
 ) {
     private var TAG = javaClass.simpleName
-    val page: PageObject?
-    get() {
-        if( pageID == "" ) return null
-        val pageObject = PageObject(pageID, pageIDX)
-        pageObject.params = param
-        pageObject.isPopup = isPopup
-        return pageObject
-    }
 
     companion object {
         private const val PAGE_KEY = "pageID"

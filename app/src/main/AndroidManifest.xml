@@ -22,6 +22,7 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboard|screenSize"
             android:exported="true">
             <intent-filter>
