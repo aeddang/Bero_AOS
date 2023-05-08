@@ -68,7 +68,7 @@ fun ProfileInfoDescription(
                         )
                     }
                     Text(
-                        stringResource(id = gender.getTitle()),
+                        stringResource(id = gender.title),
                         fontSize = FontSize.thin.sp,
                         color = color
                     )

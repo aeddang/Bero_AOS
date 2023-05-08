@@ -248,8 +248,10 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.libraries.places:places:3.1.0")
     implementation("com.google.maps.android:maps-compose:2.11.3")
+
     /**
-     * Lottie
+     * Lib
      */
     implementation("com.airbnb.android:lottie-compose:6.0.0")
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.10")
 }

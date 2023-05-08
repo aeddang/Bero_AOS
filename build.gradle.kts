@@ -1,3 +1,4 @@
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -5,6 +6,7 @@ buildscript {
         google()
         mavenCentral()
         mavenLocal()
+
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
@@ -19,6 +21,7 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven ( url = "https://oss.sonatype.org/content/repositories/snapshots/" )
+        maven (url = "https://jitpack.io" )
     }
 }
 tasks.register("clean", Delete::class) {

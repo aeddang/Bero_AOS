@@ -40,7 +40,8 @@ enum class PageID(val value: String, val position: Int = 9999){
     My("my", 400),
     Webview("webview"),
     Privacy("privacy"),
-    ServiceTerms("serviceTerms")
+    ServiceTerms("serviceTerms"),
+    AddDog("addDog"),
 }
 
 class PageProvider {

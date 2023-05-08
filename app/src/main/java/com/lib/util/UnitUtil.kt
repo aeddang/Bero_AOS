@@ -3,8 +3,11 @@ package com.lib.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.graphics.RectF
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Patterns
 import android.util.Size
@@ -43,6 +46,31 @@ fun LocalDateTime.toFormatString(
     return this.format(pattern)
 }
 
+fun LocalDate.toAge(trailing:String = "Y", subTrailing:String = "M", isKr:Boolean = false) : String {
+    val now = LocalDate.now()
+    val yy = now.toFormatString("yyyy") ?: "0"
+    val birthYY = toFormatString("yyyy") ?: "0"
+    val mm = now.toFormatString("MM") ?: "0"
+    val birthMM = toFormatString("MM") ?: "0"
+
+    val yearDiff = yy.toInt() - birthYY.toInt()
+    val monthDiff = mm.toInt() - birthMM.toInt()
+    val diff = (yearDiff * 12) + monthDiff
+
+    val age = floor(diff/12.0).toInt()
+    return if (isKr) {
+        (age + 1).toString() + trailing
+    } else {
+        if (age > 0) {
+            val unit = if(age != 1) trailing else trailing.replace("s", "")
+            age.toString() + unit
+        } else {
+            val unit = if(diff != 1 ) subTrailing else subTrailing.replace("s", "")
+            diff.toString() + unit
+        }
+    }
+}
+
 fun String.toDecimalFormat(): String {
     val decimal = round(this.toDouble()).toInt()
     if (decimal > 999) {
@@ -56,6 +84,10 @@ fun String.toFixLength(l:Int, prefix:String = "000000"): String {
     if (length >= l) { return this }
     val fix:String = prefix + this
     return fix.takeLast(l)
+}
+
+fun String.replace(newString:String): String {
+    return replace("%s", newString)
 }
 
 fun Double.secToMinString(div:String = ":") : String {
@@ -117,4 +149,19 @@ fun Uri.getAbsuratePathFromUri(context: Context): String {
         cursor.close()
     }
     return path
+}
+fun Uri.getBitmap(context: Context): Bitmap? {
+    try {
+        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, this))
+        } else {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+        }
+        return bitmap
+
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
+    }
+
 }

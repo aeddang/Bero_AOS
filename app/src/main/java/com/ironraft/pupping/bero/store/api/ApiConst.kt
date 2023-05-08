@@ -29,6 +29,7 @@ object Api {
     object Misc {
         private const val PATH = "misc"
         const val weather = "$VERSION_V1/$PATH/weather"
+        const val codes = "$VERSION_V1/$PATH/codes"
     }
 
     object Mission {
@@ -84,6 +85,8 @@ object ApiField {
     const val birthdate = "birthdate"
     const val sex = "sex"
     const val regNumber = "regNumber"
+    const val animalId = "animalId"
+    const val introduction = "introduction"
     const val level = "level"
     const val weight = "weight"
     const val status = "status"
@@ -91,11 +94,19 @@ object ApiField {
     const val pictureType = "pictureType"
     const val ownerId = "ownerId"
     const val pictureIds = "pictureIds"
+    const val isNeutralized = "isNeutralized"
+    const val isRepresentative = "isRepresentative"
+    const val tagBreed = "tagBreed"
+    const val tagStatus = "tagStatus"
+    const val tagPersonality = "tagPersonality"
+
+    const val category = "category"
+    const val searchText = "searchText"
 }
 
 enum class ApiType{
     AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush,
-    GetWeather,
+    GetWeather, GetCode,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,
     GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPictures,

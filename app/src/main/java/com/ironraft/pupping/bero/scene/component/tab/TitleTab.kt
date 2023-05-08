@@ -190,9 +190,10 @@ fun TitleTab(
                                 }
                             }
                             button.icon?.let {
+
                                 ImageButton(
                                     defaultImage = it,
-                                    iconText = icons[index] ,
+                                    iconText =  if (icons.count() > index) icons[index] else null,
                                     defaultColor = button.color
                                 ) {
                                     action?.let { it(button) }
@@ -228,7 +229,9 @@ fun TitleTabComposePreview() {
             buttons = arrayListOf(TitleTabButtonType.Add, TitleTabButtonType.AddChat),
             icons = arrayListOf("N", null),
             sortButton = "sort"
-        )
+        ){
+
+        }
 
     }
 }

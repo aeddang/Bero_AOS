@@ -3,6 +3,7 @@ package com.ironraft.pupping.bero.store.provider.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import com.lib.util.DataLog
 import com.ironraft.pupping.bero.R
@@ -11,49 +12,56 @@ import com.lib.util.toDate
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
 import com.skeleton.sns.SnsUser
+import com.skeleton.theme.ColorApp
 import java.util.*
 
 enum class Gender {
-    Male, Female;
-    @DrawableRes
-    fun getIcon() : Int {
-        return when(this) {
+    Male, Female, Neutral;
+    @get:DrawableRes
+    val icon:Int
+        get() = when(this) {
             Male -> R.drawable.male
             Female -> R.drawable.female
+            Neutral -> R.drawable.neutrality
         }
-    }
-    @StringRes
-    fun getTitle():Int {
-        return when(this) {
+
+    @get:StringRes
+    val title:Int
+        get() = when(this) {
             Male -> R.string.male
             Female -> R.string.female
+            Neutral -> R.string.neutral
         }
-    }
-    fun getSimpleTitle():String {
-        return when(this) {
-            Male -> "Male"
-            Female -> "Female"
-        }
-    }
 
-    fun coreDataKey() : Int {
-        return when(this) {
+    val color : Color
+        get() = when(this) {
+            Male -> ColorApp.blue
+            Female -> ColorApp.orange
+            Neutral -> ColorApp.green
+        }
+
+
+    val coreDataKey : Int
+        get() = when(this) {
             Male -> 1
             Female -> 2
+            Neutral -> 3
         }
-    }
-    fun apiDataKey() : String {
-        return when(this) {
+
+    val apiDataKey : String
+        get() = when(this) {
             Male -> "Male"
             Female -> "Female"
+            Neutral -> "Neutral"
         }
-    }
+
 
     companion object{
         fun getGender(value:Int) : Gender?{
             return when(value) {
-                1  -> Gender.Male
-                2 -> Gender.Female
+                1  -> Male
+                2 -> Female
+                3 -> Neutral
                 else -> null
             }
         }
@@ -61,6 +69,7 @@ enum class Gender {
             return when(value) {
                 "Male"  -> Gender.Male
                 "Female" -> Gender.Female
+                "Neutral" -> Gender.Neutral
                 else -> null
             }
         }

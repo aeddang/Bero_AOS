@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
@@ -53,7 +54,6 @@ fun PageLogin(
     val snsError = snsManager.error.observeAsState()
     val errorMsg = stringResource(R.string.alert_snsLoginError)
 
-
     fun join() {
         snsUser.value?.let {
             repository.registerSnsLogin(it, info = snsUserInfo.value)
@@ -65,18 +65,25 @@ fun PageLogin(
         )
     }
     snsError.value?.let{
+        it ?: return@let
         when (it.event){
             SnsEvent.Login->
                 appSceneObserver.alert.value = ActivitAlertEvent(
                     type = ActivitAlertType.Alert,
-                    title = errorMsg
+                    title = errorMsg,
+                    isNegative = true
                 )
             SnsEvent.GetProfile -> join()
             else -> {}
         }
+        snsManager.error.value = null
     }
-    snsUser.value?.let {snsManager.getUserInfo() }
-    snsUserInfo.value?.let { join() }
+    snsUser.value?.let {
+        snsManager.getUserInfo()
+    }
+    snsUserInfo.value?.let {
+        join()
+    }
     Box(
         modifier = modifier
             .fillMaxSize()

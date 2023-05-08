@@ -48,6 +48,8 @@ data class PageObject(val pageID:String = "",
     val key:String = UUID.randomUUID().toString()
     val screenID:String get() { return "$pageID$pageIDX"}
 
+    var isInit = false
+
     fun addParam(key:String, value:Any?):PageObject{
         value ?: return this
         if (params == null) {
@@ -61,6 +63,15 @@ data class PageObject(val pageID:String = "",
         if (params == null) return null
         return params!![key]
     }
+     fun copy():PageObject{
+         val copyPage = PageObject(pageID, pageIDX)
+         copyPage.isHome = isHome
+         copyPage.isPopup = isPopup
+         copyPage.params = params
+         copyPage.isInit = false
+         copyPage.animationType = animationType
+         return copyPage
+     }
 }
 
 interface PagePresenter {

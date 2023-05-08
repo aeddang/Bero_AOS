@@ -39,30 +39,25 @@ fun Alert(
     action:(Int) -> Unit
 ) {
     AppTheme {
-        AlertDialog(
-            onDismissRequest = {action(-1)},
-            title = {
-                title?.let {
-                    Text(
-                        it,
-                        fontSize = FontSize.regular.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = ColorApp.black
-                    )
-                }
-            },
-            text = {
-                Column (
+        val titleCompose: @Composable (() -> Unit)? = if (title == null) null else {{
+            Text(
+                title,
+                fontSize = FontSize.regular.sp,
+                fontWeight = FontWeight.Bold,
+                color = ColorApp.black
+            )
+        }}
+        val textCompose: @Composable (() -> Unit)? = if (text == null) null else {
+            {
+                Column(
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    text?.let {
-                        Text(
-                            it,
-                            fontSize = FontSize.light.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = ColorApp.black
-                        )
-                    }
+                    Text(
+                        text,
+                        fontSize = FontSize.light.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = ColorApp.black
+                    )
                     subText?.let {
                         Text(
                             it,
@@ -91,13 +86,19 @@ fun Alert(
                         )
                     }
                 }
-            },
+            }
+        }
+        AlertDialog(
+            onDismissRequest = {action(-1)},
+            title = titleCompose,
+            text = textCompose,
             buttons = {
                 Column (
                     modifier = Modifier.padding(
                         start = DimenMargin.regular.dp,
                         end = DimenMargin.regular.dp,
-                        bottom = DimenMargin.regular.dp
+                        bottom = DimenMargin.regular.dp,
+                        top = DimenMargin.medium.dp
                     ),
                     verticalArrangement = Arrangement.spacedBy(0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally

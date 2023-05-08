@@ -5,89 +5,97 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.lib.util.*
-import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.api.rest.PetData
 import java.time.LocalDate
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.floor
 
 data class ModifyPetProfileData (
     var image:Bitmap? = null,
-    var nickName:String? = null,
-    var species:String? = null,
+    var name:String? = null,
+    var breed:String? = null,
     var gender:Gender? =null,
+    var isNeutralized:Boolean? = null,
+    var isRepresentative:Boolean? = null,
     var birth:LocalDate? = null,
-    var microfin:String? = null,
-    var neutralization:Boolean? = null,
-    var distemper:Boolean? = null,
-    var hepatitis:Boolean? = null,
-    var parovirus:Boolean? = null,
-    var rabies:Boolean? = null,
+    var microchip:String? = null,
+    var animalId:String? = null,
+    var immunStatus:String? = null,
+    var hashStatus:String? = null,
+    var introduction:String? = null,
     var weight:Double? = null,
     var size:Double? = null
-)
+){
+    fun update(data:ModifyPetProfileData) : ModifyPetProfileData {
+        return ModifyPetProfileData(
+            image = data.image ?: image,
+            name = data.name ?: name,
+            breed = data.breed ?: breed,
+            gender = data.gender ?: gender,
+            isNeutralized = data.isNeutralized ?: isNeutralized,
+            isRepresentative = data.isRepresentative ?: isRepresentative,
+            birth = data.birth ?: birth,
+            microchip = data.microchip ?: microchip,
+            animalId = data.animalId ?: animalId,
+            immunStatus = data.immunStatus ?: immunStatus,
+            hashStatus = data.hashStatus ?: hashStatus,
+            introduction = data.introduction ?: introduction,
+            weight = data.weight ?: weight,
+            size = data.size ?: size
+        )
+    }
+}
 
-data class ModifyPlayData (
-    val lv:Int,
-    val expval:Double
-)
 
 class PetProfile {
     companion object{
-        val expRange:Double = 100.0
-        fun getStatusValue(profile:PetProfile?):List<String>? {
-            profile ?: return null
-            val status:ArrayList<String> = arrayListOf()
-            if (profile.neutralization.value == true) {status.add("neutralization")}
-            if (profile.distemper.value == true) {status.add("distemper")}
-            if (profile.hepatitis.value == true) {status.add("hepatitis")}
-            if (profile.parovirus.value == true) {status.add("parovirus")}
-            if (profile.rabies.value == true) {status.add("rabies")}
-            return status
+        fun exchangeListToString(list:List<String>?):String{
+            list?.let { values ->
+                if (values.isEmpty()) return ""
+                return values.reduce { acc, s ->
+                    return "$acc,$s"
+                }.dropLast(1)
+            }
+            return ""
+        }
+        fun exchangeStringToList(str:String?):List<String>{
+            str?.let{ value ->
+                if (value.isEmpty()) return emptyList()
+                return value.split(",")
+            }
+            return emptyList()
         }
 
-        fun getStatusValue(profile:ModifyPetProfileData?):List<String>?{
-            profile ?: return null
-            val status:ArrayList<String> = arrayListOf()
-            if (profile.neutralization == true) {status.add("neutralization")}
-            if (profile.distemper == true) {status.add("distemper")}
-            if (profile.hepatitis == true) {status.add("hepatitis")}
-            if (profile.parovirus == true) {status.add("parovirus")}
-            if (profile.rabies == true) {status.add("rabies")}
-            return status
-        }
     }
     private val appTag = javaClass.simpleName
     var id:String = UUID.randomUUID().toString(); private set
     var petId:Int = 0; private set
     var imagePath:String? = null; private set
     val image:MutableLiveData<Bitmap?> = MutableLiveData<Bitmap?>(null)
-    val nickName:MutableLiveData<String?> = MutableLiveData<String?>(null)
-    val species:MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val name:MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val breed:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val gender:MutableLiveData<Gender?> = MutableLiveData<Gender?>(null)
     val birth:MutableLiveData<LocalDate?> = MutableLiveData<LocalDate?>(null)
-    val exp:MutableLiveData<Double> = MutableLiveData<Double>(0.0)
-    val lv:MutableLiveData<Int> = MutableLiveData<Int>(-1)
-    val prevExp:MutableLiveData<Double> = MutableLiveData<Double>(0.0)
-    val nextExp:MutableLiveData<Double> = MutableLiveData<Double>(0.0)
-    val neutralization:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
-    val distemper:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
-    val hepatitis:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
-    val parovirus:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
-    val rabies:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
+    val isNeutralized:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
 
-    val microfin: MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val immunStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val hashStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val animalId:MutableLiveData<String?> = MutableLiveData<String?>(null)
+    val microchip:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val weight:MutableLiveData<Double?> = MutableLiveData<Double?>(null)
     val size:MutableLiveData<Double?> = MutableLiveData<Double?>(null)
-
+    val introduction:MutableLiveData<String?> = MutableLiveData<String?>(null)
     var isEmpty:Boolean = false; private set
     var isMypet:Boolean = false; private set
-    var totalExerciseDistance: Double? = null; private set
-    var totalExerciseDuration: Double? = null; private set
-    var totalMissionCount: Int? = null; private set
-    var totalWalkCount: Int? = null; private set
+    var exerciseDistance: Double? = null; private set
+    var exerciseDuration: Double? = null; private set
+    val totalWalkCount: MutableLiveData<Int?> = MutableLiveData<Int?>(null)
+
+    var originData:PetData? = null
     var isWith:Boolean = true
+    var isRepresentative:Boolean = false
+    var isFriend:Boolean = false
+    var level:Int? = null
 
     override fun equals(other: Any?): Boolean {
         (other as? PetProfile)?.let {
@@ -95,9 +103,9 @@ class PetProfile {
         }
         return super.equals(other)
     }
-    fun init(nickName:String?,species:String?, gender:Gender?, birth:LocalDate?) : PetProfile{
-        this.nickName.value = nickName
-        this.species.value = species
+    fun init(nickName:String?,breed:String?, gender:Gender?, birth:LocalDate?) : PetProfile{
+        this.name.value = nickName
+        this.breed.value = breed
         this.gender.value = gender
         this.birth.value = birth
         this.isMypet = true
@@ -108,72 +116,87 @@ class PetProfile {
         isMypet = isMyPet
         return this
     }
-    fun init(data:PetData, isMyPet:Boolean): PetProfile{
+    fun init(data:PetData, isMyPet:Boolean, isFriend:Boolean = false, index:Int = -1): PetProfile{
+        if (isMyPet) originData = data
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0
         this.imagePath = data.pictureUrl
-        this.nickName.value = data.name
-        this.species.value = data.breed
+        this.name.value = data.name
+        this.breed.value = data.tagBreed
         this.gender.value = Gender.getGender(data.sex)
-        this.birth.value = data.birthdate?.toDate( "yyyy-MM-dd'T'HH:mm:ss")
-        this.exp.value = (data.experience ?: 0.0).toDouble()
-        this.microfin.value = data.regNumber
+        this.birth.value = data.birthdate?.toDate( )
+        this.introduction.value = data.introduce
+        this.microchip.value = data.regNumber
+        this.animalId.value = data.animalId
         this.weight.value = data.weight
         this.size.value = data.size
-        this.neutralization.value = data.status?.contains("neutralization")
-        this.distemper.value = data.status?.contains("distemper")
-        this.hepatitis.value = data.status?.contains("hepatitis")
-        this.parovirus.value = data.status?.contains("parovirus")
-        this.rabies.value = data.status?.contains("rabies")
-        this.totalExerciseDistance = data.exerciseDistance
-        this.totalExerciseDuration = data.exerciseDuration
-        this.totalWalkCount = data.walkCompleteCnt
-        this.totalMissionCount = data.missionCompleteCnt
-        this.updatedExp()
+        this.isNeutralized.value = data.status?.contains("neutralization")
+        this.immunStatus.value = data.tagStatus
+        this.hashStatus.value = data.tagPersonality
+        this.exerciseDistance = data.exerciseDistance
+        this.exerciseDuration = data.exerciseDuration
+        this.totalWalkCount.value = data.walkCompleteCnt
+        /*
+        if (introduction.value?.isNotEmpty() == true) {
+            data.name?.let {
+                introduction.value = String.pageText.introductionDefault.replace(name)
+            }
+        }
+        */
         return this
     }
     fun removeObservers(owner: LifecycleOwner){
         image.removeObservers(owner)
-        nickName.removeObservers(owner)
-        species.removeObservers(owner)
+        name.removeObservers(owner)
+        breed.removeObservers(owner)
         gender.removeObservers(owner)
         birth.removeObservers(owner)
-        exp.removeObservers(owner)
-        lv.removeObservers(owner)
-        prevExp.removeObservers(owner)
-        nextExp.removeObservers(owner)
-        neutralization.removeObservers(owner)
-        distemper.removeObservers(owner)
-        hepatitis.removeObservers(owner)
-        parovirus.removeObservers(owner)
-        rabies.removeObservers(owner)
-        microfin.removeObservers(owner)
+        introduction.removeObservers(owner)
+        isNeutralized.removeObservers(owner)
+        immunStatus.removeObservers(owner)
+        hashStatus.removeObservers(owner)
+        animalId.removeObservers(owner)
+        microchip.removeObservers(owner)
         weight.removeObservers(owner)
+        size.removeObservers(owner)
+        totalWalkCount.removeObservers(owner)
     }
 
     fun empty(context:Context) : PetProfile{
         this.isEmpty = true
-        this.nickName.value = ""
+        this.name.value = ""
         this.isMypet = true
         return this
     }
 
     fun update(data:ModifyPetProfileData) : PetProfile{
         data.image?.let { this.image.value = it }
-        data.nickName?.let { this.nickName.value = it }
-        data.species?.let { this.species.value = it }
+        data.name?.let { this.name.value = it }
+        data.breed?.let { this.breed.value = it }
         data.gender?.let { this.gender.value = it }
-        data.microfin?.let { this.microfin.value = it }
+        data.microchip?.let { this.microchip.value = it }
         data.birth?.let { this.birth.value = it }
-        data.neutralization?.let { this.neutralization.value = it }
-        data.distemper?.let { this.distemper.value = it }
-        data.hepatitis?.let { this.hepatitis.value = it }
-        data.parovirus?.let { this.parovirus.value = it }
-        data.rabies?.let { this.rabies.value = it }
+        data.isNeutralized?.let { this.isNeutralized.value = it }
+        data.immunStatus?.let { this.immunStatus.value = it }
+        data.hashStatus?.let { this.hashStatus.value = it }
+        data.animalId?.let { this.animalId.value = it }
         data.weight?.let { this.weight.value = it }
         data.size?.let { this.size.value = it }
+        data.introduction?.let  { this.introduction.value = it }
         //ProfileCoreData().update(id: self.id, data: data)
         return this
+    }
+
+    fun missionCompleted(mission:Mission) {
+        if (!mission.isCompleted) return
+        when (mission.type){
+            MissionType.Walk -> {
+                totalWalkCount.value = totalWalkCount.value?.plus(1)
+                exerciseDistance = exerciseDistance?.plus(mission.distance)
+                exerciseDuration = exerciseDuration?.plus(mission.duration)
+            }
+            else -> {}
+        }
     }
 
     fun update(image:Bitmap?) : PetProfile{
@@ -181,26 +204,5 @@ class PetProfile {
         return this
     }
 
-    fun update(exp:Double) : PetProfile{
-        this.exp.value = this.exp.value?.plus(exp)
-        updatedExp()
-        return this
-    }
 
-    private fun updatedExp(){
-        val willLv:Int = floor((exp.value ?: 0.0) / PetProfile.expRange).toInt() + 1
-        if (willLv != this.lv.value) {
-            this.lv.value = willLv
-            updatedLv()
-        }
-    }
-    private fun updatedLv(){
-        lv.value?.let { lvValue ->
-            this.prevExp.value = (lvValue-1) * expRange
-            this.nextExp.value = lvValue * expRange
-            DataLog.d("prevExp ${prevExp.value}" , appTag)
-            DataLog.d("nextExp ${nextExp.value}" , appTag)
-        }
-        DataLog.d("lv  ${lv.value}" , appTag)
-    }
 }

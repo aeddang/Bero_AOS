@@ -125,7 +125,7 @@ fun ActivityAlertController(){
                 subText = currentEvent?.subText,
                 imgButtons = imgButtons,
                 buttons = buttons,
-                buttonColor = ColorBrand.primary,
+                buttonColor = buttonColor,
             ) {selected ->
                 isShow = false
                 currentEvent?.let { evt ->

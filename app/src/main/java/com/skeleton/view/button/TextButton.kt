@@ -66,49 +66,49 @@ fun TextButton(
     modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
-    WrapTransparentButton(
-        action = {
-            action(index)
-        }
-    ){
-        AppTheme {
-            Box(
-                modifier = modifier
-                    .wrapContentSize()
-                    .clip(RoundedCornerShape(type.bgRadius.dp))
-                    .background(type.bgColor)
-                ,
-                contentAlignment = Alignment.CenterStart
+    AppTheme {
+        Box(
+            modifier = modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(type.bgRadius.dp))
+                .background(type.bgColor)
+            ,
+            contentAlignment = Alignment.CenterStart
 
+        ) {
+            Row(
+                Modifier.padding(horizontal = type.paddingHorizontal.dp, vertical = type.paddingVertical.dp),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = spacing.dp,
+                    alignment = Alignment.CenterHorizontally
+                ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    Modifier.padding(horizontal = type.paddingHorizontal.dp, vertical = type.paddingVertical.dp),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        space = spacing.dp,
-                        alignment = Alignment.CenterHorizontally
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        if(isSelected) activeText ?: defaultText else defaultText,
-                        fontSize = (textSize ?: type.textSize).sp,
-                        fontWeight = textFamily ?: type.textFamily,
-                        color = if (isSelected) textActiveColor ?: type.activeColor else textColor ?: type.textColor,
-                        textAlign = TextAlign.Start,
-                        style = if(isUnderLine) TextStyle(textDecoration = TextDecoration.Underline) else LocalTextStyle.current
+                Text(
+                    if(isSelected) activeText ?: defaultText else defaultText,
+                    fontSize = (textSize ?: type.textSize).sp,
+                    fontWeight = textFamily ?: type.textFamily,
+                    color = if (isSelected) textActiveColor ?: type.activeColor else textColor ?: type.textColor,
+                    textAlign = TextAlign.Start,
+                    style = if(isUnderLine) TextStyle(textDecoration = TextDecoration.Underline) else LocalTextStyle.current
+                )
+                image?.let {
+                    Image(
+                        painterResource(it),
+                        contentDescription = "",
+                        contentScale = ContentScale.Fit,
+                        colorFilter = if (isOriginImage) null
+                            else ColorFilter.tint(if (isSelected) textActiveColor ?: type.activeColor else textColor ?: type.textColor),
+                        modifier = Modifier.size(imageSize.dp)
                     )
-                    image?.let {
-                        Image(
-                            painterResource(it),
-                            contentDescription = "",
-                            contentScale = ContentScale.Fit,
-                            colorFilter = if (isOriginImage) null
-                                else ColorFilter.tint(if (isSelected) textActiveColor ?: type.activeColor else textColor ?: type.textColor),
-                            modifier = Modifier.size(imageSize.dp)
-                        )
-                    }
                 }
             }
+            TransparentButton(
+                modifier = Modifier.matchParentSize(),
+                action =  {
+                    action(index)
+                }
+            )
         }
     }
 }

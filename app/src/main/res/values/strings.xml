@@ -368,7 +368,7 @@
     <string name="reportWalkRecentlyUnit">mins</string>
     <string name="reportWalkRecentlyText1">You recently walked</string>
     <string name="reportWalkRecentlyText2">in average for each walk.</string>
-    <string name="reportWalkRecentlyTip">The recommended time for each walk\nis between 20-40 mins.</string>
+    <string name="reportWalkRecentlyTip">The recommended time for each walk\nis between 20–40 mins.</string>
 
     <string name="exploreSeletReport">Feed filter</string>
 
@@ -392,7 +392,7 @@
     <string name="walkFinishSuccessTitle">Here is the Rewards!</string>
     <string name="walkFinishSuccessText">Hope to see you next time!</string>
 
-    <string name="walkFinishFailTitle">Oops...\nThe image didn’t work.</string>
+    <string name="walkFinishFailTitle">Oops…\nThe image didn’t work.</string>
     <string name="walkFinishFailText">Take another photo with your dog’s face clearly shown in the center.</string>
 
     <string name="missionSuccessTitle">Mission complete!</string>
@@ -419,7 +419,7 @@
     
 
     <string name="lockScreen_start">Today’s walk start</string>
-    <string name="lockScreen_walking">Currently walking...</string>
+    <string name="lockScreen_walking">Currently walking…</string>
     <string name="lockScreen_end">Today’s walk</string>
 
 

@@ -11,11 +11,11 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.skeleton.module.network.NetworkFactory
 import com.skeleton.sns.SnsUser
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.http.Part
 
 class ApiBridge(
     private val context: Context,
@@ -50,6 +50,7 @@ class ApiBridge(
             ApiType.UpdateUser -> getUpdateUserProfile( snsUser?.snsID,  apiQ.requestData as? ModifyUserProfileData )
             ApiType.RegistPush -> user.post(apiQ.body as Map<String, String>)
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
+            ApiType.GetCode -> misc.getCodes(apiQ.query?.get(ApiField.category), apiQ.query?.get(ApiField.searchText))
             ApiType.GetMission -> mission.getMissions(
                 apiQ.query?.get(ApiField.userId), apiQ.query?.get(ApiField.petId), apiQ.query?.get(ApiField.missionCategory),
                 apiQ.query?.get(ApiField.page) ?: "0", apiQ.query?.get(ApiField.size) ?: ApiValue.PAGE_SIZE.toString()
@@ -103,31 +104,38 @@ class ApiBridge(
     }
 
     private fun getUpdatePetProfile(petId:String, profile: ModifyPetProfileData?) = runBlocking {
-        val name: RequestBody? = getRequestBody(profile?.nickName)
-        val breed: RequestBody? = getRequestBody(profile?.species)
+        val name: RequestBody? = getRequestBody(profile?.name)
+        val breed: RequestBody? = getRequestBody(profile?.breed)
         val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString()?.substring(0, 19))
-        val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey())
-        val regNumber: RequestBody? = getRequestBody(profile?.microfin)
-        var status: RequestBody? = null
-        PetProfile.getStatusValue(profile)?.let {
-            status = if (it.isEmpty()) getRequestBody("") else getRequestBody(it.reduce { acc, s -> "$acc,$s" })
-        }
+        val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey)
+        val regNumber: RequestBody? = getRequestBody(profile?.microchip)
+        val animalId: RequestBody? = getRequestBody(profile?.animalId)
+        val introduce: RequestBody? = getRequestBody(profile?.introduction)
         val weight: RequestBody? = getRequestBody(profile?.weight?.toString())
         val size: RequestBody? = getRequestBody(profile?.size?.toString())
-        pet.put(petId, name, breed, birthdate, sex, regNumber, status=status, weight = weight, size = size)
+        val isNeutralized: RequestBody? = getRequestBody(profile?.isNeutralized?.toString())
+        val isRepresentative: RequestBody? = getRequestBody(profile?.isRepresentative?.toString())
+        val tagBreed: RequestBody? = getRequestBody(profile?.breed)
+        val tagPersonality: RequestBody? = getRequestBody(profile?.hashStatus)
+        val tagStatus: RequestBody? = getRequestBody(profile?.immunStatus)
+        pet.put(petId, name, breed, birthdate, sex, regNumber, animalId, introduce, weight, size,
+            isNeutralized, isRepresentative,
+            tagBreed, tagStatus, tagPersonality)
     }
 
     private fun getRegistPetProfile(userId:String?, profile: PetProfile?) = runBlocking {
-        val name: RequestBody? = getRequestBody(profile?.nickName?.value)
-        val breed: RequestBody? = getRequestBody(profile?.species?.value)
+        val name: RequestBody? = getRequestBody(profile?.name?.value)
+        val breed: RequestBody? = getRequestBody(profile?.breed?.value)
         val birthdate: RequestBody? = getRequestBody(profile?.birth?.value?.toFormatString()?.substring(0, 19))
-        val sex: RequestBody? = getRequestBody(profile?.gender?.value?.apiDataKey())
-        val regNumber: RequestBody? = getRequestBody(profile?.microfin?.value)
+        val sex: RequestBody? = getRequestBody(profile?.gender?.value?.apiDataKey)
+        val regNumber: RequestBody? = getRequestBody(profile?.microchip?.value)
+        val animalId: RequestBody? = getRequestBody(profile?.animalId?.value)
         val level: RequestBody? = getRequestBody("1")
-        var status: RequestBody? = null
-        PetProfile.getStatusValue(profile)?.let {
-            status = if (it.isEmpty()) getRequestBody("") else getRequestBody(it.reduce { acc, s -> "$acc,$s" })
-        }
+        val isNeutralized: RequestBody? = getRequestBody(profile?.isNeutralized?.value.toString())
+        val isRepresentative: RequestBody? = getRequestBody(profile?.isRepresentative?.toString())
+        val tagBreed: RequestBody? = getRequestBody(profile?.breed?.value)
+        val tagPersonality: RequestBody? = getRequestBody(profile?.hashStatus?.value)
+        val tagStatus: RequestBody? = getRequestBody(profile?.immunStatus?.value)
 
         var image: MultipartBody.Part? = null
         profile?.image?.value?.let {
@@ -135,7 +143,8 @@ class ApiBridge(
             val imgBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", "profileImage.jpg" , imgBody)
         }
-        pet.post(userId,name, breed, birthdate, sex, regNumber, level, status, image)
+        pet.post(userId,name, breed, birthdate, sex, regNumber, animalId, isNeutralized, isRepresentative,  level,
+            tagBreed, tagStatus, tagPersonality, image)
     }
 
     private fun getRegistAlbumPicture(ownerId:String?, albumData: AlbumData?) = runBlocking {

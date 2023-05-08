@@ -1,7 +1,8 @@
 package com.ironraft.pupping.bero.store.provider.model
 
 import android.content.Context
-import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
 import com.ironraft.pupping.bero.R
@@ -9,30 +10,32 @@ import java.util.*
 
 
 enum class MissionType {
-    Today, Event, Always;
-
-    fun info(): String {
-        return when (this) {
-            Today -> "Today’s Mission"
-            Event -> "Event!! Mission"
-            Always -> "Any Time Mission"
+    New, History, User, Walk;
+    val apiDataKey:String
+        get() = when(this) {
+            Walk -> "Walk"
+            else -> "Mission"
         }
-    }
-
-    @ColorRes
-    fun color(): Int {
-        return when (this) {
-            Today -> R.color.brand_primary
-            Event -> R.color.brand_thirdly
-            Always -> R.color.brand_secondary
+    val text :String
+        get() = when(this) {
+            Walk -> "Walk"
+            else -> "Mission"
         }
-    }
 
-    companion object {
-        fun random(): MissionType {
-            return MissionType.values().random()
+    @get:DrawableRes
+    val icon :Int
+        get() = when(this) {
+            Walk -> R.drawable.paw
+            else -> R.drawable.goal
         }
-    }
+
+    @get:StringRes
+    val completeButton :Int
+        get() = when(this) {
+            Walk -> R.string.button_walkComplete
+            else -> R.string.button_missionComplete
+        }
+
 }
 
 
@@ -76,7 +79,7 @@ class Mission(){
 
     val id:String = UUID.randomUUID().toString()
     // Use fields to define the data types to return.
-    var type:MissionType = MissionType.Today; private set
+    var type:MissionType = MissionType.Walk; private set
     var description:String = ""; private set
     var summary:String = ""; private set
     var recommandPlaces:List<AutocompletePrediction> = arrayListOf(); private set
@@ -84,7 +87,7 @@ class Mission(){
     var destination:Place? = null; private set
     var waypoints:List<Place> = arrayListOf(); private set
     var startTime:Double = 0.0; private set
-    var totaldistance:Double = 0.0; private set //miter
+    var distance:Double = 0.0; private set //miter
     var duration:Double = 0.0; private set //sec
     var speed:Double = 0.0; private set //meter per hour
 
@@ -108,7 +111,7 @@ class Mission(){
     }
 
     fun viewSpeed(ctx:Context):String { return Mission.viewSpeed(ctx, speed) }
-    fun viewDistance(ctx:Context):String { return Mission.viewDistance(ctx, totaldistance) }
+    fun viewDistance(ctx:Context):String { return Mission.viewDistance(ctx, distance) }
     fun viewDuration(ctx:Context):String { return Mission.viewDuration(ctx, duration) }
 
     val allPoint:List<Place>; get(){

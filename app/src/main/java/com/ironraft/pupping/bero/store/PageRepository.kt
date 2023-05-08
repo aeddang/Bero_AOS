@@ -93,14 +93,14 @@ class PageRepository (
                 dataProvider.result.value = it
                 if (!res.isOptional) pagePresenter.loaded()
                 apiManager.result.value = null
-                dataProvider.result.postValue(null) //value = null
+                //dataProvider.result.postValue(null) //value = null
             }
         })
         apiManager.error.observe(owner, Observer{err: ApiError<ApiType>?->
             err?.let {
                 dataProvider.error.value = it
                 apiManager.error.value = null
-                dataProvider.error.postValue(null)
+                //dataProvider.error.postValue(null)
                 if (!it.isOptional) {
                     pagePresenter.loaded()
                     appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.ApiError, error = it)

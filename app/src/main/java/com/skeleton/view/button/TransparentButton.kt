@@ -13,11 +13,12 @@ import com.skeleton.theme.ColorTransparent
 
 @Composable
 fun TransparentButton(
+    modifier: Modifier = Modifier.fillMaxSize(),
     action:() -> Unit
 ){
     FloatingActionButton(
         onClick = action,
-        Modifier.fillMaxSize(),
+        modifier = modifier,
         shape = RoundedCornerShape(0.dp),
         backgroundColor = ColorTransparent.clear,
         contentColor = contentColorFor(ColorTransparent.clear),

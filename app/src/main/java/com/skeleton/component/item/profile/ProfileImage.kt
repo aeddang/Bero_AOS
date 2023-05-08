@@ -68,7 +68,7 @@ fun ProfileImage(
                         Image(
                             painterResource(emptyImagePath),
                             contentDescription = "",
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.size(size.dp, size.dp)
                         )
                     }
@@ -76,7 +76,7 @@ fun ProfileImage(
                         Image(
                             it,
                             contentDescription = "",
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.size(size.dp, size.dp)
                         )
                     }

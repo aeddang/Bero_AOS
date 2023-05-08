@@ -26,6 +26,7 @@ import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
+import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
@@ -132,6 +133,7 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
                 PageID.My.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
                 PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
                 PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
+                PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentRoutePage)
             }
         }
     }

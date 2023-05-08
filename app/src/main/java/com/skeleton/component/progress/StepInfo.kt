@@ -41,7 +41,7 @@ fun StepInfo(
     AppTheme {
         Column (
             modifier = Modifier.wrapContentSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             var isOn by remember { mutableStateOf(true) }
             image?.let {
@@ -71,7 +71,6 @@ fun StepInfo(
                     modifier = Modifier.padding(top = DimenMargin.regular.dp)
                 )
             }
-
         }
     }
 }

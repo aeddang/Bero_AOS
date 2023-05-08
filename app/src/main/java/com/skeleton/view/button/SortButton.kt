@@ -17,10 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,99 +92,100 @@ fun SortButton(
     action:() -> Unit
 
 ) {
-    WrapTransparentButton(
-        action = action
-    ) {
-        AppTheme {
-            Box(
-                modifier = modifier
-                    .wrapContentSize()
-                    .clip(RoundedCornerShape(sizeType.radius.dp))
-                    .background(type.bgColor(color))
-                    .border(
-                        width = type.strokeWidth.dp,
-                        color = type.strokeColor(color),
-                        shape = RoundedCornerShape(sizeType.radius.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier.padding(
-                        start = if (text.isEmpty()||isOriginIcon) sizeType.marginVertical.dp  else sizeType.marginHorizontal.dp,
-                        end = if (text.isEmpty()||isSort) sizeType.marginVertical.dp  else sizeType.marginHorizontal.dp,
-                        top = sizeType.marginVertical.dp,
-                        bottom = sizeType.marginVertical.dp
-                    ),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        space = sizeType.spacing.dp,
-                        alignment = Alignment.Start
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    petProfile?.let {
-                        ProfileImage(
-                            image = it.image.value,
-                            imagePath = it.imagePath,
-                            size= sizeType.iconSize,
-                            emptyImagePath= R.drawable.profile_dog_default
-                        )
-                    }
-                    userProfile?.let {
-                        ProfileImage(
-                            image = it.image.value,
-                            imagePath = it.imagePath,
-                            size= sizeType.iconSize,
-                            emptyImagePath= R.drawable.profile_user_default
-                        )
-                    }
-                    icon?.let {
-                        if (isOriginIcon)
-                            Box(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .clip(CircleShape)
-                                    .background(ColorApp.white)
-                                    .padding(DimenMargin.micro.dp)
 
-                            ) {
-                                Image(
-                                    painterResource(it),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.Fit,
-                                    modifier = Modifier.size(sizeType.iconSize.dp)
-                                )
-                            }
-                        else
+    AppTheme {
+        Box(
+            modifier = modifier
+                .wrapContentSize()
+                .clip(RoundedCornerShape(sizeType.radius.dp))
+                .background(type.bgColor(color))
+                .border(
+                    width = type.strokeWidth.dp,
+                    color = type.strokeColor(color),
+                    shape = RoundedCornerShape(sizeType.radius.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier.padding(
+                    start = if (text.isEmpty()||isOriginIcon) sizeType.marginVertical.dp  else sizeType.marginHorizontal.dp,
+                    end = if (text.isEmpty()||isSort) sizeType.marginVertical.dp  else sizeType.marginHorizontal.dp,
+                    top = sizeType.marginVertical.dp,
+                    bottom = sizeType.marginVertical.dp
+                ),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = sizeType.spacing.dp,
+                    alignment = Alignment.Start
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                petProfile?.let {
+                    ProfileImage(
+                        image = it.image.value,
+                        imagePath = it.imagePath,
+                        size= sizeType.iconSize,
+                        emptyImagePath= R.drawable.profile_dog_default
+                    )
+                }
+                userProfile?.let {
+                    ProfileImage(
+                        image = it.image.value,
+                        imagePath = it.imagePath,
+                        size= sizeType.iconSize,
+                        emptyImagePath= R.drawable.profile_user_default
+                    )
+                }
+                icon?.let {
+                    if (isOriginIcon)
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .clip(CircleShape)
+                                .background(ColorApp.white)
+                                .padding(DimenMargin.micro.dp)
+
+                        ) {
                             Image(
                                 painterResource(it),
                                 contentDescription = "",
                                 contentScale = ContentScale.Fit,
-                                colorFilter = ColorFilter.tint(type.textColor(color)),
                                 modifier = Modifier.size(sizeType.iconSize.dp)
                             )
-                    }
-                    if (text.isNotEmpty())
-                        Text(
-                            text,
-                            fontSize = sizeType.textSize.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = type.textColor(color),
-                            textAlign = TextAlign.Start,
-                            maxLines = 1
+                        }
+                    else
+                        Image(
+                            painterResource(it),
+                            contentDescription = "",
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(type.textColor(color)),
+                            modifier = Modifier.size(sizeType.iconSize.dp)
                         )
-                        if(isSort)
-                            Image(
-                                painterResource(if(isSelected) R.drawable.direction_up else R.drawable.direction_down),
-                                contentDescription = "",
-                                contentScale = ContentScale.Fit,
-                                colorFilter = ColorFilter.tint(type.textColor(color)),
-                                modifier = Modifier.size(sizeType.iconSize.dp)
-                            )
                 }
-
+                if (text.isNotEmpty())
+                    Text(
+                        text,
+                        fontSize = sizeType.textSize.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = type.textColor(color),
+                        textAlign = TextAlign.Start,
+                        maxLines = 1
+                    )
+                    if(isSort)
+                        Image(
+                            painterResource(if(isSelected) R.drawable.direction_up else R.drawable.direction_down),
+                            contentDescription = "",
+                            contentScale = ContentScale.Fit,
+                            colorFilter = ColorFilter.tint(type.textColor(color)),
+                            modifier = Modifier.size(sizeType.iconSize.dp)
+                        )
             }
+            TransparentButton(
+                modifier = Modifier.matchParentSize(),
+                action = action
+            )
         }
     }
+
 }
 
 @Preview

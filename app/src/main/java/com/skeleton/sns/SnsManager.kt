@@ -19,7 +19,7 @@ class SnsManager(private val context: Context) : PageLifecycleUser {
     val userInfo = MutableLiveData<SnsUserInfo?>()
 
     private val respond = MutableLiveData<SnsResponds?>()
-    val error = SingleLiveData<SnsError?>(null)
+    val error = MutableLiveData<SnsError?>(null)
 
     private var currentManager:Sns? = null
 

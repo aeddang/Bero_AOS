@@ -3,7 +3,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.*
 import android.net.ConnectivityManager.*
 import android.os.Build
@@ -221,17 +220,19 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         this.onBackPressed()
     }
 
-
+    /*
     @Suppress("DEPRECATION")
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        activityViewModel.event.value = PageEvent(
+        val evt = PageEvent(
             PageEventType.OnActivityForResult,
             data = data,
             hashId = activityRequstId
         )
+        activityViewModel.event.value = evt
     }
+    */
     private lateinit var startActivityForResult: ActivityResultLauncher<Intent>; private set
     protected var activityRequstId:Int = -1
     private fun setupActivityResult(){
@@ -297,6 +298,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     @CallSuper
     protected open fun onWillChangePage(prevPage: PageObject?, nextPage: PageObject?){
         nextPage ?: return
+        nextPage.isInit = false
         isFullScreen = activityModel.isFullScreenPage(nextPage)
         val willChangeOrientation = activityModel.getPageOrientation(nextPage)
         if (willChangeOrientation != -1 && requestedOrientation != willChangeOrientation) requestedOrientation = willChangeOrientation
