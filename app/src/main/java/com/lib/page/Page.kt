@@ -43,6 +43,7 @@ data class PageObject(val pageID:String = "",
     var params:HashMap<String, Any?>? = null
     var isPopup = false ; internal set
     var isHome = false
+    var isHistory = true
     var animationType:PageAnimationType = PageAnimationType.Opacity
 
     val key:String = UUID.randomUUID().toString()

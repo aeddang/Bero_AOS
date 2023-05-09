@@ -15,9 +15,17 @@ data class ApiResponse<T> (
     @SerializedName("status") val status: String? = null,
     @SerializedName("code") val code: String? = null,
     @SerializedName("message") val message: String? = null,
-    @SerializedName("error") val error: String? = null
+    @SerializedName("error") val error: String? = null,
+    @SerializedName("metadata") val metadata: MetaData? = null
 )
 
+data class MetaData (
+    @SerializedName("exp") val exp: Double? = null,
+    @SerializedName("point") val point: Int? = null,
+    @SerializedName("level") val level: Int? = null,
+    @SerializedName("nextLevelExp") val nextLevelExp: Double? = null,
+    @SerializedName("prevLevelExp") val prevLevelExp: Double?  = null
+)
 
 class ApiInterceptor : Interceptor {
     var accesstoken: String = ""

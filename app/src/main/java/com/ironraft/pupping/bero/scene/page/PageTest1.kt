@@ -15,10 +15,8 @@ import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.*
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
-import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
@@ -33,7 +31,7 @@ import org.koin.compose.koinInject
  * that triggers canceling the order and passes the final order to [onSendButtonClicked] lambda
  */
 @Composable
-fun PageTest(
+fun PageTest1(
     modifier: Modifier = Modifier,
     page:PageObject? = null
 ){
@@ -98,8 +96,11 @@ fun PageTest(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-                pagePresenter.openPopup(PageProvider.getPageObject(PageID.AddDogCompleted)
-                    .addParam(PageParam.data, ModifyPetProfileData(name = "testName")))
+                appSceneObserver.select.value = ActivitSelectEvent(
+                    type = ActivitSelectType.ImgPicker
+                ){ select ->
+                    ComponentLog.d("selected$select", "test")
+                }
             }
         ) {
             Text(stringResource(R.string.button_takeCamera))
@@ -122,9 +123,4 @@ fun PageTest(
     }
 }
 
-@Preview
-@Composable
-fun PageTestPreview(){
-    PageTest(
-    )
-}
+

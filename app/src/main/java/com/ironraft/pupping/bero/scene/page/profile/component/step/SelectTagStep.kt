@@ -2,9 +2,7 @@ package com.ironraft.pupping.bero.scene.page.profile.component.step
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,6 +27,7 @@ import com.skeleton.theme.*
 import com.skeleton.view.button.*
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SelectTagStep(
     profile:ModifyPetProfileData?,
@@ -59,7 +58,8 @@ fun SelectTagStep(
     var buttons:List<RadioBtnData> by remember { mutableStateOf(listOf()) }
     val apiResult = dataProvider.result.observeAsState()
 
-     @Suppress("UNCHECKED_CAST")
+
+    @Suppress("UNCHECKED_CAST")
     apiResult.value.let { res ->
         res?.type ?: return@let
         if (res.requestData != CodeCategory.Personality) return@let
@@ -85,7 +85,7 @@ fun SelectTagStep(
         }
     }
     fun onAction(){
-        if (selects.isEmpty()) return
+        //if (selects.isEmpty()) return
         when (step){
             PageAddDogStep.Hash -> next(ModifyPetProfileData(
                 hashStatus = PetProfile.exchangeListToString(selects)))
@@ -102,9 +102,34 @@ fun SelectTagStep(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(DimenMargin.medium.dp)
             ) {
-
+                LazyColumn(
+                    modifier = Modifier.weight(1.0f),
+                    verticalArrangement = Arrangement.spacedBy(DimenMargin.regular.dp)
+                ) {
+                    item {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp)
+                        ) {
+                            buttons.forEach { btn ->
+                                SortButton(
+                                    type = if (selects.indexOf(btn.value) == -1) SortButtonType.Stroke else SortButtonType.Fill,
+                                    sizeType = SortButtonSizeType.Big,
+                                    text = btn.title,
+                                    color = if (selects.indexOf(btn.value) == -1) ColorApp.grey400 else ColorBrand.primary,
+                                    isSort = false,
+                                    modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
+                                ) {
+                                    val isSelect = !btn.isSelected
+                                    btn.isSelected = isSelect
+                                    onSelected(btn, isSelect)
+                                }
+                            }
+                        }
+                    }
+                }
+                /*
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 100.dp),
+                    columns = GridCells.Fixed(3),
                     contentPadding = PaddingValues(vertical = DimenMargin.regular.dp, horizontal = DimenMargin.thin.dp)
                 ) {
                     items(buttons) { btn ->
@@ -121,6 +146,7 @@ fun SelectTagStep(
                         }
                     }
                 }
+                */
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(
                         space = DimenMargin.tinyExtra.dp,

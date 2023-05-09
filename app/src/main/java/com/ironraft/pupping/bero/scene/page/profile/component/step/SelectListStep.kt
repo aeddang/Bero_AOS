@@ -83,11 +83,13 @@ fun SelectListStep(
         when ( res.type ){
             ApiType.GetCode -> {
                 (res.data as? List<CodeData>)?.let { datas ->
-                    buttons = datas.mapIndexed { index, codeData ->
+                    val btns = datas.mapIndexed { index, codeData ->
                         RadioBtnData(title = codeData.value ?: "", value = codeData.id.toString(), index = index )
                     }
+                    buttons = btns
                 }
                 viewData.isSearching = false
+                dataProvider.clearResult()
             }
             else ->{}
         }
@@ -96,7 +98,10 @@ fun SelectListStep(
         err?.type ?: return@let
         if (err.requestData != CodeCategory.Breed) return@let
         when ( err.type ){
-            ApiType.GetCode -> viewData.isSearching = false
+            ApiType.GetCode -> {
+                viewData.isSearching = false
+                dataProvider.clearError()
+            }
             else ->{}
         }
     }
@@ -106,7 +111,7 @@ fun SelectListStep(
         selectData = if (isSelect) btn else null
     }
     fun onAction(){
-        if (selectData == null) return
+        //if (selectData == null) return
         when (step){
             PageAddDogStep.Breed -> next(ModifyPetProfileData(breed = selectData?.value))
             else -> {}

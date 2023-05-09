@@ -42,6 +42,7 @@ enum class PageID(val value: String, val position: Int = 9999){
     Privacy("privacy"),
     ServiceTerms("serviceTerms"),
     AddDog("addDog"),
+    AddDogCompleted("addDogCompleted")
 }
 
 class PageProvider {
@@ -49,13 +50,17 @@ class PageProvider {
         fun getPageObject(pageID:PageID, animationType: PageAnimationType? = null) : PageObject {
             val pobj = PageObject(pageID.value, pageID.position )
             pobj.isHome = isHome(pageID)
+            pobj.isHistory = isHistory(pageID)
             pobj.animationType = animationType ?: getType(pageID)
             return pobj
         }
         fun getPageObject(iwillgo:IwillGo, animationType: PageAnimationType? = null) : PageObject? {
             PageID.values().find { it.value.equals(iwillgo.pageID) }?.let { pageID ->
                 val pobj = PageObject(iwillgo.pageID, iwillgo.pageIDX )
-                pobj.isHome = isHome(pageID)
+                val isHome = isHome(pageID)
+                pobj.isHome = isHome
+                pobj.isPopup = !isHome
+                pobj.isHistory = isHistory(pageID)
                 pobj.params = iwillgo.param
                 pobj.animationType = animationType ?: getType(pageID)
                 return pobj
@@ -69,6 +74,12 @@ class PageProvider {
             }
         }
 
+        fun isHistory(pageID:PageID) : Boolean{
+            return when (pageID){
+                PageID.Intro, PageID.Login, PageID.AddDog, PageID.AddDogCompleted  -> false
+                else -> true
+            }
+        }
         fun getType(pageID:PageID): PageAnimationType{
             return when (pageID){
                 PageID.Splash, PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat -> PageAnimationType.None

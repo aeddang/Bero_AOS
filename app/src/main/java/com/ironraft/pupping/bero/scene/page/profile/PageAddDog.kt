@@ -15,6 +15,8 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.page.profile.component.step.*
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
@@ -101,24 +103,23 @@ fun PageAddDog(
     modifier: Modifier = Modifier,
     page: PageObject? = null
 ){
-    val repository = koinInject<PageRepository>()
-    val appSceneObserver = koinInject<AppSceneObserver>()
+    val appTag = "PageAddDog"
     val pagePresenter = koinInject<PageComposePresenter>()
-    val resources = LocalContext.current.resources
-
     var profile:ModifyPetProfileData by remember { mutableStateOf(ModifyPetProfileData()) }
     var currentStep:PageAddDogStep by remember { mutableStateOf(PageAddDogStep.Name) }
     var currentCount:Int by remember { mutableStateOf(0) }
     val totalCount:Int = PageAddDogStep.values().count()
 
     fun onCompleted(){
+        pagePresenter.changePage(
+            PageProvider.getPageObject(PageID.AddDogCompleted)
+                .addParam(PageParam.data, profile)
+        )
         /*
         pagePresenter.openPopup(
-            PageProvider.getPageObject(.addDogCompleted)
-            .addParam(key: .data, value: self.profile)
-        )
-        */
-        pagePresenter.closePopup(page?.key)
+            PageProvider.getPageObject(PageID.AddDogCompleted)
+            .addParam(PageParam.data, profile)
+        )*/
     }
     fun onPrevStep(){
         val wiilStep = currentCount - 1
@@ -145,6 +146,7 @@ fun PageAddDog(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = DimenApp.pageHorinzontal.dp)
+            .padding(bottom = DimenMargin.regular.dp)
             .background(ColorBrand.bg),
         verticalArrangement = Arrangement.spacedBy(DimenMargin.medium.dp)
     ) {

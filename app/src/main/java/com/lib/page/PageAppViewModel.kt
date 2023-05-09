@@ -51,5 +51,6 @@ class PageAppViewModel {
         event.removeObservers(owner)
         status.removeObservers(owner)
         networkStatus.removeObservers(owner)
+        currentTopPage.removeObservers(owner)
     }
 }

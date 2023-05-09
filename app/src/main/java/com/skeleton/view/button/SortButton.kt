@@ -130,7 +130,7 @@ fun SortButton(
                 userProfile?.let {
                     ProfileImage(
                         image = it.image.value,
-                        imagePath = it.imagePath,
+                        imagePath = it.imagePath.value,
                         size= sizeType.iconSize,
                         emptyImagePath= R.drawable.profile_user_default
                     )

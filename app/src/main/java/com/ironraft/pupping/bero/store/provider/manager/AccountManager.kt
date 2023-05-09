@@ -34,10 +34,12 @@ class AccountManager(private val user: User) : PageLifecycleUser {
             }
             ApiType.UpdatePetImage ->{
                 (res.requestData as? Bitmap)?.let{ img ->
-                    user.pets.value?.find { it.petId.toString() == res.contentID }?.let { pet->
-                        pet.update(img)
-                    }
+                    user.updatedPet(res.contentID.toInt(), ModifyPetProfileData(image = img) )
                 }
+                return true
+            }
+            ApiType.ChangeRepresentativePet ->{
+                user.representativePetChanged(res.contentID.toInt())
                 return true
             }
             ApiType.UpdateUser ->{

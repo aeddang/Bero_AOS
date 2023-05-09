@@ -100,6 +100,13 @@ fun ImageButton(
                     )
                 }
             }
+            TransparentButton(
+                modifier = Modifier.matchParentSize(),
+                action = {
+                    action(index)
+                }
+            )
+            /*
             Box(
                 modifier = Modifier
                     .size(
@@ -109,12 +116,8 @@ fun ImageButton(
                                 + (padding + DimenIcon.micro)*2.0f).dp
                     )
             ) {
-                TransparentButton(
-                    action = {
-                        action(index)
-                    }
-                )
-            }
+
+            }*/
 
         }
     }

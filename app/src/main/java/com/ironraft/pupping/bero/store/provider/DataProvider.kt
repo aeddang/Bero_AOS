@@ -9,7 +9,7 @@ import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.model.User
 
 class DataProvider {
-    val user = User()
+    val user = User(true)
     val request = MutableLiveData<ApiQ?>()
     val result = MutableLiveData<ApiSuccess<ApiType>?>()
     val error = MutableLiveData<ApiError<ApiType>?>()
@@ -27,6 +27,12 @@ class DataProvider {
     fun clearEvent(){
         request.value = null
         result.value = null
+        error.value = null
+    }
+    fun clearResult(){
+        result.value = null
+    }
+    fun clearError(){
         error.value = null
     }
 }

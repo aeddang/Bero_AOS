@@ -65,9 +65,10 @@ class ApiBridge(
             ApiType.GetMissionSummary -> mission.getSummary(apiQ.contentID)
             ApiType.GetPet -> pet.get(apiQ.contentID)
             ApiType.GetPets -> pet.getUserPets((apiQ.requestData as? SnsUser)?.snsID ?: "")
-            ApiType.RegistPet -> getRegistPetProfile(snsUser?.snsID, apiQ.requestData as? PetProfile)
+            ApiType.RegistPet -> getRegistPetProfile(snsUser?.snsID, apiQ.requestData as? ModifyPetProfileData)
             ApiType.UpdatePetImage -> getUpdatePetProfile(apiQ.contentID, img = apiQ.requestData as? Bitmap)
             ApiType.UpdatePet -> getUpdatePetProfile(apiQ.contentID, profile = apiQ.requestData as? ModifyPetProfileData)
+            ApiType.ChangeRepresentativePet -> getUpdateRepresentative(apiQ.contentID)
             ApiType.DeletePet -> pet.delete(apiQ.contentID)
             ApiType.GetAlbumPictures -> album.get(
                 apiQ.contentID,
@@ -103,6 +104,10 @@ class ApiBridge(
         pet.put(petId, contents = image)
     }
 
+    private fun getUpdateRepresentative(petId:String) = runBlocking {
+        val isRepresentative: RequestBody? = getRequestBody("true")
+        pet.put(petId, isRepresentative = isRepresentative)
+    }
     private fun getUpdatePetProfile(petId:String, profile: ModifyPetProfileData?) = runBlocking {
         val name: RequestBody? = getRequestBody(profile?.name)
         val breed: RequestBody? = getRequestBody(profile?.breed)
@@ -123,22 +128,22 @@ class ApiBridge(
             tagBreed, tagStatus, tagPersonality)
     }
 
-    private fun getRegistPetProfile(userId:String?, profile: PetProfile?) = runBlocking {
-        val name: RequestBody? = getRequestBody(profile?.name?.value)
-        val breed: RequestBody? = getRequestBody(profile?.breed?.value)
-        val birthdate: RequestBody? = getRequestBody(profile?.birth?.value?.toFormatString()?.substring(0, 19))
-        val sex: RequestBody? = getRequestBody(profile?.gender?.value?.apiDataKey)
-        val regNumber: RequestBody? = getRequestBody(profile?.microchip?.value)
-        val animalId: RequestBody? = getRequestBody(profile?.animalId?.value)
+    private fun getRegistPetProfile(userId:String?, profile: ModifyPetProfileData?) = runBlocking {
+        val name: RequestBody? = getRequestBody(profile?.name)
+        val breed: RequestBody? = getRequestBody(profile?.breed)
+        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString()?.substring(0, 19))
+        val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey)
+        val regNumber: RequestBody? = getRequestBody(profile?.microchip)
+        val animalId: RequestBody? = getRequestBody(profile?.animalId)
         val level: RequestBody? = getRequestBody("1")
-        val isNeutralized: RequestBody? = getRequestBody(profile?.isNeutralized?.value.toString())
+        val isNeutralized: RequestBody? = getRequestBody(profile?.isNeutralized?.toString())
         val isRepresentative: RequestBody? = getRequestBody(profile?.isRepresentative?.toString())
-        val tagBreed: RequestBody? = getRequestBody(profile?.breed?.value)
-        val tagPersonality: RequestBody? = getRequestBody(profile?.hashStatus?.value)
-        val tagStatus: RequestBody? = getRequestBody(profile?.immunStatus?.value)
+        val tagBreed: RequestBody? = getRequestBody(profile?.breed)
+        val tagPersonality: RequestBody? = getRequestBody(profile?.hashStatus)
+        val tagStatus: RequestBody? = getRequestBody(profile?.immunStatus)
 
         var image: MultipartBody.Part? = null
-        profile?.image?.value?.let {
+        profile?.image?.let {
             val file = it.toFile(context)
             val imgBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             image = MultipartBody.Part.createFormData("contents", "profileImage.jpg" , imgBody)

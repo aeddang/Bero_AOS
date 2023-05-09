@@ -18,7 +18,7 @@ import com.skeleton.theme.ColorBrand
 fun PageSplash(
     modifier: Modifier = Modifier
 ){
-    val resources = LocalContext.current.resources
+
     Box (
         modifier = Modifier.fillMaxSize().background(ColorBrand.primary),
         contentAlignment = Alignment.Center

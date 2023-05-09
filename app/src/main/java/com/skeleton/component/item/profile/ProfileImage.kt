@@ -26,6 +26,7 @@ import com.skeleton.view.button.TransparentButton
 
 @Composable
 fun ProfileImage(
+    modifier: Modifier = Modifier,
     image:Bitmap? = null,
     imagePath:String? = null,
     isSelected:Boolean = false,
@@ -42,7 +43,7 @@ fun ProfileImage(
     }
     AppTheme {
         Box(
-            modifier = Modifier.wrapContentSize(),
+            modifier = modifier.wrapContentSize(),
             contentAlignment = Alignment.BottomEnd
         ) {
             Box(

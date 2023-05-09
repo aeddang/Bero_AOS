@@ -25,8 +25,10 @@ import com.ironraft.pupping.bero.scene.page.intro.PageIntro
 import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
+import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
+import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
@@ -72,25 +74,20 @@ fun PageApp(
     val activityModel = koinInject<ActivityModel>()
     val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
-
-    val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
-
+    val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
     val viewModel = koinInject<AppSceneObserver>()
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
     var isLoading by remember { mutableStateOf(false) }
     var isLock by remember { mutableStateOf(false) }
-
     //val isTest by viewModel.isTest.collectAsState()
     //val backStackEntry by pageNavController.currentBackStackEntryAsState()
-    Box(modifier = Modifier.fillMaxSize()){
-        Scaffold(
+    Box(modifier = Modifier.fillMaxSize()){ Scaffold(
             bottomBar = {
                 currentTopPage?.let {
                     if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
                 }
             }
         ) { innerPadding ->
-            val currentPage = pagePresenter.currentTopPage
             AnimatedNavHost(
                 navController = pageNavController,
                 startDestination = PageID.Splash.value,
@@ -99,6 +96,7 @@ fun PageApp(
                     .fillMaxSize()
                     .background(ColorBrand.bg)
             ) {
+                val currentPage = pagePresenter.currentTopPage
                 PageID.values().forEach {
                     getPageComposable(nav = this, routePage = it, currentPage = currentPage)
                 }
@@ -119,6 +117,7 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
     val page = currentRoutePage ?: PageProvider.getPageObject(routePage)
     val ani = page.animationType
     val duration = PageAnimationType.duration
+
     nav.composable(route = routePage.value,
         enterTransition = {ani.enter},
         exitTransition = {ani.exit},
@@ -130,10 +129,13 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
                 PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
                 PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
                 PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
-                PageID.My.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.My.value -> PageTest1(Modifier.fillMaxSize(), page = currentRoutePage)
                 PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
                 PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
                 PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentRoutePage)
+                PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentRoutePage)
             }
         }
     }

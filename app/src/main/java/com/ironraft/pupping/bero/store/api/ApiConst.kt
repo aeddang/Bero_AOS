@@ -108,7 +108,7 @@ enum class ApiType{
     AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush,
     GetWeather, GetCode,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
-    GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,
+    GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPictures,
     CheckHumanWithDog
 }

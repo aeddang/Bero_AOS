@@ -90,7 +90,8 @@ fun SelectPictureStep(
                 image = selectData,
                 isSelected = selectData != null,
                 size = DimenProfile.heavy,
-                emptyImagePath = R.drawable.profile_dog_default
+                emptyImagePath = R.drawable.profile_dog_default,
+                modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
             )
             SelectButton(
                 type = SelectButtonType.Small,
@@ -118,7 +119,6 @@ fun SelectPictureStep(
                 )
 
             }
-
             Spacer(modifier = Modifier.weight(1.0f))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(

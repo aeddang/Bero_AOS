@@ -39,10 +39,6 @@ enum class MissionType {
 }
 
 
-
-
-
-
 enum class MissionKeyword{
     Convenience, AnimalHospital, Mart;
     fun keyword() : String{

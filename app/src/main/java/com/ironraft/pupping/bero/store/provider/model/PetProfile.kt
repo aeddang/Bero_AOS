@@ -77,7 +77,6 @@ class PetProfile {
     val gender:MutableLiveData<Gender?> = MutableLiveData<Gender?>(null)
     val birth:MutableLiveData<LocalDate?> = MutableLiveData<LocalDate?>(null)
     val isNeutralized:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
-
     val immunStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val hashStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val animalId:MutableLiveData<String?> = MutableLiveData<String?>(null)
@@ -90,12 +89,13 @@ class PetProfile {
     var exerciseDistance: Double? = null; private set
     var exerciseDuration: Double? = null; private set
     val totalWalkCount: MutableLiveData<Int?> = MutableLiveData<Int?>(null)
-
     var originData:PetData? = null
     var isWith:Boolean = true
     var isRepresentative:Boolean = false
     var isFriend:Boolean = false
     var level:Int? = null
+    val sortIdx:Int
+        get() = if (isRepresentative) 0 else 1
 
     override fun equals(other: Any?): Boolean {
         (other as? PetProfile)?.let {
@@ -116,8 +116,10 @@ class PetProfile {
         isMypet = isMyPet
         return this
     }
-    fun init(data:PetData, isMyPet:Boolean, isFriend:Boolean = false, index:Int = -1): PetProfile{
+    fun init(data:PetData, isMyPet:Boolean, isFriend:Boolean = false, lv:Int? = null, index:Int = -1): PetProfile{
         if (isMyPet) originData = data
+        lv?.let { level = it }
+
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0
         this.imagePath = data.pictureUrl
@@ -144,22 +146,6 @@ class PetProfile {
         }
         */
         return this
-    }
-    fun removeObservers(owner: LifecycleOwner){
-        image.removeObservers(owner)
-        name.removeObservers(owner)
-        breed.removeObservers(owner)
-        gender.removeObservers(owner)
-        birth.removeObservers(owner)
-        introduction.removeObservers(owner)
-        isNeutralized.removeObservers(owner)
-        immunStatus.removeObservers(owner)
-        hashStatus.removeObservers(owner)
-        animalId.removeObservers(owner)
-        microchip.removeObservers(owner)
-        weight.removeObservers(owner)
-        size.removeObservers(owner)
-        totalWalkCount.removeObservers(owner)
     }
 
     fun empty(context:Context) : PetProfile{
@@ -204,5 +190,21 @@ class PetProfile {
         return this
     }
 
+    fun removeObservers(owner: LifecycleOwner){
+        image.removeObservers(owner)
+        name.removeObservers(owner)
+        breed.removeObservers(owner)
+        gender.removeObservers(owner)
+        birth.removeObservers(owner)
+        introduction.removeObservers(owner)
+        isNeutralized.removeObservers(owner)
+        immunStatus.removeObservers(owner)
+        hashStatus.removeObservers(owner)
+        animalId.removeObservers(owner)
+        microchip.removeObservers(owner)
+        weight.removeObservers(owner)
+        size.removeObservers(owner)
+        totalWalkCount.removeObservers(owner)
+    }
 
 }
