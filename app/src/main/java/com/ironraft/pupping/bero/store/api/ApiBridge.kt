@@ -7,7 +7,6 @@ import com.ironraft.pupping.bero.BuildConfig
 import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.ModifyUserProfileData
-import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.skeleton.module.network.NetworkFactory
 import com.skeleton.sns.SnsUser
 import kotlinx.coroutines.runBlocking
@@ -15,7 +14,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.http.Part
 
 class ApiBridge(
     private val context: Context,
@@ -42,7 +40,7 @@ class ApiBridge(
         VisionApi::class.java)
 
     @Suppress("UNCHECKED_CAST")
-    fun getUpdateUserProfile(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
+    fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
         return@runBlocking when(apiQ.type){
             ApiType.AuthLogin -> auth.post(apiQ.body as Map<String, String>)
             ApiType.AuthReflash -> auth.reflash(apiQ.body as Map<String, String>)
@@ -131,7 +129,7 @@ class ApiBridge(
     private fun getRegistPetProfile(userId:String?, profile: ModifyPetProfileData?) = runBlocking {
         val name: RequestBody? = getRequestBody(profile?.name)
         val breed: RequestBody? = getRequestBody(profile?.breed)
-        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString()?.substring(0, 19))
+        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString())
         val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey)
         val regNumber: RequestBody? = getRequestBody(profile?.microchip)
         val animalId: RequestBody? = getRequestBody(profile?.animalId)

@@ -50,7 +50,7 @@ fun SelectDateStep(
         }
     }
     var selectDate:LocalDate  by remember { mutableStateOf(getPrevData() ?: LocalDate.now()) }
-    val calendar = Calendar.getInstance()
+    val calendar:Calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
     fun onAction(){
         when (step){
@@ -68,6 +68,7 @@ fun SelectDateStep(
             WheelDatePicker(
                 modifier = Modifier.fillMaxWidth(),
                 startDate = selectDate,
+                maxDate = LocalDate.now(),
                 yearsRange = IntRange(currentYear-100, currentYear),
                 size = DpSize(256.dp, 256.dp),
                 rowCount = 7,
@@ -80,6 +81,7 @@ fun SelectDateStep(
                 )
             ){ date ->
                 selectDate = date
+
             }
             SortButton(
                 type = SortButtonType.StrokeFill,
@@ -89,7 +91,7 @@ fun SelectDateStep(
                 isSort = false,
                 isSelected = true
             ) {
-                selectDate = LocalDate.now()
+                //selectDate = LocalDate.now()
             }
             Spacer(modifier = Modifier.weight(1.0f))
             Row(

@@ -85,7 +85,7 @@ fun SelectTagStep(
         }
     }
     fun onAction(){
-        //if (selects.isEmpty()) return
+        if (selects.isEmpty()) return
         when (step){
             PageAddDogStep.Hash -> next(ModifyPetProfileData(
                 hashStatus = PetProfile.exchangeListToString(selects)))

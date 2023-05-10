@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.animation.content.Content
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.profile.component.step.*
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
@@ -66,59 +65,53 @@ fun PageAddDogCompleted(
         val q = ApiQ(appTag, ApiType.RegistPet, requestData = profile, isLock = true)
         dataProvider.requestData(q)
     }
-
     Column (
         modifier = modifier
+            .background(ColorBrand.bg)
             .fillMaxSize()
             .padding(horizontal = DimenApp.pageHorinzontal.dp)
-            .padding(bottom = DimenMargin.regular.dp)
-            .background(ColorBrand.bg),
-        verticalArrangement = Arrangement.spacedBy(DimenMargin.medium.dp)
+            .padding(bottom = DimenMargin.regular.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1.0f))
-        Column (
-            modifier = modifier
-                .wrapContentSize(),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ){
-                Image(
-                    painterResource(R.drawable.profile_deco),
-                    contentDescription = "",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(136.dp, 90.dp)
-                )
-                ProfileImage(
-                    image = profile.image,
-                    size = DimenProfile.medium
-                )
-            }
-            Text(
-                stringResource(id = R.string.addDogCompletedText1),
-                fontSize = FontSize.thin.sp,
-                color = ColorApp.grey500,
-                modifier = Modifier.padding(vertical = DimenMargin.regularExtra.dp)
+        Box(
+            modifier =Modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Image(
+                painterResource(R.drawable.profile_deco),
+                contentDescription = "",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(136.dp, 90.dp)
             )
-            profile.name?.let {
-                Text(
-                    it,
-                    fontSize = FontSize.black.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = ColorApp.black,
-                    modifier = Modifier.padding(vertical = DimenMargin.micro.dp)
-                )
-            }
-            Text(
-                stringResource(id = R.string.addDogCompletedText2),
-                fontSize = FontSize.light.sp,
-                color = ColorApp.black,
-                modifier = Modifier.padding(vertical = DimenMargin.heavy.dp),
-                textAlign = TextAlign.Center
+            ProfileImage(
+                image = profile.image,
+                size = DimenProfile.medium
             )
         }
+        Text(
+            stringResource(id = R.string.addDogCompletedText1),
+            fontSize = FontSize.thin.sp,
+            color = ColorApp.grey500,
+            modifier = Modifier.padding(vertical = DimenMargin.regularExtra.dp)
+        )
+        profile.name?.let {
+            Text(
+                it,
+                fontSize = FontSize.black.sp,
+                fontWeight = FontWeight.Bold,
+                color = ColorApp.black,
+                modifier = Modifier.padding(vertical = DimenMargin.micro.dp)
+            )
+        }
+        Text(
+            stringResource(id = R.string.addDogCompletedText2),
+            fontSize = FontSize.light.sp,
+            color = ColorApp.black,
+            modifier = Modifier.padding(vertical = DimenMargin.heavy.dp),
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.weight(1.0f))
         FillButton(
             type = FillButtonType.Fill,

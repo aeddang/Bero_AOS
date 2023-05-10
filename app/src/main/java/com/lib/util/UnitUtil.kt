@@ -27,24 +27,36 @@ fun String.isEmailType():Boolean {
 }
 
 fun String.toDate(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): LocalDate? {
-    val pattern = DateTimeFormatter.ofPattern(dateFormat)
-    return LocalDate.parse(this, pattern)
+    return try {
+        val pattern = DateTimeFormatter.ofPattern(dateFormat)
+        return LocalDate.parse(this.replace("Z", ""), pattern)
+    } catch (e: Exception) {
+        null
+    }
+
 }
 
 fun LocalDate.toFormatString(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): String? {
+
     val date  = LocalDateTime.of(this, LocalTime.MIN)
-    return date.toFormatString(dateFormat)
+    return date.toFormatString(dateFormat.replace("Z", ""))
 }
 fun LocalDateTime.toFormatString(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): String? {
-    val pattern = DateTimeFormatter.ofPattern(dateFormat)
-    return this.format(pattern)
+    return try {
+        val pattern = DateTimeFormatter.ofPattern(dateFormat)
+        this.format(pattern)
+    } catch (e: Exception) {
+        null
+    }
 }
+
+
 
 fun LocalDate.toAge(trailing:String = "Y", subTrailing:String = "M", isKr:Boolean = false) : String {
     val now = LocalDate.now()

@@ -3,6 +3,7 @@ package com.ironraft.pupping.bero.scene.page.profile.component.step
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
@@ -54,20 +55,32 @@ fun SelectListStep(
     val dataProvider = koinInject<DataProvider>()
     val viewData: SelectListStepData  by remember { mutableStateOf(SelectListStepData()) }
     var btnType:RadioButtonType by remember { mutableStateOf(RadioButtonType.Blank)}
+    var keyword:String by remember { mutableStateOf("") }
 
+    fun onSearch(){
+        if (viewData.isSearching) return
+        viewData.isSearching = true
+        val params = HashMap<String, String>()
+        params[ApiField.category] = CodeCategory.Breed.name.lowercase()
+        params[ApiField.searchText] = keyword
+        val q = ApiQ(appTag, ApiType.GetCode, query = params, isOptional = true, requestData = CodeCategory.Breed)
+        dataProvider.requestData(q)
+    }
     fun getPrevData() : RadioBtnData?{
         return when (step){
             PageAddDogStep.Breed -> {
                 btnType = RadioButtonType.Blank
+                onSearch()
                 profile?.breed?.let {
                     return RadioBtnData(title = it, value = it, index = -1)
                 }
+
             }
             else -> null
         }
     }
 
-    var keyword:String by remember { mutableStateOf("") }
+
     var isSearch:Boolean by remember { mutableStateOf(false) }
     var selectData:RadioBtnData? by remember { mutableStateOf(getPrevData()) }
     var buttons:List<RadioBtnData> by remember { mutableStateOf(listOf()) }
@@ -111,34 +124,22 @@ fun SelectListStep(
         selectData = if (isSelect) btn else null
     }
     fun onAction(){
-        //if (selectData == null) return
+        if (selectData == null) return
         when (step){
             PageAddDogStep.Breed -> next(ModifyPetProfileData(breed = selectData?.value))
             else -> {}
         }
     }
-    fun onSearch(){
-        if (viewData.isSearching) return
-        if (keyword.isEmpty()) {
-            if (buttons.isNotEmpty()) buttons = listOf()
-            return
-        }
-        viewData.isSearching = true
-        val params = HashMap<String, String>()
-        params[ApiField.category] = CodeCategory.Breed.name.lowercase()
-        params[ApiField.searchText] = keyword
-        val q = ApiQ(appTag, ApiType.GetCode, query = params, isOptional = true, requestData = CodeCategory.Breed)
-        dataProvider.requestData(q)
-    }
 
     AppTheme {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onTap = { focusManager.clearFocus() }
                     )
-            },
+                },
             contentAlignment = Alignment.Center
         ) {
 
@@ -189,20 +190,23 @@ fun SelectListStep(
                     singleLine = true
                 )
 
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .verticalScroll(scrollState)
                         .weight(1.0f),
                     verticalArrangement = Arrangement.spacedBy(btnType.spacing.dp)
                 ) {
-                    buttons.forEach { btn ->
-                        RadioButton(
-                            type = btnType,
-                            isChecked = selectData?.value == btn.value ,
-                            text = btn.title){
-                            focusManager.clearFocus()
-                            onSelected(btn, it)
+                    items( buttons.count()){ index->
+                        buttons[index].let { btn ->
+                            RadioButton(
+                                type = btnType,
+                                isChecked = selectData?.value == btn.value,
+                                text = btn.title
+                            ) {
+                                focusManager.clearFocus()
+                                onSelected(btn, it)
+                            }
+
                         }
                     }
                 }

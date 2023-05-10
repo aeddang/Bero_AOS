@@ -79,7 +79,7 @@ class ApiManager(
             else -> {}
         }
 
-        ApiAdapter { apiBridge.getUpdateUserProfile(apiQ, snsUser) }
+        ApiAdapter { apiBridge.getApi(apiQ, snsUser) }
             .onSuccess(
                 { res->
                     //res?.let { DataLog.d(it,appTag) }

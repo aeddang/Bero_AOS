@@ -111,15 +111,10 @@ fun PageAddDog(
     val totalCount:Int = PageAddDogStep.values().count()
 
     fun onCompleted(){
-        pagePresenter.changePage(
-            PageProvider.getPageObject(PageID.AddDogCompleted)
-                .addParam(PageParam.data, profile)
-        )
-        /*
         pagePresenter.openPopup(
             PageProvider.getPageObject(PageID.AddDogCompleted)
             .addParam(PageParam.data, profile)
-        )*/
+        )
     }
     fun onPrevStep(){
         val wiilStep = currentCount - 1
@@ -144,10 +139,9 @@ fun PageAddDog(
     }
     Column (
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize().background(ColorBrand.bg)
             .padding(horizontal = DimenApp.pageHorinzontal.dp)
-            .padding(bottom = DimenMargin.regular.dp)
-            .background(ColorBrand.bg),
+            .padding(bottom = DimenMargin.regular.dp),
         verticalArrangement = Arrangement.spacedBy(DimenMargin.medium.dp)
     ) {
         TitleTab(
