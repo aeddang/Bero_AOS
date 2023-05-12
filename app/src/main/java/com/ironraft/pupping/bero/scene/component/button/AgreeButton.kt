@@ -18,14 +18,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
 import com.skeleton.theme.*
 import com.skeleton.view.button.TransparentButton
 import com.skeleton.view.button.TextButton
 import com.skeleton.view.button.WrapTransparentButton
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 enum class AgreeButtonType {
@@ -57,7 +60,7 @@ fun AgreeButton(
     modifier: Modifier = Modifier,
     action:(Boolean) -> Unit
 ) {
-    val pagePresenter = koinInject<PageComposePresenter>()
+    val pagePresenter:PageComposePresenter = get()
     AppTheme {
         WrapTransparentButton(
             action = {

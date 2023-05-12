@@ -37,6 +37,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 internal class SelectListStepData{
@@ -52,7 +53,7 @@ fun SelectListStep(
     next: (ModifyPetProfileData) -> Unit
 ) {
     val appTag = "InputTextStep"
-    val dataProvider = koinInject<DataProvider>()
+    val dataProvider:DataProvider = get()
     val viewData: SelectListStepData  by remember { mutableStateOf(SelectListStepData()) }
     var btnType:RadioButtonType by remember { mutableStateOf(RadioButtonType.Blank)}
     var keyword:String by remember { mutableStateOf("") }

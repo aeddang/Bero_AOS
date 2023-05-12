@@ -67,6 +67,7 @@ class MainActivity : PageComposeable() {
     @OptIn(ExperimentalAnimationApi::class)
     private fun setupComposeScreen(){
         setContent {
+
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
             scope.run {

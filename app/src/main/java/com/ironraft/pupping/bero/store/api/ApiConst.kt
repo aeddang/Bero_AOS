@@ -49,6 +49,16 @@ object Api {
         private const val PATH = "vision"
         const val detect = "$VERSION_V1/$PATH/images/detecthumanwithdog"
     }
+
+    object Friend {
+        private const val PATH = "friends"
+        const val friends = "$VERSION_V1/${Friend.PATH}"
+        const val friendsIsRequested = "${Friend.friends}/isRequested"
+        const val friendsRequesting = "${Friend.friends}/requesting"
+        const val friendsRequest = "${Friend.friends}/request"
+        const val friendsAccept = "${Friend.friends}/accept"
+        const val friendsReject = "${Friend.friends}/reject"
+    }
 }
 
 
@@ -57,11 +67,6 @@ object ApiValue{
     const val PAGE_SIZE = 20
 }
 
-object ApiAction {
-    const val password  = "password"
-    const val accessToken = "accesstoken"
-
-}
 
 object ApiCode{
     const val  invalidToken = "C001"
@@ -102,6 +107,7 @@ object ApiField {
 
     const val category = "category"
     const val searchText = "searchText"
+    const val otherUserId = "otherUserId"
 }
 
 enum class ApiType{
@@ -110,5 +116,7 @@ enum class ApiType{
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPictures,
-    CheckHumanWithDog
+    CheckHumanWithDog,
+    GetFriend, GetFriends, GetRequestFriends, GetRequestedFriends,
+    RequestFriend, DeleteFriend, RejectFriend, AcceptFriend
 }

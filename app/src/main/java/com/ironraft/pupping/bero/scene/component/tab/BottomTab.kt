@@ -32,6 +32,7 @@ import com.lib.page.PageObject
 import com.skeleton.view.button.ImageButton
 import com.skeleton.view.button.SelectButton
 import com.skeleton.view.button.SelectButtonType
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 data class PageSelecterble (
@@ -47,8 +48,8 @@ data class PageSelecterble (
 fun BottomTab(
 
 ) {
-    val pagePresenter = koinInject<PageComposePresenter>()
-    val pageAppViewModel = koinInject<PageAppViewModel>()
+    val pagePresenter:PageComposePresenter = get()
+    val pageAppViewModel:PageAppViewModel = get()
     val pages:ArrayList<PageSelecterble> = arrayListOf(
         PageSelecterble(PageID.Walk, PageID.Walk.position, R.drawable.paw, text = stringResource(R.string.gnb_walk)),
         PageSelecterble(PageID.Explore, PageID.Explore.position, R.drawable.explore, text = stringResource(R.string.gnb_explore)),

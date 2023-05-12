@@ -27,6 +27,7 @@ import com.skeleton.component.progress.StepInfo
 import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenMargin
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 enum class PageAddDogStep{
@@ -104,7 +105,7 @@ fun PageAddDog(
     page: PageObject? = null
 ){
     val appTag = "PageAddDog"
-    val pagePresenter = koinInject<PageComposePresenter>()
+    val pagePresenter:PageComposePresenter = get()
     var profile:ModifyPetProfileData by remember { mutableStateOf(ModifyPetProfileData()) }
     var currentStep:PageAddDogStep by remember { mutableStateOf(PageAddDogStep.Name) }
     var currentCount:Int by remember { mutableStateOf(0) }

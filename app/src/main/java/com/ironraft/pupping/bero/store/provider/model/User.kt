@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import com.lib.util.DataLog
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.component.button.FriendButtonFuncType
 import com.ironraft.pupping.bero.store.api.MetaData
 import com.ironraft.pupping.bero.store.api.rest.*
 import com.lib.page.PageEventType
@@ -272,8 +273,8 @@ class History{
     }
 }
 
-enum class FriendStatus(isFriend:Boolean = false){
-    Norelation, RequestFriend, Friend, RecieveFriend, Chat, Move;
+enum class FriendStatus{
+    Norelation, RequestFriend, Friend, RecieveFriend, Chat, Move, MoveFriend;
     @get:DrawableRes
     val icon:Int
         get() = when(this) {
@@ -281,7 +282,8 @@ enum class FriendStatus(isFriend:Boolean = false){
             RequestFriend -> R.drawable.check
             Friend -> R.drawable.remove_friend
             RecieveFriend -> R.drawable.add_friend
-            Move -> if(isFriend) R.drawable.chat else R.drawable.add_friend
+            Move -> R.drawable.add_friend
+            MoveFriend -> R.drawable.chat
             else -> R.drawable.add_friend
         }
 
@@ -292,27 +294,28 @@ enum class FriendStatus(isFriend:Boolean = false){
             RequestFriend -> R.string.button_requestSent
             Friend -> R.string.button_removeFriend
             RecieveFriend -> R.string.button_addFriend
-            Move -> if(isFriend) R.string.button_chat else R.string.button_addFriend
+            Move -> R.string.button_addFriend
+            MoveFriend -> R.string.button_chat
             else -> R.string.button_addFriend
         }
 
-    /*
-    var buttons:[FriendButton.FuncType]{
-        switch self {
-            case .chat : return [.chat]
-            case .requestFriend : return []
-            case .friend : return [.delete]
-            case .recieveFriend : return [.reject, .accept]
-            case .move( let isFriend) : return isFriend ? [.move, .chat] : [.move, .request]
-            default : return [.request]
+
+    val buttons:List<FriendButtonFuncType>
+        get() = when(this) {
+            Chat -> listOf(FriendButtonFuncType.Chat)
+            RequestFriend -> listOf()
+            Friend -> listOf(FriendButtonFuncType.Delete)
+            RecieveFriend -> listOf(FriendButtonFuncType.Reject, FriendButtonFuncType.Accept)
+            Move -> listOf(FriendButtonFuncType.Move, FriendButtonFuncType.Request)
+            MoveFriend -> listOf(FriendButtonFuncType.Move, FriendButtonFuncType.Chat)
+            else -> listOf()
         }
-    }
-    */
+
+
 
     val isFriend:Boolean
         get() = when(this) {
-            Friend, Chat -> true
-            Move -> isFriend
+            Friend, Chat,  MoveFriend -> true
             else -> false
         }
 

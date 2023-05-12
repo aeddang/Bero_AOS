@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.store.api
 
+import androidx.compose.foundation.pager.PageSize
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.annotations.SerializedName
 import com.skeleton.module.network.ErrorType
@@ -45,11 +46,12 @@ class ApiInterceptor : Interceptor {
 data class ApiQ(val id:String,  val type: ApiType,
     var query:HashMap<String,String>? = null,
     var body:HashMap<String, Any>? = null,
-    var action: ApiAction? = null,
     var contentID:String = "",
     var isOptional:Boolean = false,
     var isLock:Boolean = false,
-    var requestData:Any? = null
+    var requestData:Any? = null,
+    var page:Int = 0,
+    var pageSize:Int = ApiValue.PAGE_SIZE
 )
 
 data class ApiSuccess<T>(

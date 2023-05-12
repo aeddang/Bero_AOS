@@ -21,6 +21,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.skeleton.view.button.*
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 enum class TitleTabType {
@@ -97,8 +98,8 @@ fun TitleTab(
     icons:ArrayList<String?> = arrayListOf(),
     action: ((TitleTabButtonType) -> Unit)? = null
 ) {
-    //val pagePresenter = koinInject<PageComposePresenter>()
-    //val pageAppViewModel = koinInject<PageAppViewModel>()
+    val pagePresenter:PageComposePresenter = get()
+    val pageAppViewModel:PageAppViewModel = get()
 
     AppTheme {
         Column(

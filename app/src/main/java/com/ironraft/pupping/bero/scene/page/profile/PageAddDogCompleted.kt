@@ -29,6 +29,7 @@ import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
 import com.skeleton.view.button.FillButton
 import com.skeleton.view.button.FillButtonType
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 @Composable
 fun PageAddDogCompleted(
@@ -36,8 +37,8 @@ fun PageAddDogCompleted(
     page: PageObject? = null
 ){
     val appTag = "PageAddDogCompleted"
-    val pagePresenter = koinInject<PageComposePresenter>()
-    val dataProvider = koinInject<DataProvider>()
+    val pagePresenter:PageComposePresenter = get()
+    val dataProvider:DataProvider = get()
     var profile:ModifyPetProfileData by remember { mutableStateOf( ModifyPetProfileData() ) }
     val userEvent = dataProvider.user.event.observeAsState()
     @Suppress("UNCHECKED_CAST")

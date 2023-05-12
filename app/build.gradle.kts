@@ -132,7 +132,7 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-navigation:3.4.0")
     implementation("io.insert-koin:koin-androidx-compose:3.4.3")
     implementation("io.insert-koin:koin-annotations:1.2.0")
-
+    implementation("dev.burnoo:cokoin:0.3.2")
     /*
     implementation("io.insert-koin:koin-ksp-compiler:1.0.2")
     implementation("com.google.devtools.ksp:symbol-processing-api:1.8.0-1.0.8")

@@ -25,6 +25,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -36,7 +37,7 @@ fun SelectTagStep(
     next: (ModifyPetProfileData) -> Unit
 ) {
     val appTag = "SelectTagStep"
-    val dataProvider = koinInject<DataProvider>()
+    val dataProvider:DataProvider = get()
     fun getCodeData(){
         val params = HashMap<String, String>()
         params[ApiField.category] = CodeCategory.Personality.name.lowercase()

@@ -15,8 +15,10 @@ import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
+import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.lib.page.*
 import com.lib.util.AppUtil
@@ -24,6 +26,7 @@ import com.lib.util.getBitmap
 import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 import java.util.UUID
 
@@ -35,8 +38,9 @@ fun SelectPictureStep(
     next: (ModifyPetProfileData) -> Unit
 ) {
     val appTag = "SelectPictureStep"
-    val pagePresenter = koinInject<PagePresenter>()
-    val activityModel = koinInject<PageAppViewModel>()
+    val pagePresenter:PageComposePresenter = get()
+    val activityModel: PageAppViewModel = get()
+
     fun getPrevData() : Bitmap?{
         return when (step){
             PageAddDogStep.Picture -> profile?.image

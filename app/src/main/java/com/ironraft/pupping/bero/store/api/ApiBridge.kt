@@ -17,27 +17,25 @@ import okhttp3.RequestBody.Companion.asRequestBody
 
 class ApiBridge(
     private val context: Context,
-    private val networkFactory: NetworkFactory,
-    private val interceptor: ApiInterceptor
+    networkFactory: NetworkFactory,
+    interceptor: ApiInterceptor
 ) {
-    val auth: AuthApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        AuthApi::class.java)
-    val user: UserApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        UserApi::class.java)
-
-    private val pet: PetApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        PetApi::class.java)
-    private val misc: MiscApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        MiscApi::class.java)
-
-    private val mission: MissionApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        MissionApi::class.java)
-
-    private val album: AlbumApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        AlbumApi::class.java)
-
-    private val vision: VisionApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) ).create(
-        VisionApi::class.java)
+    val auth: AuthApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(AuthApi::class.java)
+    val user: UserApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(UserApi::class.java)
+    private val pet: PetApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(PetApi::class.java)
+    private val misc: MiscApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(MiscApi::class.java)
+    private val mission: MissionApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(MissionApi::class.java)
+    private val album: AlbumApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(AlbumApi::class.java)
+    private val vision: VisionApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(VisionApi::class.java)
+    private val friend: FriendApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(FriendApi::class.java)
 
     @Suppress("UNCHECKED_CAST")
     fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
@@ -78,6 +76,14 @@ class ApiBridge(
             ApiType.UpdateAlbumPictures -> getUpdateLikeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
             ApiType.DeleteAlbumPictures -> album.delete(apiQ.contentID)
             ApiType.CheckHumanWithDog -> getVisionCheck(apiQ.requestData as? Bitmap)
+            ApiType.GetFriend -> friend.get(apiQ.contentID)
+            ApiType.GetFriends -> friend.getFriends(apiQ.page, apiQ.pageSize)
+            ApiType.GetRequestFriends -> friend.requestFriends(apiQ.page, apiQ.pageSize)
+            ApiType.GetRequestedFriends -> friend.requestedFriends(apiQ.page, apiQ.pageSize)
+            ApiType.RequestFriend -> friend.request(apiQ.contentID)
+            ApiType.AcceptFriend -> friend.accept(apiQ.contentID)
+            ApiType.RejectFriend -> friend.reject(apiQ.contentID)
+            ApiType.DeleteFriend -> friend.delete(apiQ.contentID)
         }
     }
 

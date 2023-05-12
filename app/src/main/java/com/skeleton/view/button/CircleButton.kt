@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
 
 
@@ -28,7 +29,10 @@ enum class CircleButtonType() {
     Tiny {
         override var size: Float = DimenIcon.microUltra
     },
-    Icon, Text, Image;
+    Image {
+        override var size: Float = DimenIcon.light
+    },
+    Icon, Text;
     open var size:Float = DimenIcon.mediumUltra
 }
 
@@ -47,12 +51,12 @@ fun CircleButton(
     modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
-    var painter: AsyncImagePainter? = null
+    var imagePath: String? = null
     var text:String? = null
     value?.let {
         when (type) {
             CircleButtonType.Text -> text = it
-            CircleButtonType.Image -> painter = rememberAsyncImagePainter(it)
+            CircleButtonType.Image -> imagePath =it
             else -> {}
         }
     }
@@ -63,13 +67,14 @@ fun CircleButton(
                 .clip(CircleShape)
                 .background(
                     if (isSelected) activeColor
-                    else if(type == CircleButtonType.Tiny) defaultColor else ColorApp.white)
+                    else if (type == CircleButtonType.Tiny) defaultColor else ColorApp.white
+                )
                 .border(
                     width = strokeWidth.dp,
                     color = if (isSelected) ColorApp.white else ColorApp.grey200,
                     shape = CircleShape
                 )
-                .size(type.size.dp),
+                .size((originSize ?: type.size).dp),
             contentAlignment = Alignment.Center
 
         ) {
@@ -79,7 +84,9 @@ fun CircleButton(
                     contentDescription = "",
                     contentScale = ContentScale.Fit,
                     colorFilter = ColorFilter.tint(if(isSelected) ColorApp.white else defaultColor),
-                    modifier = Modifier.fillMaxSize().padding(DimenMargin.tinyExtra.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(DimenMargin.tinyExtra.dp)
                 )
             }
             text?.let {
@@ -90,8 +97,16 @@ fun CircleButton(
                     color = if(isSelected) ColorApp.white else defaultColor
                 )
             }
+            imagePath?.let {
+                ProfileImage(
+                    imagePath = it,
+                    size = type.size
+                )
+            }
 
+            /*
             painter?.let {
+
                 Image(
                     it,
                     contentDescription = "",
@@ -99,7 +114,7 @@ fun CircleButton(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
+            */
             TransparentButton(
                 action = {
                     action(index)
@@ -114,7 +129,9 @@ fun CircleButton(
 @Composable
 fun CircleButtonComposePreview(){
     Column (
-        modifier = Modifier.padding(16.dp).background(ColorApp.white),
+        modifier = Modifier
+            .padding(16.dp)
+            .background(ColorApp.white),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CircleButton(
@@ -133,6 +150,15 @@ fun CircleButtonComposePreview(){
         }
         CircleButton(
             type = CircleButtonType.Text,
+            value = "LV99",
+            strokeWidth = DimenStroke.regular,
+            defaultColor = ColorApp.green,
+            isSelected = false
+        ) {
+
+        }
+        CircleButton(
+            type = CircleButtonType.Image,
             value = "LV99",
             strokeWidth = DimenStroke.regular,
             defaultColor = ColorApp.green,

@@ -7,11 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +42,11 @@ fun ProfileImage(
     var painter:AsyncImagePainter? = null
     image?.let{ painter = rememberAsyncImagePainter(it) }
     if(painter == null) {
-        imagePath?.let { painter = rememberAsyncImagePainter(it) }
+        imagePath?.let {
+            painter = rememberAsyncImagePainter( it,
+                placeholder = painterResource(emptyImagePath)
+            )
+        }
     }
     AppTheme {
         Box(
@@ -105,6 +112,46 @@ fun ProfileImage(
     }
 }
 
+@Composable
+fun ProfileImageRect(
+    modifier: Modifier = Modifier,
+    imagePath:String? = null,
+    action: (() -> Unit)? = null
+) {
+    var painter:AsyncImagePainter? = null
+    imagePath?.let {
+        painter = rememberAsyncImagePainter( it,
+            placeholder = painterResource(R.drawable.noimage_1_1)
+        )
+    }
+
+    AppTheme {
+        Box(
+            modifier = modifier.size(DimenButton.medium.dp)
+                .clip(RoundedCornerShape(CornerSize(DimenRadius.tiny.dp)))
+                .background(ColorApp.grey50)
+
+        ) {
+            painter?.let {
+                Image(
+                    it,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(DimenButton.medium.dp)
+                )
+            }
+            action?.let {
+                TransparentButton(
+                    modifier = Modifier.matchParentSize(),
+                    action =  {
+                        it()
+                    }
+                )
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun ProfileImageComposePreview(){
@@ -127,6 +174,9 @@ fun ProfileImageComposePreview(){
         ) {
 
         }
+        ProfileImageRect(
+            imagePath = "test"
+        )
 
     }
 

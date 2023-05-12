@@ -65,34 +65,34 @@ fun LvButton(
     action:(Int) -> Unit
 ) {
     AppTheme {
-        WrapTransparentButton(
-            action = {
-                action(index)
-            }
+        Box (
+            modifier = modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center
         ){
-            Box (
-                modifier = Modifier.wrapContentSize(),
-                contentAlignment = Alignment.Center
-            ){
-                Image(
-                    painterResource(lv.icon),
-                    contentDescription = "",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(type.size.dp),
-                    colorFilter = if(isSelected) null else ColorFilter.tint(defaultColor)
+            Image(
+                painterResource(lv.icon),
+                contentDescription = "",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(type.size.dp),
+                colorFilter = if(isSelected) null else ColorFilter.tint(defaultColor)
+            )
+            text?.let {
+                Text(
+                    it,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = type.textSize.sp,
+                    letterSpacing = 0.sp,
+                    maxLines = 1,
+                    color = ColorApp.white,
+                    modifier = Modifier.padding(top = type.textTop.dp)
                 )
-                text?.let {
-                    Text(
-                        it,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = type.textSize.sp,
-                        letterSpacing = 0.sp,
-                        maxLines = 1,
-                        color = ColorApp.white,
-                        modifier = Modifier.padding(top = type.textTop.dp)
-                    )
-                }
             }
+            TransparentButton(
+                modifier = Modifier.matchParentSize(),
+                action =  {
+                    action(index)
+                }
+            )
         }
     }
 }

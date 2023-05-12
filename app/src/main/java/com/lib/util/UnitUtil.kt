@@ -102,10 +102,10 @@ fun String.replace(newString:String): String {
     return replace("%s", newString)
 }
 
-fun Double.secToMinString(div:String = ":") : String {
+fun Double.secToMinString(div:String = ":", fix:Int=2) : String {
     val sec = this.toInt() % 60
     val min = floor( this / 60.0 ).toInt()
-    return min.toString().toFixLength(2) + div + sec.toString().toFixLength(2)
+    return min.toString().toFixLength(2) + div + sec.toString().toFixLength(fix)
 }
 
 fun Double.toDecimal(divid:Double = 1.0 ,f:Int = 0) : String {

@@ -35,9 +35,7 @@ fun WrapTransparentButton(
 ){
     FloatingActionButton(
         onClick = action,
-        Modifier
-            .wrapContentSize()
-            .padding(0.dp),
+        modifier = Modifier.wrapContentSize().padding(0.dp),
         shape = RoundedCornerShape(0.dp),
         backgroundColor = ColorTransparent.clear,
         contentColor = contentColorFor(ColorTransparent.clear),

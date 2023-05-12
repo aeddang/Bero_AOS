@@ -19,6 +19,7 @@ import com.lib.page.PageObject
 import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenMargin
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 @Composable
@@ -27,17 +28,13 @@ fun PageMy(
     page: PageObject? = null
 ){
     val appTag = "PageMy"
-    val pagePresenter = koinInject<PageComposePresenter>()
-    var profile:ModifyPetProfileData by remember { mutableStateOf(ModifyPetProfileData()) }
-    fun onCompleted(){
-        pagePresenter.openPopup(
-            PageProvider.getPageObject(PageID.AddDogCompleted)
-                .addParam(PageParam.data, profile)
-        )
-    }
+    val pagePresenter:PageComposePresenter = get()
+    val profile:ModifyPetProfileData by remember { mutableStateOf(ModifyPetProfileData()) }
+
     Column (
         modifier = modifier
-            .fillMaxSize().background(ColorBrand.bg)
+            .fillMaxSize()
+            .background(ColorBrand.bg)
             .padding(horizontal = DimenApp.pageHorinzontal.dp)
             .padding(bottom = DimenMargin.regular.dp),
         verticalArrangement = Arrangement.spacedBy(DimenMargin.medium.dp)
