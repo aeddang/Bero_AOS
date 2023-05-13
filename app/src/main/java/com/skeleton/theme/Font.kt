@@ -1,5 +1,7 @@
 package com.skeleton.theme
 import androidx.compose.material.Typography
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
 import com.ironraft.pupping.bero.R
 
@@ -16,11 +18,17 @@ class FontSize {
         var microExtra:Float = 8.0f
     }
 }
+val style = TextStyle(
+    platformStyle = PlatformTextStyle(
+        includeFontPadding = false,
+    )
+)
 
 val DefaultFontFamily = FontFamily(
     Font(R.font.poppins_extralight, FontWeight.ExtraLight),
     Font(R.font.poppins_light, FontWeight.Light),
     Font(R.font.poppins_regular),
+    Font(R.font.poppins_regular, FontWeight.Normal),
     Font(R.font.poppins_medium, FontWeight.Medium),
     Font(R.font.poppins_bold, FontWeight.Bold) ,
     Font(R.font.poppins_semibold, FontWeight.SemiBold) ,
@@ -29,5 +37,7 @@ val DefaultFontFamily = FontFamily(
 )
 
 val DefaultTypography = Typography(
-    defaultFontFamily = DefaultFontFamily
+    defaultFontFamily = DefaultFontFamily,
+    body1 = style,
+    body2 = style
 )

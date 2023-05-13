@@ -42,7 +42,10 @@ class UserProfile(val isMine:Boolean = false){
         type = data.snsType
         return this
     }
-
+    fun dummy() : UserProfile{
+        nickName.value = "Bero User"
+        return this
+    }
     fun setData(data:UserData):UserProfile{
         if (isMine) originData = data
         userId = data.userId ?: ""

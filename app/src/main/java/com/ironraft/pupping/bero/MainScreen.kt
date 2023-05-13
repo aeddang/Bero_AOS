@@ -124,6 +124,7 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
     ) {
         val pageAppViewModel = koinInject<PageAppViewModel>()
         val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
+
         AppTheme {
             when (routePage.value) {
                 PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())

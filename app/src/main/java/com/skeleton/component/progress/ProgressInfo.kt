@@ -104,7 +104,7 @@ fun ProgressInfoComposePreview(){
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ProgressInfo(
-            //title = "test",
+            title = "test",
             leadingText = "leading",
             trailingText = "trail",
             progress = 0.5,

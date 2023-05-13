@@ -52,7 +52,7 @@ class User(val isMe:Boolean = false){
         get() = (representativePet.value?.name?.value ?: currentProfile.nickName.value) ?: "Bero user"
 
     val representativeImage:String?
-        get() = representativePet.value?.imagePath ?: currentProfile.imagePath.value
+        get() = representativePet.value?.imagePath?.value ?: currentProfile.imagePath.value
 
     val isFriend:Boolean
         get() = currentProfile.status.value?.isFriend ?: false

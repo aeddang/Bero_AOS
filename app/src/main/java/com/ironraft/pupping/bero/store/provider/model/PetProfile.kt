@@ -70,7 +70,7 @@ class PetProfile {
     private val appTag = javaClass.simpleName
     var id:String = UUID.randomUUID().toString(); private set
     var petId:Int = 0; private set
-    var imagePath:String? = null; private set
+    val imagePath:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val image:MutableLiveData<Bitmap?> = MutableLiveData<Bitmap?>(null)
     val name:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val breed:MutableLiveData<String?> = MutableLiveData<String?>(null)
@@ -122,7 +122,7 @@ class PetProfile {
 
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0
-        this.imagePath = data.pictureUrl
+        this.imagePath.value = data.pictureUrl
         this.name.value = data.name
         this.breed.value = data.tagBreed
         this.gender.value = Gender.getGender(data.sex)
@@ -148,13 +148,19 @@ class PetProfile {
         return this
     }
 
-    fun empty(context:Context) : PetProfile{
+    fun empty() : PetProfile{
         this.isEmpty = true
         this.name.value = ""
         this.isMypet = true
         return this
     }
+    fun dummy() : PetProfile{
 
+        this.name.value = "name"
+        this.isMypet = true
+        this.introduction.value = "introduction"
+        return this
+    }
     fun update(data:ModifyPetProfileData) : PetProfile{
         data.image?.let { this.image.value = it }
         data.name?.let { this.name.value = it }
@@ -191,6 +197,7 @@ class PetProfile {
     }
 
     fun removeObservers(owner: LifecycleOwner){
+        imagePath.removeObservers(owner)
         image.removeObservers(owner)
         name.removeObservers(owner)
         breed.removeObservers(owner)

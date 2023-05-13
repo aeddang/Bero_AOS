@@ -22,6 +22,7 @@ import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
 import com.ironraft.pupping.bero.activityui.ActivitAlertType
+import com.ironraft.pupping.bero.koin.pageModelModule
 import com.ironraft.pupping.bero.scene.component.button.AgreeButton
 import com.ironraft.pupping.bero.scene.component.button.AgreeButtonType
 import com.ironraft.pupping.bero.store.PageRepository
@@ -36,6 +37,8 @@ import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenMargin
 import com.skeleton.theme.FontSize
 import com.skeleton.view.button.FillButton
+import dev.burnoo.cokoin.Koin
+import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
 
@@ -43,10 +46,10 @@ import org.koin.compose.koinInject
 fun PageLogin(
     modifier: Modifier = Modifier
 ){
-    val pagePresenter = koinInject<PageComposePresenter>()
-    val repository = koinInject<PageRepository>()
-    val appSceneObserver = koinInject<AppSceneObserver>()
-    val snsManager = koinInject<SnsManager>()
+    val pagePresenter:PageComposePresenter = get()
+    val repository:PageRepository = get()
+    val appSceneObserver:AppSceneObserver = get()
+    val snsManager:SnsManager = get()
     var isAgree by remember { mutableStateOf(false) }
 
     val snsUser = snsManager.user.observeAsState()
@@ -165,6 +168,8 @@ fun PageLogin(
 @Preview
 @Composable
 fun PageLoginPreview(){
-    PageLogin(
-    )
+    Koin(appDeclaration = { modules(pageModelModule) }) {
+        PageLogin(
+        )
+    }
 }

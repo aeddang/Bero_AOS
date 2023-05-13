@@ -122,7 +122,7 @@ fun SortButton(
                 petProfile?.let {
                     ProfileImage(
                         image = it.image.value,
-                        imagePath = it.imagePath,
+                        imagePath = it.imagePath.value,
                         size= sizeType.iconSize,
                         emptyImagePath= R.drawable.profile_dog_default
                     )
