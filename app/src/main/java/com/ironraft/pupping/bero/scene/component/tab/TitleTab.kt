@@ -17,10 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.koin.pageModelModule
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.skeleton.view.button.*
+import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
 import org.koin.compose.koinInject
 
@@ -179,16 +181,19 @@ fun TitleTab(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             button.text?.let {
-                                WrapTransparentButton(
-                                    action = {
-                                        action?.let { it(button) }
-                                    }
-                                ) {
+                                Box(modifier = Modifier.wrapContentSize()){
                                     Text(
                                         stringResource(id = it),
                                         fontSize = FontSize.thin.sp,
                                         color = button.color
                                     )
+                                    action?.let {
+                                        TransparentButton(
+                                            modifier = Modifier.matchParentSize()) {
+                                            it(button)
+                                        }
+                                    }
+
                                 }
                             }
                             button.icon?.let {
@@ -218,22 +223,30 @@ fun TitleTab(
 @Preview
 @Composable
 fun TitleTabComposePreview() {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .width(420.dp)
-            .background(ColorApp.white),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        TitleTab(
-            useBack = true,
-            title = "Page Title",
-            buttons = arrayListOf(TitleTabButtonType.Add, TitleTabButtonType.AddChat),
-            icons = arrayListOf("N", null),
-            sortButton = "sort"
-        ){
+    Koin(appDeclaration = { modules(pageModelModule) }) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .width(420.dp)
+                .background(ColorApp.white),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            TitleTab(
+                useBack = true,
+                title = "Page Title",
+                buttons = arrayListOf(TitleTabButtonType.Add, TitleTabButtonType.AddChat),
+                icons = arrayListOf("N", null),
+                sortButton = "sort"
+            ) {
 
+            }
+            TitleTab(
+                useBack = true,
+                title = "Page Title",
+                buttons = arrayListOf(TitleTabButtonType.ManageDogs)
+            ) {
+
+            }
         }
-
     }
 }

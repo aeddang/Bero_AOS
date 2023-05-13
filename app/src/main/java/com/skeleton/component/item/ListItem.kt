@@ -188,11 +188,11 @@ fun ListItemComposePreview() {
             likeCount = 100.0,
             isLike = true,
             pets = listOf(
-                PetProfile().init(PetData(), false),
-                PetProfile().init(PetData(), false),
-                PetProfile().init(PetData(), false),
-                PetProfile().init(PetData(), false),
-                PetProfile().init(PetData(), false)
+                PetProfile().init(PetData()),
+                PetProfile().init(PetData()),
+                PetProfile().init(PetData()),
+                PetProfile().init(PetData()),
+                PetProfile().init(PetData())
             )
         )
     }

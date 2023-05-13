@@ -33,6 +33,8 @@ import com.ironraft.pupping.bero.store.api.rest.MissionCategory
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.UserEvent
 import com.ironraft.pupping.bero.store.provider.model.UserEventType
+import com.lib.page.PageComposePresenter
+import com.lib.page.PagePresenter
 import com.lib.util.replace
 import com.skeleton.component.item.ValueInfoType
 import com.skeleton.component.item.profile.*
@@ -49,6 +51,7 @@ import dev.burnoo.cokoin.get
 fun MyHistorySection(
     modifier: Modifier = Modifier
 ) {
+    val pagePresenter: PagePresenter = get()
     val dataProvider: DataProvider = get()
     var walkDistance:Double by remember { mutableStateOf(dataProvider.user.exerciseDistance) }
     var walkDescription:String by remember { mutableStateOf(dataProvider.user.totalWalkCount.toString()) }

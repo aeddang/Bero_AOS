@@ -40,10 +40,12 @@ class MainActivity : PageComposeable() {
 
     override fun getPageActivityPresenter(): PageComposePresenter = get()
     override fun getPageActivityViewModel(): PageAppViewModel = get()
-    override fun getPageActivityModel(): PageModel{
+    override fun getPageActivityModel(): PageModel = get()
+    /*
         val model:ActivityModel = get()
         return model
     }
+     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         scope.createJob()

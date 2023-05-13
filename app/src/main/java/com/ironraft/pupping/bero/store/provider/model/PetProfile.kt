@@ -70,6 +70,7 @@ class PetProfile {
     private val appTag = javaClass.simpleName
     var id:String = UUID.randomUUID().toString(); private set
     var petId:Int = 0; private set
+    var userId:String = ""; private set
     val imagePath:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val image:MutableLiveData<Bitmap?> = MutableLiveData<Bitmap?>(null)
     val name:MutableLiveData<String?> = MutableLiveData<String?>(null)
@@ -116,10 +117,10 @@ class PetProfile {
         isMypet = isMyPet
         return this
     }
-    fun init(data:PetData, isMyPet:Boolean, isFriend:Boolean = false, lv:Int? = null, index:Int = -1): PetProfile{
+    fun init(data:PetData, userId:String? = null,isMyPet:Boolean = false, isFriend:Boolean = false, lv:Int? = null, index:Int = -1): PetProfile{
         if (isMyPet) originData = data
         lv?.let { level = it }
-
+        this.userId = data.userId ?: userId ?: ""
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0
         this.imagePath.value = data.pictureUrl

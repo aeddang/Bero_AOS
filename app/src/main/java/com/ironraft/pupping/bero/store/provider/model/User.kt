@@ -39,7 +39,7 @@ class User(val isMe:Boolean = false){
     var totalWalkCount: Int = 0; private set
     var currentProfile:UserProfile = UserProfile(isMe); private set
 
-    var pets:List<PetProfile> = arrayListOf(); private set
+    var pets:List<PetProfile> = listOf(); private set
     var snsUser:SnsUser? = null; private set
     var finalGeo:GeoData? = null; private set
 
@@ -156,7 +156,7 @@ class User(val isMe:Boolean = false){
     }
 
     fun setData(data:List<PetData>, isMyPet:Boolean = true){
-        val profiles = data.map{ PetProfile().init(it, isMyPet, lv = lv) }
+        val profiles = data.map{ PetProfile().init(it, isMyPet = isMyPet, lv = lv) }
         pets = profiles.toMutableList()
         findRepresentativePet()
         event.value = UserEvent(UserEventType.UpdatedDogs)

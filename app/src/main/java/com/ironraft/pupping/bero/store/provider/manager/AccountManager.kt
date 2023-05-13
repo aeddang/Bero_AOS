@@ -21,7 +21,7 @@ class AccountManager(private val user: User) : PageLifecycleUser {
     fun respondApi(res:ApiSuccess<ApiType>) :Boolean {
         when(res.type){
             ApiType.RegistPet ->{
-                (res.data as? PetData)?.let{ user.registPetComplete(PetProfile().init(it, true))}
+                (res.data as? PetData)?.let{ user.registPetComplete(PetProfile().init(it, isMyPet = true))}
                 return false
             }
             ApiType.DeletePet ->{

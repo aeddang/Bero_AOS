@@ -11,11 +11,8 @@ import com.ironraft.pupping.bero.store.api.ApiManager
 import com.ironraft.pupping.bero.store.Topic
 import com.ironraft.pupping.bero.store.database.DataBaseManager
 import com.ironraft.pupping.bero.store.DeepLinkManager
-import com.lib.page.PageComposePresenter
-import com.lib.page.PageAppViewModel
-import com.lib.page.PagePresenter
 import com.ironraft.pupping.bero.store.ShareManager
-import com.lib.page.AppObserver
+import com.lib.page.*
 import com.skeleton.sns.SnsManager
 import com.skeleton.module.network.NetworkFactory
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -26,7 +23,7 @@ import org.koin.dsl.module
 
 val pageModelModule = module {
     singleOf(::PageAppObserver) { bind<AppObserver>() }
-    singleOf(::ActivityModel)
+    singleOf(::ActivityModel) { bind<PageModel>() }
     singleOf(::PageAppViewModel)
     singleOf(::StoragePreference)
     singleOf(::DataProvider)

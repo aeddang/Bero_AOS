@@ -17,6 +17,7 @@ import com.ironraft.pupping.bero.scene.component.item.PetProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.item.UserProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
+import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
 import com.ironraft.pupping.bero.scene.page.my.component.UserPlayInfo
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -130,6 +131,9 @@ fun PageMy(
             MyHistorySection(modifier
                 .padding(horizontal = DimenApp.pageHorinzontal.dp)
                 .padding(top = DimenMargin.regular.dp)
+            )
+            MyDogsSection(modifier
+                .padding(top = DimenMargin.heavyExtra.dp)
             )
         }
 
