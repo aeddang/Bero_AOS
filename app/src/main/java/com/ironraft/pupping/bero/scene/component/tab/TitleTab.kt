@@ -85,6 +85,7 @@ enum class TitleTabButtonType {
 
 @Composable
 fun TitleTab(
+    modifier: Modifier = Modifier,
     type:TitleTabType = TitleTabType.Page,
     title:String? = null,
     lineLimit:Int = Int.MAX_VALUE,
@@ -103,7 +104,7 @@ fun TitleTab(
 
     AppTheme {
         Column(
-            Modifier.fillMaxWidth(),
+            modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Box(

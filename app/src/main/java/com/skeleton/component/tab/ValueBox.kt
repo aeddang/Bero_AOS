@@ -28,12 +28,13 @@ data class ValueData(
 
 @Composable
 fun ValueBox(
+    modifier:Modifier = Modifier,
     datas:List<ValueData> = listOf(),
     action: ((ValueData) -> Unit)? = null
 ) {
     AppTheme {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth().height(84.dp)
                 .clip(RoundedCornerShape(DimenRadius.thin.dp))
                 .border(

@@ -1,30 +1,38 @@
 package com.ironraft.pupping.bero.store.api.rest
 
+import androidx.annotation.DrawableRes
 import com.google.gson.annotations.SerializedName
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiResponse
 import com.ironraft.pupping.bero.store.api.ApiValue
+import com.ironraft.pupping.bero.store.provider.model.MissionType
 import retrofit2.http.*
 
 enum class MissionCategory {
     Walk, Mission, All;
-    fun getApiCode():String {
-        return when (this){
-            MissionCategory.Walk -> "Walk"
-            MissionCategory.Mission -> "Mission"
-            MissionCategory.All -> "All"
+    val getApiCode : String
+        get() = when(this) {
+            Walk -> "Walk"
+            Mission -> "Mission"
+            All -> "All"
         }
-    }
 
-    fun getView():Int? {
-        return when (this){
-            MissionCategory.Walk -> R.string.walk
-            MissionCategory.Mission -> null
-            MissionCategory.All -> null
+    val text : String
+        get() = when(this) {
+            Walk -> "Walk"
+            Mission -> "Mission"
+            All -> ""
         }
-    }
+
+    @get:DrawableRes
+    val icon : Int
+        get() = when(this) {
+            Walk -> R.drawable.calendar
+            Mission -> R.drawable.goal
+            All -> R.drawable.paw
+        }
     companion object {
         fun getCategory(value:String?) : MissionCategory {
             return when (value){
