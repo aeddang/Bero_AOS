@@ -36,7 +36,7 @@ data class ActivitRadioEvent(
     var title:String? = null,
     var text:String? = null,
     var selected:Int? = null,
-    var buttons:ArrayList<String>? = null,
+    var buttons:List<String>? = null,
     var radioButtons:List<RadioBtnData>? = null,
     var handler: ((Int) -> Unit)? = null
 )

@@ -17,9 +17,10 @@ import com.ironraft.pupping.bero.scene.component.item.PetProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.item.UserProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
+import com.ironraft.pupping.bero.scene.page.component.FriendSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
-import com.ironraft.pupping.bero.scene.page.my.component.UserPlayInfo
+import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
@@ -128,12 +129,19 @@ fun PageMy(
                 .height(DimenLine.heavy.dp)
                 .background(ColorApp.grey50)
             )
-            MyHistorySection(modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.regular.dp)
+            MyHistorySection(
+                modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.regular.dp)
             )
             MyDogsSection(modifier
                 .padding(top = DimenMargin.heavyExtra.dp)
+            )
+            FriendSection(modifier
+                .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                .padding(top = DimenMargin.heavyExtra.dp),
+                user = dataProvider.user,
+                isEdit = true
             )
         }
 

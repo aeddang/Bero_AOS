@@ -197,7 +197,7 @@ fun SelectListStep(
                         .weight(1.0f),
                     verticalArrangement = Arrangement.spacedBy(btnType.spacing.dp)
                 ) {
-                    items( buttons.count()){ index->
+                    items( buttons.count() ){ index->
                         buttons[index].let { btn ->
                             RadioButton(
                                 type = btnType,

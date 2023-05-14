@@ -52,9 +52,9 @@ object Api {
 
     object Friend {
         private const val PATH = "friends"
-        const val friends = "$VERSION_V1/${Friend.PATH}"
-        const val friendsIsRequested = "${Friend.friends}/isRequested"
-        const val friendsRequesting = "${Friend.friends}/requesting"
+        const val friends = "$VERSION_V1/${Friend.PATH}/{${CONTENT_ID}}"
+        const val friendsIsRequested = "${Friend.friends}/isRequested/{${CONTENT_ID}}"
+        const val friendsRequesting = "${Friend.friends}/requesting/{${CONTENT_ID}}"
         const val friendsRequest = "${Friend.friends}/request"
         const val friendsAccept = "${Friend.friends}/accept"
         const val friendsReject = "${Friend.friends}/reject"
@@ -117,6 +117,6 @@ enum class ApiType{
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPictures,
     CheckHumanWithDog,
-    GetFriend, GetFriends, GetRequestFriends, GetRequestedFriends,
+    GetFriends, GetRequestFriends, GetRequestedFriends,
     RequestFriend, DeleteFriend, RejectFriend, AcceptFriend
 }

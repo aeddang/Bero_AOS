@@ -1,4 +1,4 @@
-package com.ironraft.pupping.bero.scene.page.my.component
+package com.ironraft.pupping.bero.scene.page.component
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState

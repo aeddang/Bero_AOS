@@ -120,26 +120,26 @@ fun MyDogsSection(
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(hasRepresentative){
+                    if(hasRepresentative) {
                         me?.let {
                             UserProfileInfo(
                                 profile = it,
                                 sizeType = HorizontalProfileSizeType.Big,
                                 modifier = Modifier.width(DimenItem.petList.dp)
-                            ){
+                            ) {
                                 /*
                                 pagePresenter.openPopup(
                                     PageProvider.getPageObject(.modifyUser)
                                 )*/
                             }
                         }
-                        pets.filter { !it.isRepresentative }.forEach {
-                            PetProfileInfo(
-                                profile = it,
-                                modifier = Modifier.width(DimenItem.petList.dp)
-                            ) {
-                                movePetPag(it)
-                            }
+                    }
+                    pets.filter { !it.isRepresentative }.forEach {
+                        PetProfileInfo(
+                            profile = it,
+                            modifier = Modifier.width(DimenItem.petList.dp)
+                        ) {
+                            movePetPag(it)
                         }
                     }
                 }

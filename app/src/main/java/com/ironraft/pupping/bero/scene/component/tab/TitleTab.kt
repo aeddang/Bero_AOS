@@ -2,6 +2,7 @@ package com.ironraft.pupping.bero.scene.component.tab
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -88,6 +89,7 @@ enum class TitleTabButtonType {
 @Composable
 fun TitleTab(
     modifier: Modifier = Modifier,
+    scrollState: ScrollState? = null,
     type:TitleTabType = TitleTabType.Page,
     title:String? = null,
     lineLimit:Int = Int.MAX_VALUE,
@@ -211,11 +213,14 @@ fun TitleTab(
                     }
                 }
             }
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
-            )
+            if(type == TitleTabType.Page) {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(DimenLine.light.dp)
+                        .background(ColorApp.grey50)
+                )
+            }
         }
     }
 }
