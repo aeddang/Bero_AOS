@@ -7,6 +7,7 @@ import com.skeleton.module.network.ErrorType
 import okhttp3.Interceptor
 import java.io.IOException
 import java.util.ArrayList
+import java.util.UUID
 import kotlin.jvm.Throws
 
 data class ApiResponse<T> (
@@ -51,21 +52,28 @@ data class ApiQ(val id:String,  val type: ApiType,
     var isLock:Boolean = false,
     var requestData:Any? = null,
     var page:Int = 0,
-    var pageSize:Int = ApiValue.PAGE_SIZE
+    var pageSize:Int = ApiValue.PAGE_SIZE,
+    var useCoreData:Boolean = true
 )
 
 data class ApiSuccess<T>(
     val type:T, var data:Any?,
-    val id: String? = null, val isOptional:Boolean = false,
-    var contentID:String = "",
-    val requestData:Any? = null
-)
+    val id: String? = null,
+    val isOptional:Boolean = false,
+    val contentID:String = "",
+    val requestData:Any? = null,
+    val useCoreData:Boolean = true
+){
+    val hashId:Int = UUID.randomUUID().hashCode()
+}
 data class ApiError<T>(
     val type:T , val errorType:ErrorType ,
     val code:String?, val msg:String? = null,
     val id: String? = null,  val isOptional:Boolean = false,
     val requestData:Any? = null
-)
+){
+    val hashId:Int = UUID.randomUUID().hashCode()
+}
 data class ApiGroup<T>(
     val type:T, var group: ArrayList<ApiSuccess<T>>,
     var complete:Int,

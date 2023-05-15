@@ -19,6 +19,7 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
+import com.ironraft.pupping.bero.store.provider.model.UserProfile
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
@@ -43,23 +44,25 @@ fun PageTest(
     val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
 
-    if(page?.isInit == false) {
-        page.isInit = true
+    fun onInit():Boolean{
         appSceneObserver.sheet.value = ActivitSheetEvent(
             type = ActivitSheetType.Select,
-            title = stringResource(id = R.string.alert_addDogTitle),
-            text = stringResource(id = R.string.alert_addDogText),
+            title = pagePresenter.activity.getString(R.string.alert_addDogTitle),
+            text = pagePresenter.activity.getString(R.string.alert_addDogText),
             image = R.drawable.add_dog,
             buttons = arrayListOf(
-                stringResource(id = R.string.button_later),
-                stringResource(id = R.string.button_ok)
+                pagePresenter.activity.getString(R.string.button_later),
+                pagePresenter.activity.getString(R.string.button_ok)
             )
         ){
             if(it == 1){
-               pagePresenter.openPopup(PageProvider.getPageObject(PageID.AddDog))
+                pagePresenter.openPopup(PageProvider.getPageObject(PageID.AddDog))
             }
         }
+        return true
     }
+    var isInit: Boolean by remember { mutableStateOf(onInit()) }
+
 
     Column (
         modifier = modifier

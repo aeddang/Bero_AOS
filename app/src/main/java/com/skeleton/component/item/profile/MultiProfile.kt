@@ -160,7 +160,7 @@ fun MultiProfile(
                     fontSize = FontSize.tiny.sp,
                     maxLines = 1,
                     textAlign = TextAlign.Center,
-                    color = ColorApp.white,
+                    color = ColorApp.black,
                     modifier = Modifier.width((imageSize ?: sizeType.imageSize).dp)
                 )
             }

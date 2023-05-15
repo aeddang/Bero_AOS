@@ -12,12 +12,11 @@ import retrofit2.http.*
 
 enum class AlbumCategory{
     Pet, User;
-    fun getApiCode() : String {
-        return when(this){
-            AlbumCategory.Pet -> "Pet"
-            AlbumCategory.User -> "User"
+    val getApiCode : String
+        get() = when(this) {
+            Pet -> "Pet"
+            User -> "User"
         }
-    }
     companion object {
         fun getCategory(value :String?) : AlbumCategory?
         {
@@ -32,8 +31,8 @@ enum class AlbumCategory{
 
 data class AlbumData(
     val type:AlbumCategory,
-    val thumb:Bitmap?,
-    val image:Bitmap?
+    val image:Bitmap?,
+    var thumb:Bitmap? = null
 )
 
 interface AlbumApi {
@@ -41,8 +40,8 @@ interface AlbumApi {
     suspend fun get(
         @Query(ApiField.ownerId) ownerId: String,
         @Query(ApiField.pictureType) pictureType: String?,
-        @Query(ApiField.page) page: String? = "0",
-        @Query(ApiField.size) size: String? = ApiValue.PAGE_SIZE.toString()
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<PictureData>?
 
     @Multipart
@@ -55,9 +54,15 @@ interface AlbumApi {
     ): ApiResponse<PictureData?>?
 
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @PUT(Api.Album.picturesThumbsup)
+    @PUT(Api.Album.pictures)
     @JvmSuppressWildcards
     suspend fun put(
+        @Body params: Map<String, Any>
+    ): ApiResponse<Any?>?
+    @Headers("Content-Type: application/json;charset=UTF-8")
+    @PUT(Api.Album.picturesThumbsup)
+    @JvmSuppressWildcards
+    suspend fun putThumbsup(
         @Body params: Map<String, Any>
     ): ApiResponse<Any?>?
 
@@ -75,5 +80,7 @@ data class PictureData (
     @SerializedName("smallPictureUrl") var smallPictureUrl: String? = null,
     @SerializedName("thumbsupCount") var thumbsupCount: Double? = null,
     @SerializedName("isChecked") var isChecked: Boolean? = null,
-    @SerializedName("createdAt") var createdAt: String? = null
+    @SerializedName("createdAt") var createdAt: String? = null,
+    @SerializedName("isExpose") var isExpose: Boolean? = null,
+    @SerializedName("referenceId") var referenceId: String? = null
 )

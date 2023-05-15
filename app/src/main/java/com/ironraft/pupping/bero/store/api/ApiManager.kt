@@ -85,9 +85,9 @@ class ApiManager(
                     //res?.let { DataLog.d(it,appTag) }
                     val data = res?.contents
                     val datas = res?.items
-                    val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional, apiQ.contentID, apiQ.requestData)
+                    val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional, apiQ.contentID, apiQ.requestData, apiQ.useCoreData)
                     if ( accountManager?.respondApi(success) != true ){
-                        result.postValue(success)
+                        result.value = success
                     }
                 },
                 { type , code , msg ->

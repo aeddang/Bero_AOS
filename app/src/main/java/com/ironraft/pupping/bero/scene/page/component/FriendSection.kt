@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.component.item.FriendListItem
@@ -31,27 +30,29 @@ import com.skeleton.component.item.EmptyItemType
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.get
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.store.provider.model.FriendStatus
+import com.lib.page.ComponentViewModel
+import com.lib.util.toDp
+import kotlin.math.min
 
 @Composable
 fun FriendSection(
     modifier: Modifier = Modifier,
     user:User? = null,
-    listSize:Float? = null,
+    listSize:Float = 300.0f,
     type:FriendListType = FriendListType.Friend,
     isEdit:Boolean = false,
     pageSize:Int = if(SystemEnvironment.isTablet) 5 else 3,
     rowSize:Int = if(SystemEnvironment.isTablet) 5 else 3
 ) {
-    val screenWidth = LocalConfiguration.current.screenWidthDp
     val appTag = "FriendSection"
     val pagePresenter: PageComposePresenter = get()
     val dataProvider: DataProvider = get()
 
+    val viewModel:ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
     val currentId:String  by remember { mutableStateOf(user?.userId ?: "") }
     val isMe:Boolean by remember { mutableStateOf(user?.isMe ?: false) }
     fun updateFriend(): Float {
-        val screenWidth:Float = listSize ?: screenWidth.toFloat()
+        val screenWidth:Float = listSize
         val q = ApiQ(appTag,
             type.apiType,
             contentID = currentId,
@@ -61,7 +62,8 @@ fun FriendSection(
 
         dataProvider.requestData(q)
         val r: Float = rowSize.toFloat()
-        return (screenWidth - (DimenMargin.regularExtra * (r - 1))) / r
+        val margin = DimenMargin.regularExtra.toInt().toDp
+        return (screenWidth - (margin * (r - 1))) / r
     }
     val imageSize:Float by remember { mutableStateOf(updateFriend()) }
     var isEmpty:Boolean by remember { mutableStateOf(true) }
@@ -74,7 +76,8 @@ fun FriendSection(
     fun loaded(datas:List<FriendData>){
         var added:List<FriendListItemData> = listOf()
         val start = friends.count()
-        added = datas.mapIndexed { idx, d  ->
+        val end = min(pageSize, datas.count()) - 1
+        added = datas.slice(0..end).mapIndexed { idx, d  ->
             FriendListItemData().setData(d,  idx = start + idx, type = type.status)
         }
         val prev = friends.toMutableList()
@@ -84,8 +87,8 @@ fun FriendSection(
     }
 
     @Suppress("UNCHECKED_CAST")
-    apiResult.value.let { res ->
-        res?.type ?: return@let
+    apiResult.value?.let { res ->
+        if(!viewModel.isValidResult(res)) return@let
         if(res.contentID != currentId) return@let
         if(res.requestData != 0) return@let
         when ( res.type ){

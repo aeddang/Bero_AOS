@@ -2,29 +2,38 @@ package com.ironraft.pupping.bero.store
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.provider.Settings
+import android.util.Size
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.gson.reflect.TypeToken
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.jaredrummler.android.device.DeviceName
 import com.lib.page.PagePresenter
-import com.lib.util.AppUtil
-import com.lib.util.DataLog
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
 import com.ironraft.pupping.bero.activityui.ActivitAlertType
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.store.api.*
-import com.ironraft.pupping.bero.store.database.DataBaseManager
+import com.ironraft.pupping.bero.store.api.rest.CodeData
+import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
 import com.lib.model.SingleLiveData
 import com.lib.page.AppObserver
+import com.lib.page.PageCoroutineScope
+import com.lib.util.*
 import com.skeleton.module.Repository
 import com.skeleton.sns.SnsManager
 import com.skeleton.sns.SnsUser
 import com.skeleton.sns.SnsUserInfo
+import com.skeleton.theme.DimenApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 enum class RepositoryStatus{
     Initate, Ready
@@ -37,7 +46,7 @@ enum class RepositoryEvent{
 class PageRepository (
     ctx: Context,
     val storage: StoragePreference,
-    val dataBaseManager: DataBaseManager,
+    val apiCoreDataManager: ApiCoreDataManager,
     val dataProvider: DataProvider,
     val apiManager: ApiManager,
     val pageModel: ActivityModel,
@@ -55,21 +64,29 @@ class PageRepository (
     val status = MutableLiveData<RepositoryStatus>(RepositoryStatus.Initate)
     val event = SingleLiveData<RepositoryEvent?>(null)
     private val accountManager = AccountManager(dataProvider.user)
-
+    private val scope = PageCoroutineScope()
     fun clearEvent(){
         dataProvider.clearEvent()
     }
 
     @SuppressLint("HardwareIds")
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
+        scope.createJob()
         deviceID =  Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID)
         snsManager.setDefaultLifecycleOwner(owner)
         accountManager.setDefaultLifecycleOwner(owner)
         apiManager.setAccountManager(accountManager)
         dataProvider.request.observe(owner, Observer{apiQ: ApiQ?->
             apiQ?.let {
-                apiManager.load(it)
+                val coreDatakey = if(it.useCoreData) it.type.coreDataKey(it.requestData) else null
                 if(!it.isOptional) pagePresenter.loading(it.isLock)
+                if (coreDatakey == null){
+                    apiManager.load(it)
+                } else {
+                    scope.launch {
+                        if (requestApi(it,coreDatakey)) apiManager.load(it)
+                    }
+                }
                 dataProvider.request.value = null
             }
         })
@@ -92,15 +109,13 @@ class PageRepository (
             res?.let {
                 dataProvider.result.value = it
                 if (!res.isOptional) pagePresenter.loaded()
-                apiManager.result.value = null
-                //dataProvider.result.postValue(null) //value = null
+                respondApi(it)
             }
         })
         apiManager.error.observe(owner, Observer{err: ApiError<ApiType>?->
             err?.let {
+                errorApi(it)
                 dataProvider.error.value = it
-                apiManager.error.value = null
-                //dataProvider.error.postValue(null)
                 if (!it.isOptional) {
                     pagePresenter.loaded()
                     appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.ApiError, error = it)
@@ -130,6 +145,7 @@ class PageRepository (
     }
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
+        scope.destoryJob()
         snsManager.disposeDefaultLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
         accountManager.disposeDefaultLifecycleOwner(owner)
@@ -172,9 +188,31 @@ class PageRepository (
             storage.loginType)
     }
 
+    private suspend fun requestApi(apiQ:ApiQ, coreDatakey:String):Boolean{
+        return withContext(Dispatchers.IO) {
+            var dbData:Any? = null
+            when (apiQ.type){
+                ApiType.GetCode -> {
+                    val type = object : TypeToken<List<CodeData>>() {}.type
+                    dbData = apiCoreDataManager.getDatas<List<CodeData>>(coreDatakey, type)
 
+                }
+                else ->{}
+            }
+            if(dbData != null) {
+                val success = ApiSuccess(apiQ.type, dbData, apiQ.id, apiQ.isOptional, apiQ.contentID, apiQ.requestData)
+                withContext(Dispatchers.Main) {
+                    dataProvider.result.value = success
+                    if (!apiQ.isOptional) pagePresenter.loaded()
+                    return@withContext false
+                }
+
+            } else {
+                return@withContext true
+            }
+        }
+    }
     private fun respondApi(res:ApiSuccess<ApiType>){
-        //self.accountManager.respondApi(res, appSceneObserver: appSceneObserver)
         //self.walkManager.respondApi(res)
         when (res.type) {
             ApiType.RegistPush -> {
@@ -188,7 +226,14 @@ class PageRepository (
             //self.walkManager.resetMapStatus(userFilter: .all)
             else -> {}
         }
+        val coreDatakey = if(res.useCoreData) res.type.coreDataKey(res.requestData) else null
+        coreDatakey?.let {
+            scope.launch{
+                apiCoreDataManager.setData(it, res.data)
+            }
+        }
     }
+
     private fun errorApi(err:ApiError<ApiType>){
         //self.accountManager.errorApi(err, appSceneObserver: self.appSceneObserver)
         //self.walkManager.errorApi(err, appSceneObserver: self.appSceneObserver)

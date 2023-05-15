@@ -63,8 +63,8 @@ interface MissionApi {
         @Query(ApiField.userId) userId: String?,
         @Query(ApiField.petId) petId: String?,
         @Query(ApiField.missionCategory) missionCategory: String?,
-        @Query(ApiField.page) page: String? = "0",
-        @Query(ApiField.size) size: String? = ApiValue.PAGE_SIZE.toString()
+        @Query(ApiField.page) page:Int? = 0,
+        @Query(ApiField.size) size:Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<MissionData>?
 
     @GET(Api.Mission.search)
@@ -74,8 +74,8 @@ interface MissionApi {
         @Query(ApiField.lat) lat: String?,
         @Query(ApiField.lng) lng: String?,
         @Query(ApiField.missionCategory) missionCategory: String?,
-        @Query(ApiField.page) page: String? = "0",
-        @Query(ApiField.size) size: String? = ApiValue.PAGE_SIZE.toString()
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<MissionData>?
 
 

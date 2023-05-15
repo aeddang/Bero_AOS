@@ -89,16 +89,22 @@ fun PageApp(
                 }
             }
         ) { innerPadding ->
-            AnimatedNavHost(
-                navController = pageNavController,
-                startDestination = PageID.Splash.value,
-                modifier = modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .background(ColorBrand.bg)
-            ) {
-                PageID.values().forEach {
-                    getPageComposable(nav = this, routePage = it, currentPage = pagePresenter.currentTopPage)
+            AppTheme {
+                AnimatedNavHost(
+                    navController = pageNavController,
+                    startDestination = PageID.Splash.value,
+                    modifier = modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .background(ColorBrand.bg)
+                ) {
+                    PageID.values().forEach {
+                        getPageComposable(
+                            nav = this,
+                            routePage = it,
+                            currentPage = pagePresenter.currentTopPage
+                        )
+                    }
                 }
             }
         }
@@ -123,22 +129,17 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
         popEnterTransition = {fadeIn(animationSpec = tween(duration)) },
         popExitTransition = {ani.exit}
     ) {
-        val pageAppViewModel = koinInject<PageAppViewModel>()
-        val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
-
-        AppTheme {
-            when (routePage.value) {
-                PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
-                PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
-                PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentTopPage)
-                PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentTopPage)
-                PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentTopPage)
-                PageID.My.value -> PageMy(Modifier.fillMaxSize(), page = currentTopPage)
-                PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
-                PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
-                PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentTopPage)
-                PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentTopPage)
-            }
+        when (routePage.value) {
+            PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
+            PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
+            PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentPage)
+            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentPage)
+            PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentPage)
+            PageID.My.value -> PageMy(Modifier.fillMaxSize(), page = currentPage)
+            PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
+            PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
+            PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentPage)
+            PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentPage)
         }
     }
 }

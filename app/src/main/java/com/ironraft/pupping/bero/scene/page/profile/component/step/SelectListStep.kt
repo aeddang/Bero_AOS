@@ -34,6 +34,7 @@ import com.ironraft.pupping.bero.store.api.rest.CodeData
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
+import com.lib.page.ComponentViewModel
 import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
@@ -54,17 +55,19 @@ fun SelectListStep(
 ) {
     val appTag = "InputTextStep"
     val dataProvider:DataProvider = get()
-    val viewData: SelectListStepData  by remember { mutableStateOf(SelectListStepData()) }
+    val viewModel: ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
+
     var btnType:RadioButtonType by remember { mutableStateOf(RadioButtonType.Blank)}
     var keyword:String by remember { mutableStateOf("") }
 
     fun onSearch(){
-        if (viewData.isSearching) return
-        viewData.isSearching = true
+        if (viewModel.isBusy) return
+        viewModel.isBusy = true
         val params = HashMap<String, String>()
         params[ApiField.category] = CodeCategory.Breed.name.lowercase()
         params[ApiField.searchText] = keyword
-        val q = ApiQ(appTag, ApiType.GetCode, query = params, isOptional = true, requestData = CodeCategory.Breed)
+        val isCoreData = keyword.isEmpty()
+        val q = ApiQ(appTag, ApiType.GetCode, query = params, isOptional = true, requestData = CodeCategory.Breed, useCoreData = isCoreData)
         dataProvider.requestData(q)
     }
     fun getPrevData() : RadioBtnData?{
@@ -91,8 +94,8 @@ fun SelectListStep(
     val apiError = dataProvider.error.observeAsState()
 
     @Suppress("UNCHECKED_CAST")
-    apiResult.value.let { res ->
-        res?.type ?: return@let
+    apiResult.value?.let { res ->
+        if(!viewModel.isValidResult(res)) return@let
         if (res.requestData != CodeCategory.Breed) return@let
         when ( res.type ){
             ApiType.GetCode -> {
@@ -102,25 +105,25 @@ fun SelectListStep(
                     }
                     buttons = btns
                 }
-                viewData.isSearching = false
+                viewModel.isBusy = false
                 dataProvider.clearResult()
             }
             else ->{}
         }
     }
-    apiError.value.let { err ->
-        err?.type ?: return@let
+    apiError.value?.let { err ->
+        if(!viewModel.isValidError(err)) return@let
         if (err.requestData != CodeCategory.Breed) return@let
         when ( err.type ){
             ApiType.GetCode -> {
-                viewData.isSearching = false
+                viewModel.isBusy = false
                 dataProvider.clearError()
             }
             else ->{}
         }
     }
-    val focusManager = LocalFocusManager.current
 
+    val focusManager = LocalFocusManager.current
     fun onSelected(btn:RadioBtnData, isSelect:Boolean) {
         selectData = if (isSelect) btn else null
     }

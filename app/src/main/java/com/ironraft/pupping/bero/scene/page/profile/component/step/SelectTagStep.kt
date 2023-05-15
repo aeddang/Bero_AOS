@@ -22,6 +22,7 @@ import com.ironraft.pupping.bero.store.api.rest.CodeData
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
+import com.lib.page.ComponentViewModel
 import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
@@ -38,6 +39,8 @@ fun SelectTagStep(
 ) {
     val appTag = "SelectTagStep"
     val dataProvider:DataProvider = get()
+    val viewModel: ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
+
     fun getCodeData(){
         val params = HashMap<String, String>()
         params[ApiField.category] = CodeCategory.Personality.name.lowercase()
@@ -61,8 +64,8 @@ fun SelectTagStep(
 
 
     @Suppress("UNCHECKED_CAST")
-    apiResult.value.let { res ->
-        res?.type ?: return@let
+    apiResult.value?.let { res ->
+        if(!viewModel.isValidResult(res)) return@let
         if (res.requestData != CodeCategory.Personality) return@let
         when ( res.type ){
             ApiType.GetCode -> {
@@ -128,26 +131,7 @@ fun SelectTagStep(
                         }
                     }
                 }
-                /*
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(vertical = DimenMargin.regular.dp, horizontal = DimenMargin.thin.dp)
-                ) {
-                    items(buttons) { btn ->
-                        SortButton(
-                            type = if (selects.indexOf(btn.value) == -1) SortButtonType.Stroke else SortButtonType.Fill,
-                            sizeType = SortButtonSizeType.Big,
-                            text = btn.title,
-                            color = if (selects.indexOf(btn.value) == -1) ColorApp.grey400 else ColorBrand.primary,
-                            isSort = false
-                        ) {
-                            val isSelect = !btn.isSelected
-                            btn.isSelected = isSelect
-                            onSelected(btn, isSelect)
-                        }
-                    }
-                }
-                */
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(
                         space = DimenMargin.tinyExtra.dp,

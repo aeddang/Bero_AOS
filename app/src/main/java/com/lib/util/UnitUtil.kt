@@ -126,7 +126,10 @@ fun Double.toThousandUnit(f:Int = 0) : String {
 fun Double.millisecToSec() : Double {
     return this/1000.0
 }
-
+fun Boolean.toggle() : Boolean {
+    val prev = this
+    return !prev
+}
 
 fun Size.getCropRatioSize(crop: Size):RectF{
     val cropRatio = crop.width.toFloat()/crop.height.toFloat()

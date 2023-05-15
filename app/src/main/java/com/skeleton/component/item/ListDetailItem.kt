@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,10 +32,11 @@ import com.skeleton.theme.*
 import com.skeleton.view.button.SortButton
 import com.skeleton.view.button.SortButtonSizeType
 import com.skeleton.view.button.SortButtonType
+import com.skeleton.view.button.WrapTransparentButton
 
 
 @Composable
-fun ListItem(
+fun ListDetailItem(
     modifier: Modifier = Modifier,
     imagePath:String? = null,
     @DrawableRes emptyImage:Int = R.drawable.noimage_1_1,
@@ -48,16 +50,20 @@ fun ListItem(
     likeCount:Double? = null,
     isLike:Boolean = false,
     likeSize:SortButtonSizeType = SortButtonSizeType.Big,
+    isShared:Boolean? = null,
+    isOriginSize:Boolean = false,
     pets:List<PetProfile> = listOf(),
     iconAction: (() -> Unit)? = null,
-    action: (() -> Unit)? = null,
-    move:(() -> Unit)? = null
-
+    likeAction: (() -> Unit)? = null,
+    shareAction: (() -> Unit)? = null
     ) {
     var painter: AsyncImagePainter? = null
     imagePath?.let {
         painter = rememberAsyncImagePainter( it,
-            placeholder = painterResource(emptyImage)
+            placeholder = painterResource(emptyImage),
+            onSuccess = { success ->
+                val size = success.result.drawable.bounds
+            }
         )
     }
     AppTheme {
@@ -67,9 +73,9 @@ fun ListItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = Modifier
-                    .size(width = imgSize.width.dp, height = imgSize.height.dp)
-                    .clip(RoundedCornerShape(CornerSize(DimenRadius.light.dp)))
+                modifier = (
+                    if(isOriginSize) Modifier.width(imgSize.width.dp)
+                    else Modifier.size(width = imgSize.width.dp, height = imgSize.height.dp))
                     .background(ColorApp.grey100),
                 contentAlignment = Alignment.Center
             ) {
@@ -86,13 +92,17 @@ fun ListItem(
                         it,
                         contentDescription = "",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.matchParentSize()
+                        modifier =
+                        if(isOriginSize) Modifier.fillMaxWidth()
+                        else Modifier.matchParentSize()
                     )
                 }
                 Column(
-                    modifier = Modifier.matchParentSize().padding(all = DimenMargin.tiny.dp),
+                    modifier = Modifier
+                        .matchParentSize()
+                        .padding(all = DimenMargin.tiny.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp),
-                    horizontalAlignment = Alignment.Start
+                    horizontalAlignment = Alignment.End
                 ) {
                     icon?.let {
                         SortButton(
@@ -107,56 +117,71 @@ fun ListItem(
                         }
                     }
                     Spacer(modifier = Modifier.weight(1.0f))
-                    likeCount?.let {likeCount ->
-                        Row(
-                            modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(space = 0.dp, alignment = Alignment.End)
-                        ) {
-                            SortButton(
-                                type = SortButtonType.Stroke,
-                                sizeType = likeSize,
-                                icon = if(isLike) R.drawable.favorite_on else R.drawable.favorite_on,
-                                text = likeCount.toThousandUnit(),
-                                color = if(isLike) ColorBrand.primary else ColorApp.grey400,
-                                isSort = false
-                            ){
-                                action?.let { it() }
-                            }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(DimenMargin.microExtra.dp),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        title?.let {
+                            Text(
+                                it,
+                                fontSize = FontSize.medium.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = ColorApp.white,
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        subTitle?.let {
+                            Text(
+                                it,
+                                fontSize = FontSize.thin.sp,
+                                color = ColorApp.white,
+                                textAlign = TextAlign.End
+                            )
                         }
                     }
                 }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(space = 0.dp)
+                horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.weight(1.0f),
-                    verticalArrangement = Arrangement.spacedBy(DimenMargin.microExtra.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    title?.let {
-                        Text(
-                            it,
-                            fontSize = FontSize.light.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = ColorApp.black,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-                    subTitle?.let {
-                        Text(
-                            it,
-                            fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey300,
-                            textAlign = TextAlign.Start
-                        )
+                likeCount?.let {likeCount ->
+                    Row(
+                        modifier.weight(1.0f),
+                        horizontalArrangement = Arrangement.spacedBy(space = DimenMargin.tinyExtra.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SortButton(
+                            type = SortButtonType.Stroke,
+                            sizeType = likeSize,
+                            icon = if(isLike) R.drawable.favorite_on else R.drawable.favorite_on,
+                            color = if(isLike) ColorBrand.primary else ColorApp.grey400,
+                            isSort = false
+                        ){
+                            likeAction?.let { it() }
+                        }
+                        WrapTransparentButton(action = { likeAction?.let { it() } }) {
+                            Text(
+                                likeCount.toThousandUnit() + " " + stringResource(id = R.string.likes),
+                                fontSize = FontSize.thin.sp,
+                                color = ColorApp.grey400,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.regular.dp)))
+                                    .background(ColorApp.whiteDeepLight)
+                                    .padding(
+                                        horizontal = DimenMargin.light.dp,
+                                        vertical = DimenMargin.tinyExtra.dp
+                                    )
+                            )
+                        }
                     }
                 }
                 if(pets.isNotEmpty())
-                    Box(
+                    Row(
                         modifier = modifier.wrapContentSize(),
-                        contentAlignment = Alignment.CenterEnd
+                        horizontalArrangement = Arrangement.spacedBy(space = DimenMargin.micro.dp)
                     ) {
                         pets.reversed().forEachIndexed {index, pet ->
                             ProfileImage(
@@ -168,7 +193,18 @@ fun ListItem(
                             )
                         }
                     }
-
+                isShared?.let {
+                    SortButton(
+                        type = SortButtonType.Stroke,
+                        sizeType = SortButtonSizeType.Small,
+                        icon = R.drawable.global,
+                        text = stringResource(id = R.string.share),
+                        color = if(isShared) ColorBrand.primary else ColorApp.grey400,
+                        isSort = false
+                    ){
+                        shareAction?.let { it() }
+                    }
+                }
             }
         }
     }
@@ -176,23 +212,23 @@ fun ListItem(
 
 @Preview
 @Composable
-fun ListItemComposePreview() {
+fun ListDetailItemComposePreview() {
     Column(
-        modifier = Modifier.background(ColorApp.white).padding(16.dp),
+        modifier = Modifier
+            .background(ColorApp.white)
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ListItem(
-            imgSize = Size(width = 240.0f, height = 120.0f),
+        ListDetailItem(
+            imgSize = Size(width = 440.0f, height = 160.0f),
             title = "title",
             subTitle = "subTitle",
             icon = null,
             iconText = "Walk",
             likeCount = 100.0,
             isLike = true,
+            isShared = true,
             pets = listOf(
-                PetProfile().init(PetData()),
-                PetProfile().init(PetData()),
-                PetProfile().init(PetData()),
                 PetProfile().init(PetData()),
                 PetProfile().init(PetData())
             )

@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.lib.page.PageComposeable
 import java.io.File
 import java.security.MessageDigest
+import java.time.LocalDate
 import java.util.*
 import kotlin.math.sqrt
 
@@ -43,13 +44,17 @@ object AppUtil {
         return appVersion
     }
 
-    fun isBigsizeDevice(context: Context, check:Double = 6.5 ):Boolean{
+    fun isBigsizeDevice(context: Context, check:Double = 7.5 ):Boolean{
          val displayMetrics = Resources.getSystem().displayMetrics
-        val density: Float = context.resources.displayMetrics.density
-        val dpHeight = displayMetrics.heightPixels / density
-        val dpWidth = displayMetrics.widthPixels / density
-        val diagonalInches = sqrt((dpHeight * dpHeight + dpWidth * dpWidth).toDouble())
+        //val density: Float = context.resources.displayMetrics.density
+        val dpHeight = displayMetrics.heightPixels / displayMetrics.ydpi
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.xdpi
+        val diagonalInches = sqrt((dpHeight*dpHeight + dpWidth*dpWidth).toDouble())
         return diagonalInches >= check
+    }
+
+    fun networkTimeDate(): LocalDate {
+        return LocalDate.now()
     }
 
     fun clearAppData(ctx: Context) {

@@ -92,58 +92,61 @@ class DimenButton {
 
 class DimenRadius {
     companion object {
-        val heavy: Float = 32.0f
-        val mediumUltra: Float = 28.0f
-        val medium: Float = 24.0f
-        val regular: Float = 20.0f
-        val light: Float = 16.0f
-        val lightExtra: Float = 14.0f
-        val thin: Float = 12.0f
-        val thinExtra: Float = 10.0f
-        val tiny: Float = 8.0f
-        val micro: Float = 4.0f//
+        const val heavy: Float = 32.0f
+        const val mediumUltra: Float = 28.0f
+        const val medium: Float = 24.0f
+        const val regular: Float = 20.0f
+        const val light: Float = 16.0f
+        const val lightExtra: Float = 14.0f
+        const val thin: Float = 12.0f
+        const val thinExtra: Float = 10.0f
+        const val tiny: Float = 8.0f
+        const val micro: Float = 4.0f//
     }
 }
 class DimenCircle {
     companion object {
-        val regular: Float = 40.0f
-        val thin: Float = 4.0f
+        const val regular: Float = 40.0f
+        const val thin: Float = 4.0f
     }
 }
 
 class DimenBar {
     companion object {
-        val medium: Float = 34.0f //
-        val regular: Float = 16.0f
-        val light: Float = 4.0f
+        const val medium: Float = 34.0f //
+        const val regular: Float = 16.0f
+        const val light: Float = 4.0f
     }
 }
 
 class DimenLine {
     companion object {
-        val heavy: Float = 12.0f
-        val medium: Float = 6.0f//
-        val regular: Float = 2.0f
-        val light: Float = 1.0f
+        const val heavy: Float = 12.0f
+        const val medium: Float = 6.0f//
+        const val regular: Float = 2.0f
+        const val light: Float = 1.0f
     }
 }
 
 
 class DimenStroke {
     companion object {
-        val heavyUltra: Float = 5.0f
-        val heavy: Float = 4.0f
-        val medium: Float = 3.0f
-        val regular: Float = 2.0f
-        val light: Float = 1.0f
+        const val heavyUltra: Float = 5.0f
+        const val heavy: Float = 4.0f
+        const val medium: Float = 3.0f
+        const val regular: Float = 2.0f
+        const val light: Float = 1.0f
     }
 }
 
 class DimenApp {
     companion object {
-        val bottom: Float = 64.0f
-        val top: Float = 50.0f
-        val chatBox: Float = 64.0f
-        val pageHorinzontal: Float = DimenMargin.regular
+        const val bottom: Float = 64.0f
+        const val top: Float = 50.0f
+        const val chatBox: Float = 64.0f
+        const val pageHorinzontal: Float = DimenMargin.regular
+
+        const val originImageSize:Int = 480
+        const val thumbImageSize:Int = 120
     }
 }

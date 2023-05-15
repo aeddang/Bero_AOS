@@ -1,5 +1,7 @@
 package com.ironraft.pupping.bero.store.api
 
+import com.ironraft.pupping.bero.store.api.rest.CodeCategory
+
 
 object Api {
     private const val VERSION_V1 = "v1"
@@ -115,8 +117,18 @@ enum class ApiType{
     GetWeather, GetCode,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
-    GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPictures,
+    GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,
     CheckHumanWithDog,
     GetFriends, GetRequestFriends, GetRequestedFriends,
-    RequestFriend, DeleteFriend, RejectFriend, AcceptFriend
+    RequestFriend, DeleteFriend, RejectFriend, AcceptFriend;
+
+    fun coreDataKey(requestData:Any?) : String? {
+        return when (this) {
+            GetCode -> {
+                val cate = requestData as? CodeCategory
+                cate?.apiCoreKey
+            }
+            else -> null
+        }
+    }
 }

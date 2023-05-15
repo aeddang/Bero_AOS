@@ -41,24 +41,6 @@ fun PageTest1(
     val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
 
-    if(page?.isInit == false) {
-        page.isInit = true
-        appSceneObserver.sheet.value = ActivitSheetEvent(
-            type = ActivitSheetType.Select,
-            title = stringResource(id = R.string.alert_addDogTitle),
-            text = stringResource(id = R.string.alert_addDogText),
-            image = R.drawable.add_dog,
-            buttons = arrayListOf(
-                stringResource(id = R.string.button_later),
-                stringResource(id = R.string.button_ok)
-            )
-        ){
-            if(it == 1){
-               pagePresenter.openPopup(PageProvider.getPageObject(PageID.AddDog))
-            }
-        }
-    }
-
     Column (
         modifier = modifier
             .fillMaxSize()

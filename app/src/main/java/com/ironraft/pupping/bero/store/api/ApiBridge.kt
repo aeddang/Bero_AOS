@@ -2,6 +2,7 @@ package com.ironraft.pupping.bero.store.api
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Size
 import com.lib.util.*
 import com.ironraft.pupping.bero.BuildConfig
 import com.ironraft.pupping.bero.store.api.rest.*
@@ -9,7 +10,10 @@ import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.ModifyUserProfileData
 import com.skeleton.module.network.NetworkFactory
 import com.skeleton.sns.SnsUser
+import com.skeleton.theme.DimenApp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -48,14 +52,10 @@ class ApiBridge(
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
             ApiType.GetCode -> misc.getCodes(apiQ.query?.get(ApiField.category), apiQ.query?.get(ApiField.searchText))
             ApiType.GetMission -> mission.getMissions(
-                apiQ.query?.get(ApiField.userId), apiQ.query?.get(ApiField.petId), apiQ.query?.get(ApiField.missionCategory),
-                apiQ.query?.get(ApiField.page) ?: "0", apiQ.query?.get(ApiField.size) ?: ApiValue.PAGE_SIZE.toString()
-            )
+                apiQ.query?.get(ApiField.userId), apiQ.query?.get(ApiField.petId), apiQ.query?.get(ApiField.missionCategory),apiQ.page, apiQ.pageSize)
             ApiType.SearchMission -> mission.getSearch(
                 apiQ.query?.get(ApiField.searchType), apiQ.query?.get(ApiField.distance),
-                apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.missionCategory),
-                apiQ.query?.get(ApiField.page) ?: "0", apiQ.query?.get(ApiField.size) ?: ApiValue.PAGE_SIZE.toString()
-            )
+                apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.missionCategory),apiQ.page, apiQ.pageSize)
             ApiType.CompleteMission -> mission.post(apiQ.body as Map<String, Any>)
             ApiType.CompleteWalk -> mission.post(apiQ.body as Map<String, Any>)
             ApiType.GetMissionSummary -> mission.getSummary(apiQ.contentID)
@@ -66,14 +66,10 @@ class ApiBridge(
             ApiType.UpdatePet -> getUpdatePetProfile(apiQ.contentID, profile = apiQ.requestData as? ModifyPetProfileData)
             ApiType.ChangeRepresentativePet -> getUpdateRepresentative(apiQ.contentID)
             ApiType.DeletePet -> pet.delete(apiQ.contentID)
-            ApiType.GetAlbumPictures -> album.get(
-                apiQ.contentID,
-                apiQ.query?.get(ApiField.pictureType),
-                apiQ.query?.get(ApiField.page) ?: "0",
-                apiQ.query?.get(ApiField.size) ?: ApiValue.PAGE_SIZE.toString()
-            )
+            ApiType.GetAlbumPictures -> album.get(apiQ.contentID, apiQ.query?.get(ApiField.pictureType),apiQ.page, apiQ.pageSize)
             ApiType.RegistAlbumPicture -> getRegistAlbumPicture(apiQ.contentID, apiQ.requestData as? AlbumData)
-            ApiType.UpdateAlbumPictures -> getUpdateLikeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
+            ApiType.UpdateAlbumPicturesLike -> getUpdateLikeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
+            ApiType.UpdateAlbumPicturesExpose -> getUpdateExposeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
             ApiType.DeleteAlbumPictures -> album.delete(apiQ.contentID)
             ApiType.CheckHumanWithDog -> getVisionCheck(apiQ.requestData as? Bitmap)
             ApiType.GetFriends -> friend.getFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
@@ -157,16 +153,18 @@ class ApiBridge(
 
     private fun getRegistAlbumPicture(ownerId:String?, albumData: AlbumData?) = runBlocking {
         val owner: RequestBody? = getRequestBody(ownerId)
-        val type: RequestBody? = getRequestBody(albumData?.type?.getApiCode())
+        val type: RequestBody? = getRequestBody(albumData?.type?.getApiCode)
         var image: MultipartBody.Part? = null
+        var thumbImage:Bitmap? = albumData?.thumb
         albumData?.image?.let {
-            val file = it.toFile(context)
+            val images = create(it)
+            val file = images.first.toFile(context)
             val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             image = MultipartBody.Part.createFormData("contents", "albumImage.jpg" , imgBody)
+            if (albumData.thumb == null) thumbImage = images.second
         }
-
         var thumb: MultipartBody.Part? = null
-        albumData?.thumb?.let {
+        thumbImage?.let {
             val file = it.toFile(context)
             val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             thumb = MultipartBody.Part.createFormData("smallContents", "thumbAlbumImage.jpg" , imgBody)
@@ -174,10 +172,34 @@ class ApiBridge(
         album.post(owner, type, thumb, image)
     }
 
-    private fun getUpdateLikeAlbumPicture(id:String, isLike:Boolean?) = runBlocking {
+    suspend fun create(img:Bitmap):Pair<Bitmap, Bitmap>{
+        return withContext(Dispatchers.IO) {
+            val hei = DimenApp.originImageSize * img.height / img.width
+            val crop = Size(img.width, img.height)
+                .getCropRatioSize(
+                    Size(
+                        DimenApp.thumbImageSize,
+                        DimenApp.thumbImageSize
+                    )
+                )
+            val originImg = img.size(DimenApp.originImageSize, hei)
+            val thumbImg = img.centerCrop(crop)
+            return@withContext Pair(originImg, thumbImg)
+        }
+    }
+
+    private fun getUpdateLikeAlbumPicture(id:String, isLike:Boolean? = null) = runBlocking {
         val param = java.util.HashMap<String, Any>()
         param["id"] = id.toIntOrNull() ?: 0
         param["isChecked"] = isLike ?: true
+        val params = java.util.HashMap<String, Any>()
+        params["items"] = arrayOf(param)
+        album.putThumbsup(params)
+    }
+    private fun getUpdateExposeAlbumPicture(id:String, isExpose:Boolean? = null) = runBlocking {
+        val param = java.util.HashMap<String, Any>()
+        param["id"] = id.toIntOrNull() ?: 0
+        param["isExpose"] = isExpose ?: true
         val params = java.util.HashMap<String, Any>()
         params["items"] = arrayOf(param)
         album.put(params)
