@@ -38,11 +38,9 @@ import kotlinx.coroutines.withContext
 enum class RepositoryStatus{
     Initate, Ready
 }
-
 enum class RepositoryEvent{
     LoginUpdate, LoginUpdated
 }
-
 class PageRepository (
     ctx: Context,
     val storage: StoragePreference,
@@ -119,11 +117,6 @@ class PageRepository (
                 if (!it.isOptional) {
                     pagePresenter.loaded()
                     appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.ApiError, error = it)
-                    /*
-                    val builder = Alert.Builder(pagePresenter.activity)
-                    builder.setTitle(R.string.alertApi)
-                    builder.setText(msg ?:  ctx.getString(R.string.alertApiErrorServer)).show()
-                    */
                 }
             }
 

@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import com.ironraft.pupping.bero.koin.pageModelModule
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
+import com.lib.util.ComponentLog
 import com.skeleton.view.button.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
@@ -89,7 +91,7 @@ enum class TitleTabButtonType {
 @Composable
 fun TitleTab(
     modifier: Modifier = Modifier,
-    scrollState: ScrollState? = null,
+    parentScrollState: ScrollState? = null,
     type:TitleTabType = TitleTabType.Page,
     title:String? = null,
     lineLimit:Int = Int.MAX_VALUE,
@@ -105,6 +107,13 @@ fun TitleTab(
 ) {
     val pagePresenter:PageComposePresenter = get()
     val pageAppViewModel:PageAppViewModel = get()
+    var onTop by remember { mutableStateOf( true ) }
+    val scrollState by remember { mutableStateOf( parentScrollState ?: ScrollState(-1) ) }
+    if (scrollState.isScrollInProgress) {
+        val pos = scrollState.value
+        if(pos == 0 && !onTop) onTop = true
+        else if(onTop && pos != 0) onTop = false
+    }
 
     AppTheme {
         Column(
@@ -218,7 +227,7 @@ fun TitleTab(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(DimenLine.light.dp)
-                        .background(ColorApp.grey50)
+                        .background(if(onTop) ColorTransparent.clear else ColorApp.grey50)
                 )
             }
         }

@@ -1,4 +1,4 @@
-package com.ironraft.pupping.bero.scene.page.my
+package com.ironraft.pupping.bero.scene.page.pet
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,8 +23,11 @@ import com.ironraft.pupping.bero.scene.page.component.FriendSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
 import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
+import com.ironraft.pupping.bero.scene.page.pet.component.PetPhysicalSection
+import com.ironraft.pupping.bero.scene.page.pet.component.PetTagSection
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.provider.DataProvider
+import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
 import com.lib.util.toDp
@@ -34,11 +37,11 @@ import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
 
 @Composable
-fun PageMy(
+fun PageDog(
     modifier: Modifier = Modifier,
     page: PageObject? = null
 ){
-    val appTag = "PageMy"
+    val appTag = "PageDog"
     val screenWidth = LocalConfiguration.current.screenWidthDp
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
@@ -47,7 +50,8 @@ fun PageMy(
     val listWidth: Float by remember { mutableStateOf( getListWidth() ) }
     val pagePresenter:PageComposePresenter = get()
     val dataProvider:DataProvider = get()
-    val representativePet by dataProvider.user.representativePet.observeAsState()
+
+    var profile by remember { mutableStateOf( PetProfile() ) }
     val scrollState: ScrollState = rememberScrollState()
 
     Column (
@@ -60,13 +64,10 @@ fun PageMy(
         TitleTab(
             modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
             parentScrollState = scrollState,
-            title = stringResource(id = R.string.pageTitle_addDog),
-            alignment = TextAlign.Center,
-            margin = 0.0f,
-            buttons = arrayListOf(TitleTabButtonType.Close)
+            useBack = true
         ){
             when(it){
-                TitleTabButtonType.Close -> {
+                TitleTabButtonType.Back -> {
                     pagePresenter.closePopup(key = page?.key)
                 }
                 else -> {}
@@ -79,85 +80,58 @@ fun PageMy(
                 .verticalScroll(scrollState)
                 .padding(
                     top = DimenMargin.medium.dp,
-                    bottom = (DimenApp.bottom + DimenMargin.heavyExtra).dp
+                    bottom = DimenMargin.heavyExtra.dp
                 ),
             verticalArrangement = Arrangement.spacedBy(0.dp),
         ) {
-            if (representativePet != null){
-                PetProfileTopInfo(
-                    modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
-                    profile = representativePet!!,
-                    viewProfile = {
-                        /*
-                        pagePresenter.openPopup(
-                            PageProvider.getPageObject(.dog)
-                            .addParam(key: .data, value: pet)
-                            .addParam(key: .subData, value: self.dataProvider.user)
+            PetProfileTopInfo(
+                modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
+                profile = profile,
+                viewProfileImage = {
+                    /*
+                    if profile.imagePath?.isEmpty == false {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.pictureViewer)
+                            .addParam(key: .data, value:profile.imagePath)
                         )
-                        */
                     }
-                )
-            } else {
-                UserProfileTopInfo(
-                    modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
-                    profile = dataProvider.user.currentProfile){
-                        /*
-                        pagePresenter.openPopup(
-                            PageProvider.getPageObject(.modifyUser)
-                        )
-                        */
+                     */
+                },
+                editProfile = {
+                    /*
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.modifyPet)
+                        .addParam(key: .data, value: profile)
+                    )
+                     */
                 }
-            }
-            UserPlayInfo(
+            )
+
+            PetTagSection(
                 modifier = Modifier
                     .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                    .padding(top = DimenMargin.regular.dp)
-            ){ data ->
-                when(data.valueType){
-                    ValueInfoType.Point -> {
-                        /*
-                        pagePresenter.openPopup(
-                            PageProvider.getPageObject(. myPoint)
-                        )
-                        */
-                    }
-                    ValueInfoType.Lv -> {
-                        /*
-                        pagePresenter.openPopup(
-                            PageProvider.getPageObject(.myLv)
-                        )
-                        */
-                    }
-                    else -> {}
-                }
-            }
+                    .padding(top = DimenMargin.regular.dp),
+                profile = profile
+            )
+            PetPhysicalSection(
+                modifier = Modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.heavyExtra.dp),
+                profile = profile
+            )
             Spacer(modifier = Modifier
                 .padding(top = DimenMargin.medium.dp)
                 .fillMaxWidth()
                 .height(DimenLine.heavy.dp)
                 .background(ColorApp.grey50)
             )
-            MyHistorySection(modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.regular.dp)
-            )
-            MyDogsSection(modifier
-                .padding(top = DimenMargin.heavyExtra.dp)
-            )
-            FriendSection(modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.heavyExtra.dp),
+            AlbumSection(
+                modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.heavyExtra.dp),
                 listSize = listWidth,
                 user = dataProvider.user,
-                isEdit = true
-            )
-
-            AlbumSection( modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.heavyExtra.dp),
-                listSize = listWidth,
-                user = dataProvider.user,
-                pageSize = 2
+                pet = profile
             )
         }
 
@@ -165,9 +139,9 @@ fun PageMy(
 }
 @Preview
 @Composable
-fun PageMyPreview(){
+fun PageDogPreview(){
     Koin(appDeclaration = { modules(pageModelModule) }) {
-        PageMy(
+        PageDog(
         )
     }
 }
