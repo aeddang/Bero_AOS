@@ -39,7 +39,7 @@ data class UserData(
     @SerializedName("point") var point: Int? = null,
     @SerializedName("birthdate") var birthdate: String? = null,
     @SerializedName("sext") var sex: String? = null,
-    @SerializedName("introduc") var introduce: String? = null,
+    @SerializedName("introduce") var introduce: String? = null,
     @SerializedName("exp") var exp:Double? = null,
     @SerializedName("exerciseDistance") var exerciseDistance: Double? = null,
     @SerializedName("exerciseDuration") var exerciseDuration: Double? = null,

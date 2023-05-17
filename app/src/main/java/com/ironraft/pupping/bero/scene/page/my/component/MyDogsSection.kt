@@ -75,13 +75,13 @@ fun MyDogsSection(
         }
     }
     fun movePetPag(profile:PetProfile){
-        /*
+
         pagePresenter.openPopup(
             PageProvider.getPageObject(.dog)
                 .addParam(key: .data, value: profile)
                 .addParam(key: .subData, value: self.dataProvider.user)
         )
-        */
+
     }
     val scrollState: ScrollState = rememberScrollState()
     AppTheme {
