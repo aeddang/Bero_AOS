@@ -127,28 +127,26 @@ fun PetTagSection(
             }
             hashStatus.value?.let {status->
                 val selects = PetProfile.exchangeStringToList(status)
-                LazyColumn(
+                Column(
                     modifier = Modifier.wrapContentSize(),
                     verticalArrangement = Arrangement.spacedBy(DimenMargin.tiny.dp)
                 ) {
-                    item {
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp)
-                        ) {
-                            buttons.filter {d->
-                                val id = d.value
-                                val find = selects.find { id == it }
-                                return@filter find != null
-                            }.forEach { btn ->
-                                SortButton(
-                                    type = SortButtonType.StrokeFill,
-                                    sizeType = SortButtonSizeType.Small,
-                                    text = btn.title,
-                                    color = ColorBrand.primary,
-                                    isSort = false,
-                                    modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
-                                ) {
-                                }
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp)
+                    ) {
+                        buttons.filter {d->
+                            val id = d.value
+                            val find = selects.find { id == it }
+                            return@filter find != null
+                        }.forEach { btn ->
+                            SortButton(
+                                type = SortButtonType.StrokeFill,
+                                sizeType = SortButtonSizeType.Small,
+                                text = btn.title,
+                                color = ColorBrand.primary,
+                                isSort = false,
+                                modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
+                            ) {
                             }
                         }
                     }

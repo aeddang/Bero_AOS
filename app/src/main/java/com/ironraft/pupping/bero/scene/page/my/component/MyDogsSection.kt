@@ -29,6 +29,9 @@ import com.ironraft.pupping.bero.scene.component.item.UserProfileInfo
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.rest.MissionApi
 import com.ironraft.pupping.bero.store.api.rest.MissionCategory
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -75,13 +78,11 @@ fun MyDogsSection(
         }
     }
     fun movePetPag(profile:PetProfile){
-
         pagePresenter.openPopup(
-            PageProvider.getPageObject(.dog)
-                .addParam(key: .data, value: profile)
-                .addParam(key: .subData, value: self.dataProvider.user)
+            PageProvider.getPageObject(PageID.Dog)
+                .addParam(key = PageParam.data, value = profile)
+                .addParam(key = PageParam.subData, value = dataProvider.user)
         )
-
     }
     val scrollState: ScrollState = rememberScrollState()
     AppTheme {

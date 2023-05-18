@@ -9,18 +9,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.component.item.FriendListItem
-import com.ironraft.pupping.bero.scene.component.item.FriendListItemData
 import com.ironraft.pupping.bero.scene.component.list.FriendListType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabType
 import com.ironraft.pupping.bero.store.SystemEnvironment
-import com.ironraft.pupping.bero.store.api.ApiQ
-import com.ironraft.pupping.bero.store.api.ApiType
-import com.ironraft.pupping.bero.store.api.rest.FriendData
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.PageComposePresenter
@@ -30,9 +27,8 @@ import com.skeleton.component.item.EmptyItemType
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.get
 import com.ironraft.pupping.bero.R
-import com.lib.page.ComponentViewModel
-import com.lib.util.toDp
-import kotlin.math.min
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendListViewModel
+import com.ironraft.pupping.bero.store.PageRepository
 
 @Composable
 fun FriendSection(
@@ -44,72 +40,30 @@ fun FriendSection(
     pageSize:Int = if(SystemEnvironment.isTablet) 5 else 3,
     rowSize:Int = if(SystemEnvironment.isTablet) 5 else 3
 ) {
-    val appTag = "FriendSection"
+
+    val owner = LocalLifecycleOwner.current
+    val repository: PageRepository = get()
     val pagePresenter: PageComposePresenter = get()
     val dataProvider: DataProvider = get()
 
-    val viewModel:ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
-    val currentId:String  by remember { mutableStateOf(user?.userId ?: "") }
+    val viewModel: FriendListViewModel by remember { mutableStateOf(
+        FriendListViewModel(repository).initSetup(owner, pageSize, limitedSize = pageSize)
+    ) }
     val isMe:Boolean by remember { mutableStateOf(user?.isMe ?: false) }
     fun updateFriend(): Float {
+        viewModel.currentId = user?.userId ?: ""
+        viewModel.currentType = type
+        viewModel.reset()
+        viewModel.load()
         val screenWidth:Float = listSize
-        val q = ApiQ(appTag,
-            type.apiType,
-            contentID = currentId,
-            page = 0,
-            pageSize = pageSize,
-            requestData = 0)
-
-        dataProvider.requestData(q)
         val r: Float = rowSize.toFloat()
-        val margin = DimenMargin.regularExtra.toInt().toDp
+        val margin = DimenMargin.regularExtra.toInt()
         return (screenWidth - (margin * (r - 1))) / r
     }
     val imageSize:Float by remember { mutableStateOf(updateFriend()) }
-    var isEmpty:Boolean by remember { mutableStateOf(true) }
-    var friends:List<FriendListItemData> by remember { mutableStateOf(listOf()) }
+    val isEmpty = viewModel.isEmpty.observeAsState()
+    val friends = viewModel.listDatas.observeAsState()
 
-    val apiResult = dataProvider.result.observeAsState()
-    fun reset(){
-        friends = listOf()
-    }
-    fun loaded(datas:List<FriendData>){
-        var added:List<FriendListItemData> = listOf()
-        val start = friends.count()
-        val end = min(pageSize, datas.count()) - 1
-        added = datas.slice(0..end).mapIndexed { idx, d  ->
-            FriendListItemData().setData(d,  idx = start + idx, type = type.status)
-        }
-        val prev = friends.toMutableList()
-        prev.addAll(added)
-        friends = prev
-        isEmpty = friends.isEmpty()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    apiResult.value?.let { res ->
-        if(!viewModel.isValidResult(res)) return@let
-        if(res.contentID != currentId) return@let
-        if(res.requestData != 0) return@let
-        when ( res.type ){
-            ApiType.GetFriends -> {
-                if(type == FriendListType.Friend)
-                    reset()
-                    loaded(res.data as? List<FriendData> ?: listOf())
-            }
-            ApiType.GetRequestFriends -> {
-                if(type == FriendListType.Friend)
-                    reset()
-                    loaded(res.data as? List<FriendData> ?: listOf())
-            }
-            ApiType.GetRequestedFriends -> {
-                if(type == FriendListType.Friend)
-                    reset()
-                    loaded(res.data as? List<FriendData> ?: listOf())
-            }
-            else ->{}
-        }
-    }
 
     fun moveFriend(id:String? = null){
         if (dataProvider.user.isSameUser(id)) {
@@ -150,26 +104,28 @@ fun FriendSection(
                     else -> {}
                 }
             }
-            if (isEmpty)
-                EmptyItem(type = EmptyItemType.MyList)
+            if (isEmpty.value == true)  EmptyItem(type = EmptyItemType.MyList)
             else
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    friends.forEach { data ->
-                        FriendListItem(
-                            data = data,
-                            imgSize = imageSize,
-                            isMe = isMe,
-                            //status = if(isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
-                            isHorizontal = true)
-                        {
-                            moveFriend(data.userId)
+                friends.value?.let { datas->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        datas.forEach { data ->
+                            FriendListItem(
+                                data = data,
+                                imgSize = imageSize,
+                                isMe = isMe,
+                                //status = if(isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
+                                isHorizontal = true)
+                            {
+                                moveFriend(data.userId)
+                            }
                         }
                     }
                 }
+
         }
     }
 }

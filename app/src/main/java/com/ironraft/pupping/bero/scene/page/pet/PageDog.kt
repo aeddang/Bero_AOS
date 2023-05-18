@@ -64,12 +64,15 @@ fun PageDog(
     val dataProvider:DataProvider = get()
     val viewModel:PageDogViewModel by remember { mutableStateOf(PageDogViewModel()) }
     val scrollState: ScrollState = rememberScrollState()
+
     val screenWidth = LocalConfiguration.current.screenWidthDp
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
         return screenWidth.toFloat() - margin
     }
     val listWidth: Float by remember { mutableStateOf( getListWidth() ) }
+    var user:User? by remember { mutableStateOf( null ) }
+    var profile:PetProfile? by remember { mutableStateOf( null ) }
 
     fun getInitUser():User?{
         val user = page?.getParamValue(PageParam.subData) as? User
@@ -77,8 +80,6 @@ fun PageDog(
         viewModel.currentUserId = user?.userId ?: ""
         return user
     }
-    var user:User? by remember { mutableStateOf( getInitUser() ) }
-
     fun getPetProfileData():PetProfile?{
         val profile = page?.getParamValue(PageParam.data) as? PetProfile
         val petId = profile?.petId ?: page?.getParamValue(PageParam.data) as? Int ?: -1
@@ -94,8 +95,6 @@ fun PageDog(
         }
         return profile
     }
-    var profile:PetProfile? by remember { mutableStateOf( getPetProfileData() ) }
-
     fun getUser(){
         if (user != null) return
         profile?.userId?.let {
@@ -105,8 +104,17 @@ fun PageDog(
             val q = ApiQ(appTag, ApiType.GetUser, contentID = viewModel.currentUserId)
             dataProvider.requestData(q)
         }
-
     }
+    if(page?.pageID == PageID.Dog.value && !viewModel.isInit){
+        viewModel.isInit = true
+        getInitUser()?.let {
+            user = it
+        }
+        getPetProfileData()?.let {
+            profile = it
+        }
+    }
+
     val apiResult = dataProvider.result.observeAsState()
     @Suppress("UNCHECKED_CAST")
     apiResult.value?.let { res ->
@@ -137,7 +145,6 @@ fun PageDog(
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(
-            modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
             parentScrollState = scrollState,
             useBack = true
         ){
@@ -182,7 +189,6 @@ fun PageDog(
                          */
                     }
                 )
-
                 PetTagSection(
                     modifier = Modifier
                         .padding(horizontal = DimenApp.pageHorinzontal.dp)
@@ -203,14 +209,17 @@ fun PageDog(
                 .height(DimenLine.heavy.dp)
                 .background(ColorApp.grey50)
             )
-            AlbumSection(
-                modifier
-                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                    .padding(top = DimenMargin.heavyExtra.dp),
-                listSize = listWidth,
-                user = dataProvider.user,
-                pet = profile
-            )
+            if(user != null && profile != null) {
+                AlbumSection(
+                    modifier
+                        .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                        .padding(top = DimenMargin.heavyExtra.dp),
+                    listSize = listWidth,
+                    user = user,
+                    pet = profile
+                )
+            }
+
         }
 
     }

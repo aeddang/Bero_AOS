@@ -26,6 +26,7 @@ enum class UserEventType{
 data class UserEvent(val type: UserEventType, var petProfile: PetProfile? = null)
 class User(val isMe:Boolean = false){
     private val appTag = javaClass.simpleName
+
     var id:String = UUID.randomUUID().toString(); private set
     val event:MutableLiveData<UserEvent?> = MutableLiveData(null)
 
@@ -56,6 +57,8 @@ class User(val isMe:Boolean = false){
 
     val isFriend:Boolean
         get() = currentProfile.status.value?.isFriend ?: false
+
+
 
     fun isSameUser(user:User?):Boolean{
         user?.currentProfile?.userId?.let {

@@ -44,7 +44,8 @@ fun ProfileImage(
     if(painter == null) {
         imagePath?.let {
             painter = rememberAsyncImagePainter( it,
-                placeholder = painterResource(emptyImagePath)
+                placeholder = painterResource(emptyImagePath),
+                error = painterResource(emptyImagePath)
             )
         }
     }

@@ -22,6 +22,7 @@
 
     <string name="noticeAppExit">Press once more to exit.</string>
     <string name="appName">Bero</string>
+    <string name="appUser">Bero User</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
 

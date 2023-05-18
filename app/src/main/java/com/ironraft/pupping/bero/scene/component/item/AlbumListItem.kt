@@ -23,6 +23,7 @@ import com.ironraft.pupping.bero.activityui.ActivitRadioEvent
 import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.scene.component.list.AlbumListType
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.*
@@ -32,6 +33,7 @@ import com.lib.page.PageComposePresenter
 import com.lib.util.replace
 import com.lib.util.toggle
 import com.skeleton.component.dialog.RadioBtnData
+import com.skeleton.component.item.ListDetailItem
 import com.skeleton.component.item.ListItem
 import com.skeleton.view.button.CircleButton
 import com.skeleton.view.button.CircleButtonType
@@ -84,16 +86,19 @@ class AlbumListItemData{
 @Composable
 fun AlbumListItem(
     modifier: Modifier = Modifier,
+    type: AlbumListType = AlbumListType.Normal,
     data:AlbumListItemData,
     user:User? = null,
     pet:PetProfile? = null,
     imgSize:Size,
-    isEdit:Boolean = false
+    isEdit:Boolean = false,
+    isOriginSize:Boolean = false
 ){
     val dataProvider:DataProvider = get()
     val isDelete by data.isDelete.observeAsState()
     val isLike by data.isLike.observeAsState()
     val likeCount by data.likeCount.observeAsState()
+    val isExpose by data.isExpose.observeAsState()
 
     val apiResult = dataProvider.result.observeAsState()
     @Suppress("UNCHECKED_CAST")
@@ -111,48 +116,80 @@ fun AlbumListItem(
         }
     }
 
+    fun onLike(){
+        val currentValue = data.isLike.value
+        val id = data.pictureId.toString()
+        currentValue?.let {
+            val q = ApiQ(id,
+                ApiType.UpdateAlbumPicturesLike,
+                contentID = id,
+                requestData = !currentValue)
+            dataProvider.requestData(q)
+        }
+    }
+    fun onMoveWalk(){
+        /*
+        pagePresenter.openPopup(
+                            PageProvider.getPageObject(.walkInfo)
+                            .addParam(key: .id, value: self.data.walkId)
+                        .addParam(key: .data, value: self.user)
+                        )
+        */
+    }
+    fun onMovePicture(){
+        /*
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(.album)
+            .addParam(key: .data, value: self.user)
+        .addParam(key: .subData, value: self.pet)
+        .addParam(key: .id, value: self.data.pictureId)
+        )
+        */
+    }
+    fun onShare(){
+        /*
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(.album)
+            .addParam(key: .data, value: self.user)
+        .addParam(key: .subData, value: self.pet)
+        .addParam(key: .id, value: self.data.pictureId)
+        )
+        */
+    }
     Box(modifier = Modifier.wrapContentSize(),
         contentAlignment = Alignment.TopEnd
     ){
-        ListItem(
-            imagePath = data.thumbIagePath,
-            imgSize = imgSize,
-            icon = data.type?.icon,
-            iconText = data.type?.text,
-            likeCount = likeCount,
-            isLike = isLike ?: false,
-            likeSize = SortButtonSizeType.Small,
-            iconAction = {
-                /*
-                pagePresenter.openPopup(
-                    PageProvider.getPageObject(.walkInfo)
-                    .addParam(key: .id, value: self.data.walkId)
-                .addParam(key: .data, value: self.user)
+        when(type){
+            AlbumListType.Normal ->
+                ListItem(
+                    imagePath = data.thumbIagePath,
+                    imgSize = imgSize,
+                    icon = data.type?.icon,
+                    iconText = data.type?.text,
+                    likeCount = likeCount,
+                    isLike = isLike ?: false,
+                    likeSize = SortButtonSizeType.Small,
+                    iconAction = { onMoveWalk() },
+                    action = { onLike() },
+                    move = { onMovePicture() }
                 )
-                */
-            },
-            action = {
-                val currentValue = data.isLike.value
-                val id = data.pictureId.toString()
-                currentValue?.let {
-                    val q = ApiQ(id,
-                        ApiType.UpdateAlbumPicturesLike,
-                        contentID = id,
-                        requestData = !currentValue)
-                    dataProvider.requestData(q)
-                }
-            },
-            move = {
-                /*
-                pagePresenter.openPopup(
-                    PageProvider.getPageObject(.album)
-                    .addParam(key: .data, value: self.user)
-                .addParam(key: .subData, value: self.pet)
-                .addParam(key: .id, value: self.data.pictureId)
+            AlbumListType.Detail ->
+                ListDetailItem(
+                    imagePath = data.thumbIagePath,
+                    imgSize = imgSize,
+                    icon = data.type?.icon,
+                    iconText = data.type?.text,
+                    likeCount = likeCount,
+                    isLike = isLike ?: false,
+                    likeSize = SortButtonSizeType.Small,
+                    isShared = if(user?.isMe == true) isExpose else null,
+                    isOriginSize = isOriginSize,
+                    iconAction = { onMoveWalk() },
+                    likeAction = { onLike() },
+                    shareAction = { onShare() }
                 )
-                */
-            }
-        )
+        }
+
         if (isEdit){
             CircleButton(
                 modifier = Modifier.padding(all = DimenMargin.thin.dp),

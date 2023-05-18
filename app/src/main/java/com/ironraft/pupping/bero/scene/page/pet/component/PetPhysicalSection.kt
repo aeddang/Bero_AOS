@@ -108,14 +108,17 @@ fun PetPhysicalSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 PropertyInfo(
+                    modifier = Modifier.weight(1.0f),
                     title = stringResource(id = R.string.weight),
-                    value = weight.value.toString()
+                    value = if(weight.value == null) "-" else weight.value.toString()
                 )
                 PropertyInfo(
+                    modifier = Modifier.weight(1.0f),
                     title = stringResource(id = R.string.height),
-                    value = height.value.toString()
+                    value = if(height.value == null) "-" else height.value.toString()
                 )
                 PropertyInfo(
+                    modifier = Modifier.weight(1.0f),
                     title = stringResource(id = R.string.immunization),
                     value = PetProfile.exchangeStringToList(immunization.value ?: "").count().toString()
                 )

@@ -18,6 +18,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.http.Part
 
 class ApiBridge(
     private val context: Context,
@@ -67,10 +68,10 @@ class ApiBridge(
             ApiType.ChangeRepresentativePet -> getUpdateRepresentative(apiQ.contentID)
             ApiType.DeletePet -> pet.delete(apiQ.contentID)
             ApiType.GetAlbumPictures -> album.get(apiQ.contentID, apiQ.query?.get(ApiField.pictureType),apiQ.page, apiQ.pageSize)
-            ApiType.RegistAlbumPicture -> getRegistAlbumPicture(apiQ.contentID, apiQ.requestData as? AlbumData)
+            ApiType.RegistAlbumPicture -> getRegistAlbumPicture(apiQ.contentID, snsUser?.snsID, apiQ.requestData as? AlbumData)
             ApiType.UpdateAlbumPicturesLike -> getUpdateLikeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
             ApiType.UpdateAlbumPicturesExpose -> getUpdateExposeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
-            ApiType.DeleteAlbumPictures -> album.delete(apiQ.contentID)
+            ApiType.DeleteAlbumPictures -> album.delete(apiQ.query?.get(ApiField.pictureIds) ?: "")
             ApiType.CheckHumanWithDog -> getVisionCheck(apiQ.requestData as? Bitmap)
             ApiType.GetFriends -> friend.getFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
             ApiType.GetRequestFriends -> friend.requestFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
@@ -151,9 +152,12 @@ class ApiBridge(
             tagBreed, tagStatus, tagPersonality, image)
     }
 
-    private fun getRegistAlbumPicture(ownerId:String?, albumData: AlbumData?) = runBlocking {
+    private fun getRegistAlbumPicture(ownerId:String?, userId:String?, albumData: AlbumData?) = runBlocking {
         val owner: RequestBody? = getRequestBody(ownerId)
+        val user: RequestBody? = getRequestBody(userId)
         val type: RequestBody? = getRequestBody(albumData?.type?.getApiCode)
+        val isExpose: RequestBody? = getRequestBody(albumData?.isExpose.toString())
+        val referenceId: RequestBody? = getRequestBody(albumData?.referenceId)
         var image: MultipartBody.Part? = null
         var thumbImage:Bitmap? = albumData?.thumb
         albumData?.image?.let {
@@ -169,7 +173,7 @@ class ApiBridge(
             val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             thumb = MultipartBody.Part.createFormData("smallContents", "thumbAlbumImage.jpg" , imgBody)
         }
-        album.post(owner, type, thumb, image)
+        album.post(owner, type, user, isExpose, referenceId, thumb, image)
     }
 
     suspend fun create(img:Bitmap):Pair<Bitmap, Bitmap>{

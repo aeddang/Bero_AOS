@@ -62,7 +62,6 @@ class ApiManager(
         status = ApiStatus.Initate
     }
 
-
     fun load(apiQ: ApiQ){
         if (status != ApiStatus.Ready){
             apiQs.add(apiQ)
@@ -82,18 +81,19 @@ class ApiManager(
         ApiAdapter { apiBridge.getApi(apiQ, snsUser) }
             .onSuccess(
                 { res->
-                    //res?.let { DataLog.d(it,appTag) }
                     val data = res?.contents
                     val datas = res?.items
-                    val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional, apiQ.contentID, apiQ.requestData, apiQ.useCoreData)
+                    val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional,
+                        apiQ.contentID, apiQ.requestData, apiQ.page, apiQ.useCoreData)
                     if ( accountManager?.respondApi(success) != true ){
                         result.value = success
                     }
                 },
                 { type , code , msg ->
-                    val e = ApiError(apiQ.type, type, code, msg, apiQ.id, apiQ.isOptional, apiQ.requestData)
+                    val e = ApiError(apiQ.type, type, code, msg, apiQ.id, apiQ.isOptional,
+                        apiQ.contentID, apiQ.requestData, apiQ.page)
                     DataLog.e(e,appTag)
-                    if (code == ApiCode.invalidToken && apiQ.type != ApiType.AuthReflash) {
+                    if (code == ApiCode.invalidToken) {
                         apiQs.add(apiQ)
                         reflashToken(e)
                     }else{

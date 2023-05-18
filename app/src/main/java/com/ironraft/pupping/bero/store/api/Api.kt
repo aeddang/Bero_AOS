@@ -40,6 +40,7 @@ class ApiInterceptor : Interceptor {
         } else {
             request.header("Authorization", "")
         }
+        request.header("Accept-Language", "ko-KR")
         return chain.proceed(request.build())
     }
 }
@@ -62,15 +63,20 @@ data class ApiSuccess<T>(
     val isOptional:Boolean = false,
     val contentID:String = "",
     val requestData:Any? = null,
+    val page:Int = 0,
     val useCoreData:Boolean = true
+
 ){
     val hashId:Int = UUID.randomUUID().hashCode()
 }
 data class ApiError<T>(
     val type:T , val errorType:ErrorType ,
     val code:String?, val msg:String? = null,
-    val id: String? = null,  val isOptional:Boolean = false,
-    val requestData:Any? = null
+    val id: String? = null,
+    val isOptional:Boolean = false,
+    val contentID:String = "",
+    val requestData:Any? = null,
+    val page:Int = 0
 ){
     val hashId:Int = UUID.randomUUID().hashCode()
 }

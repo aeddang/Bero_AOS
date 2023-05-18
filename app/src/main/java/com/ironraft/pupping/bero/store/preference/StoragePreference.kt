@@ -105,7 +105,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
     }
 
     var isExposeSetup:Boolean
-        get(){ return get(StoragePreference.isExposeSetup, true) as Boolean }
+        get(){ return get(StoragePreference.isExposeSetup, false) as Boolean }
         set(value:Boolean){ put(StoragePreference.isExposeSetup, value) }
 
     var isExpose:Boolean

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import com.ironraft.pupping.bero.R
 import com.lib.util.*
 import com.ironraft.pupping.bero.store.api.rest.PetData
 import java.time.LocalDate
@@ -123,6 +124,7 @@ class PetProfile {
         this.userId = data.userId ?: userId ?: ""
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0
+        this.isRepresentative = data.isRepresentative ?: false
         this.imagePath.value = data.pictureUrl
         this.name.value = data.name
         this.breed.value = data.tagBreed
@@ -139,13 +141,7 @@ class PetProfile {
         this.exerciseDistance = data.exerciseDistance
         this.exerciseDuration = data.exerciseDuration
         this.totalWalkCount.value = data.walkCompleteCnt
-        /*
-        if (introduction.value?.isNotEmpty() == true) {
-            data.name?.let {
-                introduction.value = String.pageText.introductionDefault.replace(name)
-            }
-        }
-        */
+
         return this
     }
 

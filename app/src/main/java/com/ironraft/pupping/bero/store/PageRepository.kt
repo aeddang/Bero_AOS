@@ -23,6 +23,7 @@ import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
 import com.lib.model.SingleLiveData
 import com.lib.page.AppObserver
+import com.lib.page.PageAppViewModel
 import com.lib.page.PageCoroutineScope
 import com.lib.util.*
 import com.skeleton.module.Repository
@@ -48,6 +49,7 @@ class PageRepository (
     val dataProvider: DataProvider,
     val apiManager: ApiManager,
     val pageModel: ActivityModel,
+    val pageAppViewModel: PageAppViewModel,
     val pagePresenter: PagePresenter,
     val appObserver: AppObserver,
     val appSceneObserver: AppSceneObserver,

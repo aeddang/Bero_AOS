@@ -32,7 +32,9 @@ enum class AlbumCategory{
 data class AlbumData(
     val type:AlbumCategory,
     val image:Bitmap?,
-    var thumb:Bitmap? = null
+    var thumb:Bitmap? = null,
+    var isExpose:Boolean = false,
+    var referenceId:String? = null
 )
 
 interface AlbumApi {
@@ -47,8 +49,11 @@ interface AlbumApi {
     @Multipart
     @POST(Api.Album.pictures)
     suspend fun post(
-        @Part(ApiField.ownerId) name: RequestBody?,
+        @Part(ApiField.ownerId) ownerId: RequestBody?,
         @Part(ApiField.pictureType) pictureType: RequestBody?,
+        @Part(ApiField.userId) userId: RequestBody?,
+        @Part(ApiField.isExpose) isExpose: RequestBody?,
+        @Part(ApiField.referenceId) referenceId: RequestBody?,
         @Part smallContents: MultipartBody.Part?,
         @Part contents: MultipartBody.Part?
     ): ApiResponse<PictureData?>?

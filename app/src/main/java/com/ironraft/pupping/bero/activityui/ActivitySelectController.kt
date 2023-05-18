@@ -55,6 +55,7 @@ fun ActivitySelectController(){
     val select = viewModel.select.observeAsState()
     select.value.let { selectEvt ->
         selectEvt?.let {evt ->
+
             buttons = (evt.buttons?.mapIndexed {
                     index,
                     btn -> SelectBtnData(title = btn, index = index, isSelected = index == evt.selected) } )

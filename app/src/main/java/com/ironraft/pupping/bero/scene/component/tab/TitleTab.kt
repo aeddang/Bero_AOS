@@ -139,29 +139,18 @@ fun TitleTab(
                             action?.let { it(TitleTabButtonType.Back) }
                         }
                     }
-                    title?.let {
-                        if (alignment == TextAlign.Start) {
-                            Text(
-                                it,
-                                fontSize = type.textSize.sp,
-                                fontWeight = type.textFamily,
-                                color = ColorApp.black,
-                                textAlign = TextAlign.Start,
-                                maxLines = lineLimit
-                            )
-                        } else {
-                            Text(
-                                it,
-                                fontSize = type.textSize.sp,
-                                fontWeight = type.textFamily,
-                                color = ColorApp.black,
-                                textAlign = TextAlign.Center,
-                                maxLines = lineLimit,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1.0f)
-                            )
-                        }
+                    if(title!=null){
+                        Text(
+                            title,
+                            fontSize = type.textSize.sp,
+                            fontWeight = type.textFamily,
+                            color = ColorApp.black,
+                            textAlign = alignment,
+                            maxLines = lineLimit,
+                            modifier = Modifier.weight(1.0f)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(1.0f))
                     }
                     sortButton?.let {
                         SortButton(
@@ -227,7 +216,7 @@ fun TitleTab(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(DimenLine.light.dp)
-                        .background(if(onTop) ColorTransparent.clear else ColorApp.grey50)
+                        .background(if (onTop) ColorTransparent.clear else ColorApp.grey50)
                 )
             }
         }

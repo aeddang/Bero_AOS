@@ -39,16 +39,16 @@ fun PageMy(
     page: PageObject? = null
 ){
     val appTag = "PageMy"
+    val dataProvider:DataProvider = get()
+    val scrollState: ScrollState = rememberScrollState()
     val screenWidth = LocalConfiguration.current.screenWidthDp
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
         return screenWidth.toFloat() - margin
     }
     val listWidth: Float by remember { mutableStateOf( getListWidth() ) }
-    val pagePresenter:PageComposePresenter = get()
-    val dataProvider:DataProvider = get()
     val representativePet by dataProvider.user.representativePet.observeAsState()
-    val scrollState: ScrollState = rememberScrollState()
+
 
     Column (
         modifier = modifier
@@ -58,16 +58,13 @@ fun PageMy(
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(
-            modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
             parentScrollState = scrollState,
-            title = stringResource(id = R.string.pageTitle_addDog),
-            alignment = TextAlign.Center,
-            margin = 0.0f,
-            buttons = arrayListOf(TitleTabButtonType.Close)
+            title = stringResource(id = R.string.pageTitle_my),
+            buttons = arrayListOf(TitleTabButtonType.Setting)
         ){
             when(it){
-                TitleTabButtonType.Close -> {
-                    pagePresenter.closePopup(key = page?.key)
+                TitleTabButtonType.Setting -> {
+                    //pagePresenter.closePopup(key = page?.key)
                 }
                 else -> {}
             }
@@ -151,7 +148,6 @@ fun PageMy(
                 user = dataProvider.user,
                 isEdit = true
             )
-
             AlbumSection( modifier
                 .padding(horizontal = DimenApp.pageHorinzontal.dp)
                 .padding(top = DimenMargin.heavyExtra.dp),

@@ -27,6 +27,8 @@ import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.my.PageMy
+import com.ironraft.pupping.bero.scene.page.pet.PageDog
+import com.ironraft.pupping.bero.scene.page.popup.PageAlbum
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
@@ -81,7 +83,9 @@ fun PageApp(
     var isLoading by remember { mutableStateOf(false) }
     var isLock by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize().background(ColorApp.black)){
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(ColorApp.black)){
         Scaffold(
             bottomBar = {
                 currentTopPage?.let {
@@ -98,6 +102,8 @@ fun PageApp(
                         .fillMaxSize()
                         .background(ColorBrand.bg)
                 ) {
+
+                    //PageLog.d(route ?: "", "PAGEROUTE")
                     PageID.values().forEach {
                         getPageComposable(
                             nav = this,
@@ -123,7 +129,8 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
     val page = currentRoutePage ?: PageProvider.getPageObject(routePage)
     val ani = page.animationType
     val duration = PageAnimationType.duration
-    nav.composable(route = routePage.value,
+    nav.composable(
+        route = routePage.value,
         enterTransition = {ani.enter},
         exitTransition = {ani.exit},
         popEnterTransition = {fadeIn(animationSpec = tween(duration)) },
@@ -132,14 +139,16 @@ fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObj
         when (routePage.value) {
             PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
             PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
-            PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentPage)
-            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentPage)
-            PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentPage)
-            PageID.My.value -> PageMy(Modifier.fillMaxSize(), page = currentPage)
+            PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.My.value -> PageMy(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.Dog.value -> PageDog(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.Album.value -> PageAlbum(Modifier.fillMaxSize(), page = currentRoutePage)
             PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
             PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
-            PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentPage)
-            PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentPage)
+            PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentRoutePage)
         }
     }
 }

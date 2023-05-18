@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -24,15 +25,19 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.koin.pageModelModule
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.rest.PetData
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
+import com.lib.page.PagePresenter
 import com.lib.util.toThousandUnit
 import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
-import com.skeleton.view.button.SortButton
-import com.skeleton.view.button.SortButtonSizeType
-import com.skeleton.view.button.SortButtonType
-import com.skeleton.view.button.WrapTransparentButton
+import com.skeleton.view.button.*
+import dev.burnoo.cokoin.Koin
+import dev.burnoo.cokoin.get
 
 
 @Composable
@@ -57,6 +62,7 @@ fun ListDetailItem(
     likeAction: (() -> Unit)? = null,
     shareAction: (() -> Unit)? = null
     ) {
+    val pagePresenter: PagePresenter = get()
     var painter: AsyncImagePainter? = null
     imagePath?.let {
         painter = rememberAsyncImagePainter( it,
@@ -74,8 +80,12 @@ fun ListDetailItem(
         ) {
             Box(
                 modifier = (
-                    if(isOriginSize) Modifier.width(imgSize.width.dp)
-                    else Modifier.size(width = imgSize.width.dp, height = imgSize.height.dp))
+                    if(isOriginSize) Modifier
+                        .clipToBounds()
+                        .width(imgSize.width.dp)
+                    else Modifier
+                        .clipToBounds()
+                        .size(width = imgSize.width.dp, height = imgSize.height.dp))
                     .background(ColorApp.grey100),
                 contentAlignment = Alignment.Center
             ) {
@@ -142,7 +152,9 @@ fun ListDetailItem(
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp),
                 horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -161,7 +173,7 @@ fun ListDetailItem(
                         ){
                             likeAction?.let { it() }
                         }
-                        WrapTransparentButton(action = { likeAction?.let { it() } }) {
+                        Box(modifier = Modifier.wrapContentSize()){
                             Text(
                                 likeCount.toThousandUnit() + " " + stringResource(id = R.string.likes),
                                 fontSize = FontSize.thin.sp,
@@ -175,7 +187,11 @@ fun ListDetailItem(
                                         vertical = DimenMargin.tinyExtra.dp
                                     )
                             )
+                            TransparentButton(modifier = Modifier.matchParentSize()) {
+                                likeAction?.let { it() }
+                            }
                         }
+
                     }
                 }
                 if(pets.isNotEmpty())
@@ -184,13 +200,21 @@ fun ListDetailItem(
                         horizontalArrangement = Arrangement.spacedBy(space = DimenMargin.micro.dp)
                     ) {
                         pets.reversed().forEachIndexed {index, pet ->
-                            ProfileImage(
-                                image = pet.image.value,
-                                imagePath = pet.imagePath.value,
-                                size = DimenProfile.thin,
-                                emptyImagePath = R.drawable.profile_dog_default,
-                                modifier = Modifier.padding(end = (DimenMargin.thin * index).dp )
-                            )
+                            WrapTransparentButton(action = {
+                                pagePresenter.openPopup(
+                                    PageProvider.getPageObject(PageID.Dog)
+                                        .addParam(key = PageParam.id, value = pet.petId)
+                                )
+
+                            }) {
+                                ProfileImage(
+                                    image = pet.image.value,
+                                    imagePath = pet.imagePath.value,
+                                    size = DimenProfile.thin,
+                                    emptyImagePath = R.drawable.profile_dog_default,
+                                    modifier = Modifier.padding(end = (DimenMargin.thin * index).dp)
+                                )
+                            }
                         }
                     }
                 isShared?.let {
@@ -213,25 +237,37 @@ fun ListDetailItem(
 @Preview
 @Composable
 fun ListDetailItemComposePreview() {
-    Column(
-        modifier = Modifier
-            .background(ColorApp.white)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        ListDetailItem(
-            imgSize = Size(width = 440.0f, height = 160.0f),
-            title = "title",
-            subTitle = "subTitle",
-            icon = null,
-            iconText = "Walk",
-            likeCount = 100.0,
-            isLike = true,
-            isShared = true,
-            pets = listOf(
-                PetProfile().init(PetData()),
-                PetProfile().init(PetData())
+    Koin(appDeclaration = { modules(pageModelModule) }) {
+        Column(
+            modifier = Modifier
+                .background(ColorApp.white)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            ListDetailItem(
+                imgSize = Size(width = 440.0f, height = 160.0f),
+                title = "title",
+                subTitle = "subTitle",
+                icon = null,
+                iconText = "Walk",
+                likeCount = 100.0,
+                isLike = true,
+                isShared = true,
+                pets = listOf(
+                    PetProfile().init(PetData()),
+                    PetProfile().init(PetData())
+                )
             )
-        )
+            ListDetailItem(
+                imgSize = Size(width = 440.0f, height = 160.0f),
+                title = "title",
+                subTitle = "subTitle",
+                icon = null,
+                iconText = "Walk",
+                likeCount = 100.0,
+                isLike = true,
+                isShared = true
+            )
+        }
     }
 }

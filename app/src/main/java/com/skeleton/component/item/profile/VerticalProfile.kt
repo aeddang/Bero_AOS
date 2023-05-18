@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ import com.ironraft.pupping.bero.scene.component.button.LvButton
 import com.ironraft.pupping.bero.store.provider.model.Gender
 import com.ironraft.pupping.bero.store.provider.model.Lv
 import com.lib.page.PageComposePresenter
+import com.lib.util.replace
 import com.lib.util.showCustomToast
 import com.skeleton.theme.*
 import com.skeleton.view.button.CircleButton
@@ -193,7 +195,7 @@ fun VerticalProfile(
             }
             description?.let {
                 Text(
-                    it,
+                    it.ifEmpty { stringResource(id = R.string.introductionDefault).replace(name ?: "") },
                     fontSize = FontSize.thin.sp,
                     color = ColorApp.grey400,
                     textAlign = if(alignment == Alignment.CenterHorizontally) TextAlign.Center  else TextAlign.Start,
@@ -214,7 +216,9 @@ fun VerticalProfile(
 fun VerticalProfileComposePreview(){
     Koin(appDeclaration = { modules(pageModelModule) }) {
         Column(
-            modifier = Modifier.background(ColorApp.white).padding(16.dp),
+            modifier = Modifier
+                .background(ColorApp.white)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             VerticalProfile(

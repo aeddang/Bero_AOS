@@ -38,6 +38,8 @@ enum class PageID(val value: String, val position: Int = 9999){
     Explore("explore", 200),
     Chat("chat", 300),
     My("my", 400),
+    Dog("dog"),
+    Album("album"),
     Webview("webview"),
     Privacy("privacy"),
     ServiceTerms("serviceTerms"),

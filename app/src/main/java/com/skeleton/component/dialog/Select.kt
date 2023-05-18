@@ -45,14 +45,13 @@ fun Select(
                 ) {
                     buttons?.let { btns ->
                         btns.forEach { btn ->
-                            var isSelect by remember { mutableStateOf(btn.isSelected) }
-
+                            var isSelect = btn.isSelected
                             SelectButton(
                                 type = SelectButtonType.Small,
                                 icon = btn.icon,
                                 text = btn.title,
                                 description = btn.tip,
-                                isSelected = isSelect
+                                isSelected = btn.isSelected
                             ) {
                                 isSelect = !isSelect
                                 btn.isSelected = isSelect

@@ -110,7 +110,11 @@ object ApiField {
     const val category = "category"
     const val searchText = "searchText"
     const val otherUserId = "otherUserId"
+
+    const val isExpose = "isExpose"
+    const val referenceId = "referenceId"
 }
+
 
 enum class ApiType{
     AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush,

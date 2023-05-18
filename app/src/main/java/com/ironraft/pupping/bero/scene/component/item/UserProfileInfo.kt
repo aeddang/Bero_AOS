@@ -11,10 +11,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.koin.pageModelModule
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.UserProfile
@@ -65,15 +68,16 @@ fun UserProfileInfoBody(
     val image by profile.image.observeAsState()
     AppTheme {
         HorizontalProfile(
-            type = HorizontalProfileType.Pet,
+            modifier = modifier,
+            type = HorizontalProfileType.User,
             sizeType = sizeType,
             imagePath = imagePath,
             image = image,
-            name = name,
+            name = name?.ifEmpty { stringResource(id = R.string.appUser)},
             gender = gender,
             age = birth?.toAge(),
             isSelected = false,
-            useBg = false
+            useBg = true
         )
     }
 }
@@ -83,7 +87,9 @@ fun UserProfileInfoBody(
 fun UserProfileInfoComposePreview() {
     Koin(appDeclaration = { modules(pageModelModule) }) {
         Column(
-            modifier = Modifier.background(ColorApp.white).padding(16.dp),
+            modifier = Modifier
+                .background(ColorApp.white)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             UserProfileInfo(

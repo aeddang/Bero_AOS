@@ -37,7 +37,7 @@ val pageModelModule = module {
     singleOf(::PageRepository)
     singleOf(::DeepLinkManager)
     //
-    viewModelOf(::BasePageViewModel)
+    //viewModelOf(::BasePageViewModel)
     //scope<MainActivity>(){} 싱글 activity 확장시 사용
 }
 

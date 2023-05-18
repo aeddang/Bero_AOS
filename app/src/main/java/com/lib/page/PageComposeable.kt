@@ -306,12 +306,13 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             nextPage.pageID,
             nextPage
         )
+        activityViewModel.currentTopPage.value = nextPage
     }
 
     @CallSuper
     protected open fun onChangedPage(){
         currentTopPage?.let {
-            activityViewModel.currentTopPage.value = it
+
             activityViewModel.event.value = PageEvent(
                 PageEventType.ChangedPage,
                 it.pageID,
@@ -398,7 +399,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         pageObject.isPopup = true
         popups.add(pageObject)
         onWillChangePage(null, pageObject)
-        navController?.navigate(pageObject.pageID) {
+        navController?.navigate(pageObject.pageID+"/"+pageObject.key) {
             if(top?.isHistory == false) {
                 popUpTo(top.pageID) {inclusive = true}
             }
