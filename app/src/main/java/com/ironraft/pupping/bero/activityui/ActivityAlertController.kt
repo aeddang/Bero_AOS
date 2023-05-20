@@ -108,12 +108,16 @@ fun ActivityAlertController(){
                 }
                 ActivitAlertType.Cancel -> {
                     isShow = false
+                    viewModel.alert.value = null
+                    viewModel.isAlertShow = false
                     return
                 }
             }
+            viewModel.isAlertShow = true
             currentEvent = evt
-            isShow = true
             viewModel.alert.value = null
+            isShow = true
+
         }
     }
 
@@ -127,6 +131,7 @@ fun ActivityAlertController(){
                 buttons = buttons,
                 buttonColor = buttonColor,
             ) {selected ->
+                viewModel.isAlertShow = false
                 isShow = false
                 currentEvent?.let { evt ->
                     evt.handler?.let {
@@ -140,8 +145,6 @@ fun ActivityAlertController(){
                         return@Alert
                     }
                 }
-
-
 
             }
         }

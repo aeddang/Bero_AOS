@@ -6,7 +6,7 @@ import com.ironraft.pupping.bero.store.api.ApiSuccess
 import com.ironraft.pupping.bero.store.api.ApiType
 
 open class ComponentViewModel:ViewModel(),PageLifecycleUser{
-    val appTag = javaClass.simpleName
+    val tag = javaClass.simpleName
     var isInit = false
     var isBusy = false
     var apiResult: ApiSuccess<ApiType>? = null; private set

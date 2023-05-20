@@ -18,6 +18,7 @@ import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavHostController
 import com.lib.util.PageLog
+import com.lib.util.resetScrollState
 import com.lib.util.showCustomToast
 import java.util.*
 import kotlin.math.abs
@@ -75,6 +76,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         get(){
             return if( historys.isEmpty() ) null else historys.last()
         }
+
+    fun findPage(pageID:String): PageObject?{
+        if( currentPageObject?.pageID == pageID ) return currentPageObject
+        return popups.findLast { it.pageID == pageID }
+    }
 
 
     @Suppress("DEPRECATION")
@@ -219,19 +225,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         //if(pageObject != null) clearPageHistory(pageObject)
         this.onBackPressed()
     }
-    /*
-    @Suppress("DEPRECATION")
-    @CallSuper
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val evt = PageEvent(
-            PageEventType.OnActivityForResult,
-            data = data,
-            hashId = activityRequstId
-        )
-        activityViewModel.event.value = evt
-    }
-    */
+
     private lateinit var startActivityForResult: ActivityResultLauncher<Intent>; private set
     protected var activityRequstId:Int = -1
     private fun setupActivityResult(){
@@ -260,15 +254,18 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     override fun onBackPressed() {
         if(popups.isNotEmpty()){
             val last = popups.last()
+            if (!last.isGoBackAble) return onGoBackPage()
             if (!isGobackAble(last)) return
-            popups.remove(last)
             onClosePopup(last)
             return
         }
-        currentPageObject ?: return
-        if (!isGobackAble(currentPageObject)) return
-        if( currentPageObject?.isHome == true ) onExitAction()
-        else onBackPressedAction()
+        currentPageObject?.let { page ->
+            if (!page.isGoBackAble) return onGoBackPage()
+            if (!isGobackAble(page)) return
+            if( page.isHome ) onExitAction()
+            else onBackPressedAction()
+        }
+
     }
 
     private var finalExitActionTime:Long = 0L
@@ -312,9 +309,18 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     @CallSuper
     protected open fun onChangedPage(){
         currentTopPage?.let {
-
             activityViewModel.event.value = PageEvent(
                 PageEventType.ChangedPage,
+                it.pageID,
+                it
+            )
+        }
+    }
+
+    private fun onGoBackPage(){
+        currentTopPage?.let {
+            activityViewModel.event.value = PageEvent(
+                PageEventType.GoBack,
                 it.pageID,
                 it
             )
@@ -350,8 +356,8 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 }
             }
         }
-        onCloseAllPopup()
-        resetBackPressedAction()
+        //onCloseAllPopup()
+        //resetBackPressedAction()
         val top = currentTopPage
         val prev = currentPageObject
         pageObject.isPopup = false
@@ -360,6 +366,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         if (isBack) {
             navController?.popBackStack()
         } else {
+            resetScrollState(pageObject.pageID)
             navController?.navigate(pageObject.pageID){
                 if(top?.isHistory == false) {
                     popUpTo(top.pageID) {inclusive = true }
@@ -373,11 +380,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         }
         if(prev == null) activityViewModel.event.value = PageEvent(
             PageEventType.Init,
-            pageObject.pageID,
-            pageObject.params
-        )
-        activityViewModel.event.value = PageEvent(
-            PageEventType.ChangePage,
             pageObject.pageID,
             pageObject.params
         )
@@ -397,18 +399,14 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         val top = currentTopPage
         resetBackPressedAction()
         pageObject.isPopup = true
+        resetScrollState(pageObject.pageID)
         popups.add(pageObject)
         onWillChangePage(null, pageObject)
-        navController?.navigate(pageObject.pageID+"/"+pageObject.key) {
+        navController?.navigate(pageObject.pageID) {
             if(top?.isHistory == false) {
                 popUpTo(top.pageID) {inclusive = true}
             }
         }
-        activityViewModel.event.value = PageEvent(
-            PageEventType.AddPopup,
-            pageObject.pageID,
-            pageObject.params
-        )
         onChangedPage()
         PageLog.d("onOpenPopup -> ${pageObject.pageID} completed", tag = this.appTag)
     }
@@ -418,11 +416,6 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         onWillChangePage(null, currentPageObject)
         allPopups.forEach { p ->
             navController?.popBackStack()
-            activityViewModel.event.value = PageEvent(
-                PageEventType.RemovePopup,
-                p.pageID,
-                p.params
-            )
         }
         onChangedPage()
     }
@@ -439,15 +432,12 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         }
     }
     private fun onClosePopup(pageObject: PageObject){
+        val oldPopups = popups
         popups.remove(pageObject)
-        val nextPage = if(popups.isNotEmpty()) popups.last() else currentPageObject
+        val newPopups = popups
+        val nextPage = if(newPopups.isNotEmpty()) newPopups.last() else currentPageObject
         onWillChangePage(null, nextPage)
         navController?.popBackStack() //route = pageObject.pageID, inclusive = true
-        activityViewModel.event.value = PageEvent(
-            PageEventType.RemovePopup,
-            pageObject.pageID,
-            pageObject.params
-        )
         onChangedPage()
     }
 

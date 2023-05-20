@@ -47,7 +47,7 @@ class ApiBridge(
         return@runBlocking when(apiQ.type){
             ApiType.AuthLogin -> auth.post(apiQ.body as Map<String, String>)
             ApiType.AuthReflash -> auth.reflash(apiQ.body as Map<String, String>)
-            ApiType.GetUser -> user.get((apiQ.requestData as? SnsUser)?.snsID ?: "")
+            ApiType.GetUser -> user.get(apiQ.contentID)
             ApiType.UpdateUser -> getUpdateUserProfile( snsUser?.snsID,  apiQ.requestData as? ModifyUserProfileData )
             ApiType.RegistPush -> user.post(apiQ.body as Map<String, String>)
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
@@ -61,7 +61,7 @@ class ApiBridge(
             ApiType.CompleteWalk -> mission.post(apiQ.body as Map<String, Any>)
             ApiType.GetMissionSummary -> mission.getSummary(apiQ.contentID)
             ApiType.GetPet -> pet.get(apiQ.contentID)
-            ApiType.GetPets -> pet.getUserPets((apiQ.requestData as? SnsUser)?.snsID ?: "")
+            ApiType.GetPets -> pet.getUserPets(apiQ.contentID)
             ApiType.RegistPet -> getRegistPetProfile(snsUser?.snsID, apiQ.requestData as? ModifyPetProfileData)
             ApiType.UpdatePetImage -> getUpdatePetProfile(apiQ.contentID, img = apiQ.requestData as? Bitmap)
             ApiType.UpdatePet -> getUpdatePetProfile(apiQ.contentID, profile = apiQ.requestData as? ModifyPetProfileData)

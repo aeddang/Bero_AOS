@@ -30,8 +30,7 @@ import org.koin.compose.koinInject
 @SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @Composable
 fun PageServiceTerms(
-    modifier: Modifier = Modifier,
-    page:PageObject? = null
+    modifier: Modifier = Modifier
 ){
 
     val pagePresenter = koinInject<PageComposePresenter>()
@@ -42,14 +41,6 @@ fun PageServiceTerms(
             url = "https://bero.dog/termsofservice",
             additionalHttpHeaders = emptyMap()
         )
-    /*
-    var isInit by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    coroutineScope.launch {
-        delay(300)
-        isInit = true
-    }
-    */
     Box (
         modifier = modifier
             .fillMaxSize()
@@ -85,7 +76,6 @@ fun PageServiceTerms(
 @Preview
 @Composable
 fun PageServiceTermsPreview(){
-
     PageServiceTerms(
     )
 }

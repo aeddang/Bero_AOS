@@ -47,8 +47,7 @@ class AccountManager(private val user: User) : PageLifecycleUser {
             }
             else ->{}
         }
-        val requestUser = (res.requestData as? SnsUser) ?: return false
-        if (requestUser.snsID != user.snsUser?.snsID) return false
+        if (res.contentID != user.snsUser?.snsID) return false
         when(res.type){
             ApiType.GetUser ->{
                 (res.data as? UserData)?.let{ user.setData(it) }

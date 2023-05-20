@@ -24,12 +24,14 @@ import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.scene.component.list.AlbumListType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.PageComposePresenter
+import com.lib.page.PagePresenter
 import com.lib.util.replace
 import com.lib.util.toggle
 import com.skeleton.component.dialog.RadioBtnData
@@ -95,6 +97,7 @@ fun AlbumListItem(
     isOriginSize:Boolean = false
 ){
     val dataProvider:DataProvider = get()
+    val pagePresenter:PagePresenter = get()
     val isDelete by data.isDelete.observeAsState()
     val isLike by data.isLike.observeAsState()
     val likeCount by data.likeCount.observeAsState()
@@ -144,7 +147,7 @@ fun AlbumListItem(
         .addParam(key: .subData, value: self.pet)
         .addParam(key: .id, value: self.data.pictureId)
         )
-        */
+           */
     }
     fun onShare(){
         /*

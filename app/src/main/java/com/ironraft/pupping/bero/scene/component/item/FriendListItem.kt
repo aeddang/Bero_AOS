@@ -162,6 +162,7 @@ fun FriendListItemBodyHorizontal(
     action: () -> Unit
 ){
     MultiProfile(
+        modifier = modifier,
         type = MultiProfileType.Pet,
         circleButtonType = if(data.lv == null) CircleButtonType.Image else null,
         circleButtonValue = if(data.lv == null) data.subImagePath else null,
@@ -245,7 +246,7 @@ fun FriendListItemBodyVertical(
             }
         }
     }
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
         .padding(vertical = DimenMargin.thin.dp),
         contentAlignment = Alignment.Center

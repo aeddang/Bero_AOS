@@ -29,9 +29,11 @@ import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.my.PageMy
 import com.ironraft.pupping.bero.scene.page.pet.PageDog
 import com.ironraft.pupping.bero.scene.page.popup.PageAlbum
+import com.ironraft.pupping.bero.scene.page.popup.PagePictureViewer
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
+import com.ironraft.pupping.bero.scene.page.user.PageUser
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
@@ -63,15 +65,19 @@ class AppSceneObserver {
     val sheet = MutableLiveData<ActivitSheetEvent?>(null)
     val select = MutableLiveData<ActivitSelectEvent?>(null)
     val radio = MutableLiveData<ActivitRadioEvent?>(null)
+    var isAlertShow:Boolean = false
 }
 
 
 
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun PageApp(
     pageNavController: NavHostController,
+    radioState: ModalBottomSheetState,
+    selectState: ModalBottomSheetState,
+    sheetState: ModalBottomSheetState,
     modifier: Modifier = Modifier
 ) {
     val activityModel = koinInject<ActivityModel>()
@@ -102,21 +108,21 @@ fun PageApp(
                         .fillMaxSize()
                         .background(ColorBrand.bg)
                 ) {
-
+                    //val routePage = pagePresenter.findPage(route)
                     //PageLog.d(route ?: "", "PAGEROUTE")
                     PageID.values().forEach {
                         getPageComposable(
                             nav = this,
-                            routePage = it,
-                            currentPage = pagePresenter.currentTopPage
+                            page = it,
+                            routePage = currentTopPage
                         )
                     }
                 }
             }
         }
-        ActivitySelectController()
-        ActivityRadioController()
-        ActivitySheetController()
+        ActivitySelectController(modalSheetState = selectState)
+        ActivityRadioController(modalSheetState = radioState)
+        ActivitySheetController(modalSheetState = sheetState)
         ActivityAlertController()
 
     }
@@ -124,31 +130,33 @@ fun PageApp(
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun getPageComposable(nav:NavGraphBuilder, routePage:PageID, currentPage:PageObject?){
-    val currentRoutePage = if(currentPage?.pageID == routePage.value) currentPage else null
-    val page = currentRoutePage ?: PageProvider.getPageObject(routePage)
-    val ani = page.animationType
+fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
+    val currentRoutePage = if(page.value == routePage?.pageID) routePage else null
+    val pageObj = currentRoutePage ?: PageProvider.getPageObject(page)
+    val ani = pageObj.animationType
     val duration = PageAnimationType.duration
     nav.composable(
-        route = routePage.value,
+        route = page.value,
         enterTransition = {ani.enter},
         exitTransition = {ani.exit},
         popEnterTransition = {fadeIn(animationSpec = tween(duration)) },
         popExitTransition = {ani.exit}
     ) {
-        when (routePage.value) {
+        when (page.value) {
             PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
             PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
-            PageID.Walk.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.Chat.value -> PageTest(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.My.value -> PageMy(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.Dog.value -> PageDog(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.Album.value -> PageAlbum(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.Walk.value -> PageTest(Modifier.fillMaxSize())
+            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize())
+            PageID.Chat.value -> PageTest(Modifier.fillMaxSize())
+            PageID.My.value -> PageMy(Modifier.fillMaxSize())
+            PageID.Dog.value -> PageDog(Modifier.fillMaxSize())
+            PageID.User.value -> PageUser(Modifier.fillMaxSize())
+            PageID.Album.value -> PageAlbum(Modifier.fillMaxSize())
             PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
             PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
-            PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize(), page = currentRoutePage)
-            PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize(), page = currentRoutePage)
+            PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize())
+            PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize())
+            PageID.PictureViewer.value -> PagePictureViewer(Modifier.fillMaxSize())
         }
     }
 }

@@ -6,12 +6,15 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.core.content.ContextCompat
 import com.lib.page.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.tasks.OnCompleteListener
-import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
-import com.ironraft.pupping.bero.activityui.ActivitAlertType
+import com.ironraft.pupping.bero.activityui.*
 import com.ironraft.pupping.bero.store.DeepLinkManager
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
@@ -27,6 +30,7 @@ import com.skeleton.sns.SnsManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+@OptIn(ExperimentalMaterialApi::class)
 class MainActivity : PageComposeable() {
     //lateinit val appObserver: PageAppObserver
     lateinit var repository: PageRepository
@@ -66,14 +70,55 @@ class MainActivity : PageComposeable() {
         setupComposeScreen()
         setupObserver()
     }
+
+    override fun isGobackAble(prevPage: PageObject?, nextPage: PageObject?): Boolean {
+        if(selectState?.isVisible == true) {
+            this.appSceneObserver.select.value = ActivitSelectEvent(ActivitSelectType.Cancel)
+            return false
+        }
+        if(radioState?.isVisible == true) {
+            this.appSceneObserver.radio.value = ActivitRadioEvent(ActivitRadioType.Cancel)
+            return false
+        }
+        if(sheetState?.isVisible == true) {
+            this.appSceneObserver.sheet.value = ActivitSheetEvent(ActivitSheetType.Cancel)
+            return false
+        }
+        if(this.appSceneObserver.isAlertShow ) {
+            this.appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.Cancel)
+            return false
+        }
+        return super.isGobackAble(prevPage, nextPage)
+    }
+    private var radioState: ModalBottomSheetState? = null
+    private var selectState: ModalBottomSheetState? = null
+    private var sheetState: ModalBottomSheetState? = null
+
     @OptIn(ExperimentalAnimationApi::class)
     private fun setupComposeScreen(){
         setContent {
-
+            val radioState = rememberModalBottomSheetState(
+                initialValue = ModalBottomSheetValue.Hidden,
+                confirmValueChange = { it != ModalBottomSheetValue.Expanded},
+                skipHalfExpanded = true
+            )
+            val selectState = rememberModalBottomSheetState(
+                initialValue = ModalBottomSheetValue.Hidden,
+                confirmValueChange = { it != ModalBottomSheetValue.Expanded},
+                skipHalfExpanded = true
+            )
+            val sheetState = rememberModalBottomSheetState(
+                initialValue = ModalBottomSheetValue.Hidden,
+                confirmValueChange = { it != ModalBottomSheetValue.Expanded},
+                skipHalfExpanded = true
+            )
             val pageNv = rememberAnimatedNavController()
             this.navController = pageNv
+            this.radioState = radioState
+            this.selectState = selectState
+            this.sheetState = sheetState
             scope.run {
-                PageApp(pageNv)
+                PageApp(pageNv, radioState = radioState, selectState = selectState, sheetState = sheetState)
             }
         }
         scope.launch {

@@ -90,7 +90,9 @@ fun MultiProfile(
     val pagePresenter:PageComposePresenter = get()
     AppTheme {
         Column (
-            modifier = Modifier.wrapContentSize(),
+            modifier =
+                if(imageSize != null) modifier.width(imageSize.dp).wrapContentHeight()
+                else modifier.wrapContentSize(),
             verticalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

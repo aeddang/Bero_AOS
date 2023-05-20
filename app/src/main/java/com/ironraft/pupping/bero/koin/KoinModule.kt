@@ -2,7 +2,6 @@ package com.ironraft.pupping.bero.koin
 import com.ironraft.pupping.bero.PageAppObserver
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
-import com.ironraft.pupping.bero.scene.page.viewmodel.BasePageViewModel
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.api.ApiInterceptor
@@ -14,7 +13,6 @@ import com.ironraft.pupping.bero.store.DeepLinkManager
 import com.lib.page.*
 import com.skeleton.sns.SnsManager
 import com.skeleton.module.network.NetworkFactory
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module

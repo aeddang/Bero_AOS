@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.item.AlbumListItem
 import com.ironraft.pupping.bero.scene.component.viewmodel.AlbumListViewModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.ironraft.pupping.bero.store.api.ApiValue
@@ -101,7 +104,7 @@ fun AlbumList(
     AppTheme {
         Column(
             modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
+            verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
         ) {
             if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
             else if(albums.value != null)
@@ -117,14 +120,24 @@ fun AlbumList(
                                 horizontalArrangement = Arrangement.spacedBy(type.marginRow.dp)
                             ) {
                                 datas.forEach { data ->
-                                    AlbumListItem(
-                                        type = type,
-                                        data = data,
-                                        user = user,
-                                        pet = pet,
-                                        imgSize = albumSize,
-                                        isEdit = isEdit
-                                    )
+                                    WrapTransparentButton(
+                                        {
+                                            pagePresenter.openPopup(
+                                                PageProvider.getPageObject(PageID.PictureViewer)
+                                                    .addParam(PageParam.data, data)
+                                            )
+                                        }
+                                    ) {
+                                        AlbumListItem(
+                                            type = type,
+                                            data = data,
+                                            user = user,
+                                            pet = pet,
+                                            imgSize = albumSize,
+                                            isEdit = isEdit
+                                        )
+                                    }
+
                                 }
                             }
                         }

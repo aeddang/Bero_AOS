@@ -69,11 +69,12 @@ fun BottomTab(
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 pages.forEach { page ->
                     ImageButton(
+                        modifier = Modifier.weight(1.0f),
                         isSelected = page.idx == currentTopPage?.pageIDX,
                         defaultImage = page.icon,
                         text = page.text,

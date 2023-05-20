@@ -146,7 +146,6 @@ class PageRepository (
         accountManager.disposeDefaultLifecycleOwner(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
         AppObserver.disposeDefaultLifecycleOwner(owner)
-
     }
 
     override fun disposeLifecycleOwner(owner: LifecycleOwner){
@@ -154,6 +153,7 @@ class PageRepository (
         accountManager.disposeLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
+        pageAppViewModel.removeObserve(owner)
     }
 
     private fun setupSetting(){
@@ -291,8 +291,8 @@ class PageRepository (
         status.value = RepositoryStatus.Ready
         event.value = RepositoryEvent.LoginUpdated
         dataProvider.user.snsUser?.let {
-            apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, requestData = it))
-            apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, requestData = it))
+            apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, contentID = it.snsID))
+            apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, contentID = it.snsID))
             //self.dataProvider.requestData(q: .init(id: self.tag, type: .getChatRooms(page: 0), isOptional: true))
             //self.dataProvider.requestData(q: .init(id: self.tag, type: .getAlarm(page: 0)))
         }

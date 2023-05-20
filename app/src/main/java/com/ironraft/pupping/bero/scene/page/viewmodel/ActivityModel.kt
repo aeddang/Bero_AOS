@@ -1,7 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.viewmodel
 
 import android.content.pm.ActivityInfo
-import androidx.lifecycle.MutableLiveData
 import com.lib.page.PageModel
 import com.lib.page.PageObject
 import com.ironraft.pupping.bero.R
@@ -13,13 +12,18 @@ class ActivityModel : PageModel{
     override var currentPageObject: PageObject? = null
     override fun getPageExitMessage(): Int  = R.string.noticeAppExit
 
+    override fun isFullScreenPage(page: PageObject): Boolean {
+        return when(page.pageID){
+            PageID.PictureViewer.value -> true
+            else -> false
+        }
+    }
 
     override fun getPageOrientation(page: PageObject): Int {
-        /*
-        when(page.pageID){
-            PageID.Picture.value -> return ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }*/
-        return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        return when(page.pageID){
+            PageID.PictureViewer.value -> ActivityInfo.SCREEN_ORIENTATION_SENSOR
+            else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
     override fun getCloseExceptions(): List<String> = arrayListOf()
 

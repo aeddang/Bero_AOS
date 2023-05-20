@@ -32,7 +32,7 @@ open class AlbumListViewModel(val repo: PageRepository)
     override fun onLoad(page: Int) {
         val query = HashMap<String,String>()
         query[ApiField.pictureType] = currentType.getApiCode
-        val q = ApiQ(appTag,
+        val q = ApiQ(tag,
             ApiType.GetAlbumPictures,
             contentID = currentId,
             page = currentPage,
@@ -70,7 +70,7 @@ open class AlbumListViewModel(val repo: PageRepository)
             }
             val query = HashMap<String,String>()
             query[ApiField.pictureIds] = del
-            val q = ApiQ(appTag,
+            val q = ApiQ(tag,
                 ApiType.DeleteAlbumPictures,
                 contentID = currentId,
                 page = currentPage,
@@ -99,11 +99,8 @@ open class AlbumListViewModel(val repo: PageRepository)
                     loaded(res.data as? List<PictureData> ?: listOf())
                 }
                 ApiType.RegistAlbumPicture , ApiType.DeleteAlbumPictures ->{
-                    (res.requestData as? AlbumData)?.let { album ->
-                        if(album.type != currentType) return@let
-                        reset()
-                        load()
-                    }
+                    reset()
+                    load()
                 }
                 else ->{}
             }
@@ -124,8 +121,7 @@ open class AlbumListViewModel(val repo: PageRepository)
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.disposeDefaultLifecycleOwner(owner)
-        repo.dataProvider.result.removeObservers(owner)
-        repo.dataProvider.error.removeObservers(owner)
+        repo.disposeLifecycleOwner(owner)
     }
 
 }

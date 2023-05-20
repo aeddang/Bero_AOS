@@ -1,6 +1,8 @@
 package com.ironraft.pupping.bero.store.api.rest
 
+import androidx.annotation.StringRes
 import com.google.gson.annotations.SerializedName
+import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
@@ -12,6 +14,38 @@ enum class CodeCategory{
     val apiCoreKey:String
         get() = "Status" + this.name.lowercase()
 }
+enum class ReportType {
+    Mission, User, Post, Chat;
+    val apiCoreKey : String
+        get() = when (this) {
+            Mission -> "MISSION"
+            User -> "USER"
+            Post -> "POST"
+            Chat -> "CHAT"
+        }
+    @get:StringRes
+    val completeMessage : Int
+        get() = when (this) {
+            Post -> R.string.alert_accuseAlbumCompleted
+            else -> R.string.alert_accuseUserCompleted
+        }
+}
+
+enum class AlarmType {
+    User, Album, Friend, Chat;
+    companion object {
+        fun getType(value:String?) : AlarmType?{
+            return when (value) {
+                "User" -> User
+                "Album" -> Album
+                "Friend" -> Friend
+                "Chat" -> Chat
+                else -> null
+            }
+        }
+    }
+}
+
 interface MiscApi {
     @GET(Api.Misc.codes)
     suspend fun getCodes(

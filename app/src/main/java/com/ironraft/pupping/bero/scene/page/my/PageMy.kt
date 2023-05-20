@@ -23,10 +23,12 @@ import com.ironraft.pupping.bero.scene.page.component.FriendSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
 import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
+import com.lib.util.rememberForeverScrollState
 import com.lib.util.toDp
 import com.skeleton.component.item.ValueInfoType
 import com.skeleton.theme.*
@@ -38,9 +40,9 @@ fun PageMy(
     modifier: Modifier = Modifier,
     page: PageObject? = null
 ){
-    val appTag = "PageMy"
+    val appTag = PageID.My.value
     val dataProvider:DataProvider = get()
-    val scrollState: ScrollState = rememberScrollState()
+    val scrollState: ScrollState = rememberForeverScrollState(key = appTag)
     val screenWidth = LocalConfiguration.current.screenWidthDp
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
@@ -48,8 +50,6 @@ fun PageMy(
     }
     val listWidth: Float by remember { mutableStateOf( getListWidth() ) }
     val representativePet by dataProvider.user.representativePet.observeAsState()
-
-
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -134,23 +134,26 @@ fun PageMy(
                 .height(DimenLine.heavy.dp)
                 .background(ColorApp.grey50)
             )
-            MyHistorySection(modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.regular.dp)
+            MyHistorySection(
+                modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.regular.dp)
             )
             MyDogsSection(modifier
                 .padding(top = DimenMargin.heavyExtra.dp)
             )
-            FriendSection(modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.heavyExtra.dp),
+            FriendSection(
+                modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.heavyExtra.dp),
                 listSize = listWidth,
                 user = dataProvider.user,
                 isEdit = true
             )
-            AlbumSection( modifier
-                .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                .padding(top = DimenMargin.heavyExtra.dp),
+            AlbumSection(
+                modifier
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                    .padding(top = DimenMargin.heavyExtra.dp),
                 listSize = listWidth,
                 user = dataProvider.user,
                 pageSize = 2

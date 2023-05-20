@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
@@ -28,7 +29,7 @@ import com.skeleton.module.network.ErrorType
 import kotlinx.coroutines.launch
 
 enum class ActivitRadioType {
-    Select, Filter
+    Select, Filter, Cancel
 }
 
 data class ActivitRadioEvent(
@@ -43,13 +44,10 @@ data class ActivitRadioEvent(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ActivityRadioController(){
+fun ActivityRadioController(modalSheetState: ModalBottomSheetState){
     val coroutineScope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = { it != ModalBottomSheetValue.Expanded},
-        skipHalfExpanded = true
-    )
+
+
     val viewModel = koinInject<AppSceneObserver>()
     var currentEvent: ActivitRadioEvent? by remember { mutableStateOf(null) }
     var buttons: List<RadioBtnData>? by remember { mutableStateOf(null) }
@@ -68,6 +66,13 @@ fun ActivityRadioController(){
                 }
                 ActivitRadioType.Filter -> {
                     isMultiSelectAble = true
+                }
+                ActivitRadioType.Cancel -> {
+                    coroutineScope.launch {
+                        modalSheetState.hide()
+                    }
+                    viewModel.radio.value = null
+                    return@let
                 }
             }
             currentEvent = evt

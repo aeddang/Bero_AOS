@@ -39,12 +39,14 @@ enum class PageID(val value: String, val position: Int = 9999){
     Chat("chat", 300),
     My("my", 400),
     Dog("dog"),
+    User("user"),
     Album("album"),
     Webview("webview"),
     Privacy("privacy"),
     ServiceTerms("serviceTerms"),
     AddDog("addDog"),
-    AddDogCompleted("addDogCompleted")
+    AddDogCompleted("addDogCompleted"),
+    PictureViewer("pictureViewer")
 }
 
 class PageProvider {
@@ -78,7 +80,7 @@ class PageProvider {
 
         fun isHistory(pageID:PageID) : Boolean{
             return when (pageID){
-                PageID.Intro, PageID.Login, PageID.AddDog, PageID.AddDogCompleted  -> false
+                PageID.Intro, PageID.Login, PageID.AddDog, PageID.AddDogCompleted, PageID.PictureViewer  -> false
                 else -> true
             }
         }
@@ -86,6 +88,7 @@ class PageProvider {
             return when (pageID){
                 PageID.Splash, PageID.Intro, PageID.Login, PageID.My, PageID.Walk, PageID.Explore, PageID.Chat -> PageAnimationType.None
                 PageID.Privacy, PageID.ServiceTerms, PageID.Webview-> PageAnimationType.None
+                PageID.PictureViewer -> PageAnimationType.Opacity
                 else -> PageAnimationType.Horizontal
             }
         }

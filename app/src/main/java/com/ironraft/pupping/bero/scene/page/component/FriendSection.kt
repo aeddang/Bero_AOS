@@ -28,6 +28,9 @@ import com.skeleton.theme.*
 import dev.burnoo.cokoin.get
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.viewmodel.FriendListViewModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 
 @Composable
@@ -73,13 +76,11 @@ fun FriendSection(
             )
 
         } else {
-            /*
             pagePresenter.openPopup(
-                PageProvider.getPageObject(.user).addParam(key: .id, value:id)
+                PageProvider.getPageObject(PageID.User)
+                    .addParam(PageParam.id, id)
             )
-            */
         }
-
     }
 
     AppTheme {

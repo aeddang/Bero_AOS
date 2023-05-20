@@ -101,4 +101,9 @@ open class PageComposePresenter : PagePresenter{
         activity.superBackPressAction()
     }
 
+    override fun findPage(pageID: String?): PageObject? {
+        val id = pageID ?: return null
+        return activity.findPage(id)
+    }
+
 }

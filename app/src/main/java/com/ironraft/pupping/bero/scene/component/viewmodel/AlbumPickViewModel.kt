@@ -59,7 +59,7 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
 
     fun update(img: Bitmap, isExpose:Boolean){
         val album: AlbumData = AlbumData(type = currentType, image = img, isExpose=isExpose)
-        val q = ApiQ(appTag,
+        val q = ApiQ(tag,
             ApiType.RegistAlbumPicture,
             contentID = currentId,
             requestData = album)
@@ -113,7 +113,7 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.disposeDefaultLifecycleOwner(owner)
-        repo.pageAppViewModel.event.removeObservers(owner)
+        repo.disposeLifecycleOwner(owner)
     }
 
 }

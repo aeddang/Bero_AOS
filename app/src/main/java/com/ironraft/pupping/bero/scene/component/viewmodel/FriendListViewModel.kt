@@ -27,7 +27,7 @@ open class FriendListViewModel(val repo: PageRepository)
     }
 
     override fun onLoad(page: Int) {
-        val q = ApiQ(appTag,
+        val q = ApiQ(tag,
             currentType.apiType,
             contentID = currentId,
             page = currentPage,
@@ -92,8 +92,7 @@ open class FriendListViewModel(val repo: PageRepository)
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.disposeDefaultLifecycleOwner(owner)
-        repo.dataProvider.result.removeObservers(owner)
-        repo.dataProvider.error.removeObservers(owner)
+        repo.disposeLifecycleOwner(owner)
     }
 
 }

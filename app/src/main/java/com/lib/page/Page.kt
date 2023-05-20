@@ -20,33 +20,35 @@ enum class PageAnimationType {
 
     val enter : EnterTransition?
         get() = when(this) {
-            Vertical -> slideInVertically (tween(duration), initialOffsetY = {it})
-            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it})
+            Vertical -> slideInVertically (tween(duration), initialOffsetY = {it/2})
+            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it/2})
             Opacity -> fadeIn(animationSpec = tween(duration))
-            ReverseVertical -> slideInVertically (tween(duration), initialOffsetY = {-it})
-            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it})
+            ReverseVertical -> slideInVertically (tween(duration), initialOffsetY = {-it/2})
+            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it/2})
             None -> null
         }
 
     val exit : ExitTransition?
         get() = when(this) {
-            Vertical -> slideOutVertically (tween(duration), targetOffsetY  = {it})
-            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it})
+            Vertical -> slideOutVertically (tween(duration), targetOffsetY  = {it/2})
+            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it/2})
             Opacity -> fadeOut(animationSpec = tween(duration))
-            ReverseVertical -> slideOutVertically (tween(duration), targetOffsetY = {-it})
-            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it})
+            ReverseVertical -> slideOutVertically (tween(duration), targetOffsetY = {-it/2})
+            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it/2})
             None -> null
         }
 }
-data class PageObject(val pageID:String = "",
-                      var pageIDX:Int = 0){
+data class PageObject(
+    val pageID:String = "",
+    var pageIDX:Int = 0,
+    val key:String = UUID.randomUUID().toString()
+){
     var params:HashMap<String, Any?>? = null
     var isPopup = false ; internal set
     var isHome = false
     var isHistory = true
+    var isGoBackAble = true
     var animationType:PageAnimationType = PageAnimationType.Opacity
-
-    val key:String = UUID.randomUUID().toString()
     val screenID:String get() { return "$pageID$pageIDX"}
 
     var isInit = false
@@ -100,6 +102,7 @@ interface PagePresenter {
     fun loaded(): PagePresenter
     fun finishApp()
     fun superBackPressAction()
+    fun findPage(pageID:String?): PageObject?
 }
 
 interface PageModel {
@@ -113,13 +116,6 @@ interface PageModel {
     fun getCloseExceptions(): List<String> = listOf()
 }
 
-interface PageDelegate {
-    fun onAddedPage(pageObject:PageObject)
-    fun onRemovedPage(pageObject:PageObject)
-    fun onBottomPage(pageObject:PageObject)
-    fun onTopPage(pageObject:PageObject)
-    fun onEvent(pageObject:PageObject, type:String, data:Any? = null)
-}
 
 interface PageLifecycleUser{
     fun setDefaultLifecycleOwner(owner: LifecycleOwner){}
@@ -127,40 +123,7 @@ interface PageLifecycleUser{
     fun disposeLifecycleOwner(owner: LifecycleOwner){}
 }
 
-interface PageView{
-    var lifecycleOwner: LifecycleOwner?
-    val transactionTime: Long get() = 500L
-    val pageChileren:ArrayList<PageView>? get() = null
-    val hasBackPressAction: Boolean get() = false
-    fun setOnPageDelegate(delegate: PageDelegate){}
-    fun onCategoryChanged(pageObject:PageObject?){}
-    fun onPageEvent(pageObject:PageObject?, type:String, data:Any? = null){}
-    fun onPageAdded(pageObject:PageObject){}
-    fun onPageRemoved(pageObject:PageObject){}
-    fun onPageReload(){}
-    fun onPageParams(params:Map<String, Any?>):PageView {return this}
-    fun onPageViewModel(vm:PageViewModel):PageView{return this}
-    fun onGlobalLayout(){}
-    fun onTransactionCompleted(){}
-    fun onRemoveTransactionStart(){}
-    fun onPagePause(){}
-    fun onPageResume(){}
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
-}
-interface PageViewFragment : PageView{
-    val pageFragment:Fragment
-    var pageObject:PageObject?
-    var pageViewModel:PageViewModel?
 
-    fun onWillDestory(pageObject:PageObject?){}
-}
-
-interface PageViewModel {
-    val repository:Repository
-    val presenter:PagePresenter
-    fun onCreateView(owner: LifecycleOwner, pageObject:PageObject?){}
-    fun onDestroyView(owner: LifecycleOwner, pageObject:PageObject?){}
-}
 
 class PageCoroutineScope : CoroutineScope {
 
@@ -180,11 +143,6 @@ class PageCoroutineScope : CoroutineScope {
 
     val coroutineContextIO: CoroutineContext
         get() = job + Dispatchers.IO
-}
-
-
-interface PageViewCoroutine {
-    fun onCoroutineScope(){}
 }
 
 interface PageRequestPermission {

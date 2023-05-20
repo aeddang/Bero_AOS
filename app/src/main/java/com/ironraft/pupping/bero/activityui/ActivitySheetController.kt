@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
@@ -31,7 +32,7 @@ import com.skeleton.module.network.ErrorType
 import kotlinx.coroutines.launch
 
 enum class ActivitSheetType {
-    Confirm, Select, Alert
+    Confirm, Select, Alert, Cancel
 }
 
 data class ActivitSheetEvent(
@@ -51,13 +52,8 @@ data class ActivitSheetEvent(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ActivitySheetController(){
+fun ActivitySheetController(modalSheetState: ModalBottomSheetState){
     val coroutineScope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = { it != ModalBottomSheetValue.Expanded},
-        skipHalfExpanded = true
-    )
     val viewModel = koinInject<AppSceneObserver>()
     var isLock by remember { mutableStateOf(false) }
     var currentEvent: ActivitSheetEvent? by remember { mutableStateOf(null) }
@@ -89,6 +85,13 @@ fun ActivitySheetController(){
                         SheetBtnData(title = stringResource(id = R.string.cancel),index = 0),
                         SheetBtnData(title = stringResource(id = R.string.confirm),index = 1)
                     )
+                }
+                ActivitSheetType.Cancel -> {
+                    coroutineScope.launch {
+                        modalSheetState.hide()
+                    }
+                    viewModel.sheet.value = null
+                    return@let
                 }
             }
             currentEvent = evt

@@ -6,9 +6,9 @@ import com.lib.model.IwillGo
 
 
 enum class PageEventType{
-    Init,IntroCompleted,
-    AddPopup, RemovePopup, ChangePage, ReloadPage,
-    WillChangePage, ChangedPage,
+    Init,
+    ReloadPage,
+    WillChangePage, ChangedPage, GoBack,
     ShowKeyboard, HideKeyboard,
     OnActivityForResult,
     Event
@@ -46,11 +46,13 @@ class PageAppViewModel {
         status.value = PageStatus.Free
         networkStatus.value = PageNetworkStatus.Undefined
     }
-
-    fun onDestroyView(owner: LifecycleOwner, pageObject: PageObject?=null) {
+    fun removeObserve(owner: LifecycleOwner){
         event.removeObservers(owner)
         status.removeObservers(owner)
         networkStatus.removeObservers(owner)
         currentTopPage.removeObservers(owner)
+    }
+    fun onDestroyView(owner: LifecycleOwner) {
+        removeObserve(owner)
     }
 }

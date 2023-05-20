@@ -15,6 +15,9 @@ import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -84,6 +87,7 @@ enum class FriendButtonFuncType {
 
 @Composable
 fun FriendButton(
+    modifier:Modifier = Modifier,
     type:FriendButtonType = FriendButtonType.Fill,
     userId:String? = null,
     userName:String? = null,
@@ -140,19 +144,17 @@ fun FriendButton(
                dataProvider.requestData(q)
            }
            FriendButtonFuncType.Move ->{
-               /*
-               PageProvider.getPageObject(.user)
-               .addParam(key: .id, value:id)
-               */
+               pagePresenter.openPopup(
+                   PageProvider.getPageObject(PageID.User)
+                       .addParam(PageParam.id, id)
+               )
            }
-
-
         }
 
     }
     AppTheme {
         Box (
-            modifier = Modifier.wrapContentSize(),
+            modifier = modifier.wrapContentSize(),
             contentAlignment = Alignment.Center
         ){
             when (type){

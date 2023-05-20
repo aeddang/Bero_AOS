@@ -7,6 +7,7 @@ import com.skeleton.module.network.ErrorType
 import okhttp3.Interceptor
 import java.io.IOException
 import java.util.ArrayList
+import java.util.Locale
 import java.util.UUID
 import kotlin.jvm.Throws
 
@@ -31,6 +32,7 @@ data class MetaData (
 
 class ApiInterceptor : Interceptor {
     var accesstoken: String = ""
+    val lang = Locale.getDefault().toLanguageTag()
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val original = chain.request()
@@ -40,7 +42,8 @@ class ApiInterceptor : Interceptor {
         } else {
             request.header("Authorization", "")
         }
-        request.header("Accept-Language", "ko-KR")
+        request.header("Accept-Language", lang)
+        request.header("User-Agent", "AOS")
         return chain.proceed(request.build())
     }
 }
