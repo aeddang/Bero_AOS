@@ -271,6 +271,7 @@
     <string name="sort_shop">Shop</string>
     <string name="sort_vet">Hospital</string>
     <string name="sort_salon">Salon</string>
+    <string name="sort_allText">All users</string>
     <string name="sort_friendsText">My friends’ posts only</string>
     <string name="sort_notUsedText">invisible</string>
     <string name="sort_restaurantText">Restaurant</string>

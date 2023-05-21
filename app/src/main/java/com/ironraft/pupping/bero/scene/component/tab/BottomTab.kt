@@ -60,7 +60,7 @@ fun BottomTab(
 
     AppTheme {
         Column(
-            Modifier.fillMaxWidth(),
+            Modifier.fillMaxWidth().background(ColorApp.white).height(DimenApp.bottom.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Spacer(
@@ -68,7 +68,7 @@ fun BottomTab(
                     .background(ColorApp.grey50)
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().weight(1.0f),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

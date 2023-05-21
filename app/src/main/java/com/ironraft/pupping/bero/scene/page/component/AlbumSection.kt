@@ -78,10 +78,8 @@ fun AlbumSection(
     fun updateAlbum(): Size {
         val id = getId()
         val type = getType()
-        viewModel.currentId = id
-        viewModel.currentType = type
-        pickViewModel.currentId = id
-        pickViewModel.currentType = type
+        viewModel.lazySetup(id, type)
+        pickViewModel.lazySetup(id, type)
         viewModel.reset()
         viewModel.load()
         val r: Float = rowSize.toFloat()

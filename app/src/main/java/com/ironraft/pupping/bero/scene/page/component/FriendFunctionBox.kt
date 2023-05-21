@@ -39,6 +39,7 @@ import com.ironraft.pupping.bero.store.provider.model.FriendStatus
 @Composable
 fun FriendFunctionBox(
     modifier: Modifier = Modifier,
+    friendFunctionViewModel:FriendFunctionViewModel? = null,
     userId:String,
     userName:String? = null,
     status:FriendStatus = FriendStatus.Norelation
@@ -47,7 +48,7 @@ fun FriendFunctionBox(
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
     val viewModel: FriendFunctionViewModel by remember { mutableStateOf(
-        FriendFunctionViewModel(repository, userId, status).initSetup(owner)
+        friendFunctionViewModel ?: FriendFunctionViewModel(repository, userId, status).initSetup(owner)
     ) }
     val currentStatus by viewModel.currentStatus.observeAsState()
 
@@ -64,11 +65,8 @@ fun FriendFunctionBox(
                         userId = userId,
                         userName = userName
                     )
-
                 }
             }
-
-
         }
     }
 }

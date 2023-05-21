@@ -47,8 +47,14 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
 
     @CallSuper
     open fun finishApp(){ super.finish() }
-    open fun loading(isRock: Boolean = false){}
-    open fun loaded(){}
+    open fun loading(isRock: Boolean = false){
+        activityViewModel.isLoading.value = true
+        activityViewModel.isLock.value = isRock
+    }
+    open fun loaded(){
+        activityViewModel.isLoading.value = false
+        activityViewModel.isLock.value = false
+    }
 
 
     protected lateinit var activityViewModel : PageAppViewModel

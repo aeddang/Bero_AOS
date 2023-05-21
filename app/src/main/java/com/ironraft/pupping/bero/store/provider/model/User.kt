@@ -311,7 +311,7 @@ enum class FriendStatus{
             RecieveFriend -> listOf(FriendButtonFuncType.Reject, FriendButtonFuncType.Accept)
             Move -> listOf(FriendButtonFuncType.Move, FriendButtonFuncType.Request)
             MoveFriend -> listOf(FriendButtonFuncType.Move, FriendButtonFuncType.Chat)
-            else -> listOf()
+            else -> listOf(FriendButtonFuncType.Request)
         }
 
 

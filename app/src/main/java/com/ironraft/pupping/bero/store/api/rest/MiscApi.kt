@@ -58,6 +58,11 @@ interface MiscApi {
         @Query(ApiField.lat) lat: String?,
         @Query(ApiField.lng) lng: String?
     ): ApiResponse<WeatherData>?
+
+    @POST(Api.Misc.report)
+    suspend fun report(
+        @Body params: Map<String, String>
+    ): ApiResponse<Any>?
 }
 
 data class WeatherData(

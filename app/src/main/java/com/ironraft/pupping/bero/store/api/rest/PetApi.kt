@@ -9,18 +9,18 @@ import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface PetApi {
-    @GET(Api.Pet.Pet)
+    @GET(Api.Pet.pet)
     suspend fun get(
         @Path(Api.CONTENT_ID) contentID: String
     ): ApiResponse<PetData>?
 
-    @GET(Api.Pet.Pets)
+    @GET(Api.Pet.pets)
     suspend fun getUserPets(
         @Query(ApiField.userId) userId: String?
     ): ApiResponse<PetData>?
 
     @Multipart
-    @POST(Api.Pet.Pets)
+    @POST(Api.Pet.pets)
     suspend fun post(
         @Query(ApiField.userId) userId: String?,
         @Part(ApiField.name) name: RequestBody?,
@@ -41,7 +41,7 @@ interface PetApi {
     ): ApiResponse<PetData?>?
 
     @Multipart
-    @PUT(Api.Pet.Pet)
+    @PUT(Api.Pet.pet)
     suspend fun put(
         @Path(Api.CONTENT_ID) contentID: String,
         @Part(ApiField.name) name: RequestBody? = null,
@@ -61,7 +61,7 @@ interface PetApi {
         @Part contents: MultipartBody.Part? = null
     ): ApiResponse<Any?>?
 
-    @DELETE(Api.Pet.Pet)
+    @DELETE(Api.Pet.pet)
     suspend fun delete(
         @Path(Api.CONTENT_ID) contentID: String
     ): ApiResponse<Any?>?

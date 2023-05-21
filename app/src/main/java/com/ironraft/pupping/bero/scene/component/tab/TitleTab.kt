@@ -105,10 +105,9 @@ fun TitleTab(
     icons:ArrayList<String?> = arrayListOf(),
     action: ((TitleTabButtonType) -> Unit)? = null
 ) {
-    val pagePresenter:PageComposePresenter = get()
-    val pageAppViewModel:PageAppViewModel = get()
-    var onTop by remember { mutableStateOf( true ) }
+
     val scrollState by remember { mutableStateOf( parentScrollState ?: ScrollState(-1) ) }
+    var onTop by remember { mutableStateOf( scrollState.value == 0 ) }
     if (scrollState.isScrollInProgress) {
         val pos = scrollState.value
         if(pos == 0 && !onTop) onTop = true
@@ -147,10 +146,9 @@ fun TitleTab(
                             color = ColorApp.black,
                             textAlign = alignment,
                             maxLines = lineLimit,
-                            modifier = Modifier.weight(1.0f)
+                            modifier = if (alignment == TextAlign.Start)
+                                Modifier.wrapContentSize() else Modifier.weight(1.0f)
                         )
-                    } else {
-                        Spacer(modifier = Modifier.weight(1.0f))
                     }
                     sortButton?.let {
                         SortButton(
@@ -239,7 +237,8 @@ fun TitleTabComposePreview() {
                 title = "Page Title",
                 buttons = arrayListOf(TitleTabButtonType.Add, TitleTabButtonType.AddChat),
                 icons = arrayListOf("N", null),
-                sortButton = "sort"
+                sortButton = "sort",
+                alignment = TextAlign.Start
             ) {
 
             }

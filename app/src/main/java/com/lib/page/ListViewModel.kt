@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 abstract class ListViewModel<T,V>:ComponentViewModel() {
     val listDatas = MutableLiveData<T?>()
     val isEmpty = MutableLiveData<Boolean>(false)
+    val isLoading = MutableLiveData<Boolean>(false)
     var pageSize:Int = 12
     var isLoadCompleted:Boolean = false; protected set
     var currentPage:Int = 0; protected set
@@ -14,6 +15,7 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
         currentPage = 0
         isBusy = false
         isEmpty.value = false
+        isLoading.value = false
         onReset()
     }
     open fun onReset(){}
@@ -22,6 +24,7 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
         if(isBusy) return false
         if(isLoadCompleted) return false
         isBusy = true
+        isLoading.value = true
         onLoad(currentPage)
         currentPage += 1
         return true
@@ -32,6 +35,7 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
         val result = onLoaded(listDatas.value, datas)
         listDatas.value = result
         isBusy = false
+        isLoading.value = false
     }
     abstract fun onLoaded(prevDatas:T?, addDatas:V?):T
 }

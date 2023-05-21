@@ -14,11 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.activityui.ActivitRadioEvent
+import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.koin.pageModelModule
 import com.ironraft.pupping.bero.scene.component.item.PetProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.item.UserProfileTopInfo
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
+import com.ironraft.pupping.bero.scene.component.viewmodel.ReportFunctionViewModel
 import com.ironraft.pupping.bero.scene.page.component.AlbumSection
 import com.ironraft.pupping.bero.scene.page.component.FriendFunctionBox
 import com.ironraft.pupping.bero.scene.page.component.FriendSection
@@ -40,6 +44,7 @@ import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.*
 import com.lib.util.rememberForeverScrollState
 import com.lib.util.showCustomToast
+import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.component.item.ValueInfoType
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.Koin
@@ -117,10 +122,15 @@ fun PageUser(
     val viewModel:PageUserViewModel by remember { mutableStateOf(
         PageUserViewModel(repository).initSetup(owner) as PageUserViewModel
     )}
+    val reportFunctionViewModel: ReportFunctionViewModel by remember { mutableStateOf(
+        ReportFunctionViewModel(repository).initSetup(owner)
+    )}
+    val friendFunctionViewModel: FriendFunctionViewModel by remember { mutableStateOf(
+         FriendFunctionViewModel(repository).initSetup(owner)
+    ) }
 
     val currentPage by viewModel.currentPage.observeAsState()
     val screenWidth = LocalConfiguration.current.screenWidthDp
-
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
         return screenWidth.toFloat() - margin
@@ -130,7 +140,47 @@ fun PageUser(
     val representativePet by viewModel.representativePet.observeAsState()
 
     fun more(){
-
+        val currentUser = user ?: return
+        if (currentUser.isMe) {
+            Toast(pagePresenter.activity).showCustomToast(
+                pagePresenter.activity.getString(R.string.alert_itsMe),
+                pagePresenter.activity
+            )
+            return
+        }
+        reportFunctionViewModel.lazySetup(currentUser.userId, currentUser.representativeName)
+        if (!currentUser.isFriend) {
+            reportFunctionViewModel.more(ReportType.User)
+            return
+        }
+        repository.appSceneObserver.radio.value = ActivitRadioEvent(
+            type = ActivitRadioType.Select,
+            title = repository.pagePresenter.activity.getString(R.string.alert_supportAction),
+            radioButtons = arrayListOf(
+                RadioBtnData(
+                    icon = R.drawable.remove_friend,
+                    title = repository.pagePresenter.activity.getString(R.string.button_removeFriend),
+                    index = 0
+                ),
+                RadioBtnData(
+                    icon = R.drawable.block,
+                    title = repository.pagePresenter.activity.getString(R.string.button_block),
+                    index = 1
+                ),
+                RadioBtnData(
+                    icon = R.drawable.warning,
+                    title = repository.pagePresenter.activity.getString(R.string.button_accuse),
+                    index = 2
+                )
+            )
+        ){ select ->
+            when(select){
+                0 -> friendFunctionViewModel.removeFriend()
+                1 -> reportFunctionViewModel.block()
+                2 -> reportFunctionViewModel.accuseUser(ReportType.User)
+                else -> {}
+            }
+        }
     }
 
     Column (
@@ -140,31 +190,34 @@ fun PageUser(
             .padding(bottom = DimenMargin.regular.dp),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        currentPage?.let { pageObject ->
-            val scrollState: ScrollState = rememberForeverScrollState(key = pageObject.key)
-            TitleTab(
-                parentScrollState = scrollState,
-                useBack = true,
-                buttons = arrayListOf(TitleTabButtonType.More)
-            ){
-                when(it){
-                    TitleTabButtonType.Back -> { pagePresenter.goBack() }
-                    TitleTabButtonType.More -> more()
-                    else -> {}
+        user?.let { user ->
+            currentPage?.let { pageObject ->
+                val scrollState: ScrollState = rememberForeverScrollState(key = pageObject.key)
+                TitleTab(
+                    parentScrollState = scrollState,
+                    useBack = true,
+                    buttons = arrayListOf(TitleTabButtonType.More)
+                ) {
+                    when (it) {
+                        TitleTabButtonType.Back -> {
+                            pagePresenter.goBack()
+                        }
+                        TitleTabButtonType.More -> more()
+                        else -> {}
+                    }
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f)
-                    .verticalScroll(scrollState)
-                    .padding(
-                        top = DimenMargin.medium.dp,
-                        bottom = DimenMargin.heavyExtra.dp
-                    ),
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-            ) {
-                user?.let { user ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.0f)
+                        .verticalScroll(scrollState)
+                        .padding(
+                            top = DimenMargin.medium.dp,
+                            bottom = DimenMargin.heavyExtra.dp
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                ) {
+
                     if (representativePet != null)
                         representativePet?.let { profile ->
                             PetProfileTopInfo(
@@ -213,7 +266,8 @@ fun PageUser(
                     ) { data ->
                         when (data.valueType) {
                             ValueInfoType.Point -> {
-                                val msg = pagePresenter.activity.getString(R.string.alert_itsNotYourPoint)
+                                val msg =
+                                    pagePresenter.activity.getString(R.string.alert_itsNotYourPoint)
                                 Toast(pagePresenter.activity).showCustomToast(
                                     msg,
                                     pagePresenter.activity
@@ -228,9 +282,10 @@ fun PageUser(
                             else -> {}
                         }
                     }
-                    if(!user.isMe)
-                        (if(user.isFriend) FriendStatus.Chat else user.currentProfile.status.value)?.let {
+                    if (!user.isMe)
+                        (if (user.isFriend) FriendStatus.Chat else user.currentProfile.status.value)?.let {
                             FriendFunctionBox(
+                                friendFunctionViewModel = friendFunctionViewModel.lazySetup(user.userId, it),
                                 modifier = Modifier
                                     .padding(horizontal = DimenApp.pageHorinzontal.dp)
                                     .padding(top = DimenMargin.regular.dp),
@@ -281,7 +336,6 @@ fun PageUser(
                     )
                 }
             }
-
         }
 
     }

@@ -40,7 +40,7 @@ fun PageAlbum(
     val repository:PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel:PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Album, repository).initSetup(owner)) }
-    val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(AlbumPickViewModel(repo = repository)) }
+    val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(AlbumPickViewModel(repo = repository).initSetup(owner)) }
 
     val currentPage = viewModel.currentPage.observeAsState()
     val goBackPage = viewModel.goBack.observeAsState()
@@ -90,8 +90,7 @@ fun PageAlbum(
     Column (
         modifier = modifier
             .fillMaxSize()
-            .background(ColorBrand.bg)
-            .padding(bottom = DimenMargin.regular.dp),
+            .background(ColorBrand.bg),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(

@@ -24,12 +24,15 @@ import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.scene.component.list.AlbumListType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.User
+import com.ironraft.pupping.bero.store.provider.model.UserProfile
 import com.lib.page.PageComposePresenter
 import com.lib.page.PagePresenter
 import com.lib.util.replace
@@ -91,6 +94,7 @@ fun AlbumListItem(
     type: AlbumListType = AlbumListType.Normal,
     data:AlbumListItemData,
     user:User? = null,
+    userProfile:UserProfile? = null,
     pet:PetProfile? = null,
     imgSize:Size,
     isEdit:Boolean = false,
@@ -140,26 +144,25 @@ fun AlbumListItem(
         */
     }
     fun onMovePicture(){
-        /*
         pagePresenter.openPopup(
-            PageProvider.getPageObject(.album)
-            .addParam(key: .data, value: self.user)
-        .addParam(key: .subData, value: self.pet)
-        .addParam(key: .id, value: self.data.pictureId)
+            PageProvider.getPageObject(PageID.Album)
+                .addParam(key = PageParam.data, value = user)
+                .addParam(key = PageParam.subData, value = pet)
+                .addParam(key = PageParam.id, value = data.pictureId)
         )
-           */
     }
     fun onShare(){
-        /*
-        pagePresenter.openPopup(
-            PageProvider.getPageObject(.album)
-            .addParam(key: .data, value: self.user)
-        .addParam(key: .subData, value: self.pet)
-        .addParam(key: .id, value: self.data.pictureId)
-        )
-        */
+        val currentValue = data.isExpose.value
+        val id = data.pictureId.toString()
+        currentValue?.let {
+            val q = ApiQ(id,
+                ApiType.UpdateAlbumPicturesExpose,
+                contentID = id,
+                requestData = !currentValue)
+            dataProvider.requestData(q)
+        }
     }
-    Box(modifier = Modifier.wrapContentSize(),
+    Box(modifier = modifier.wrapContentSize(),
         contentAlignment = Alignment.TopEnd
     ){
         when(type){

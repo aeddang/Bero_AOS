@@ -15,26 +15,26 @@ import kotlin.coroutines.CoroutineContext
 enum class PageAnimationType {
     None, Vertical, Horizontal, Opacity, ReverseVertical, ReverseHorizontal;
     companion object {
-        const val duration:Int  = 300
+        const val duration:Int  = 200
     }
 
     val enter : EnterTransition?
         get() = when(this) {
             Vertical -> slideInVertically (tween(duration), initialOffsetY = {it/2})
-            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it/2})
+            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it/3})
             Opacity -> fadeIn(animationSpec = tween(duration))
             ReverseVertical -> slideInVertically (tween(duration), initialOffsetY = {-it/2})
-            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it/2})
+            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it/3})
             None -> null
         }
 
     val exit : ExitTransition?
         get() = when(this) {
             Vertical -> slideOutVertically (tween(duration), targetOffsetY  = {it/2})
-            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it/2})
+            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it/3})
             Opacity -> fadeOut(animationSpec = tween(duration))
             ReverseVertical -> slideOutVertically (tween(duration), targetOffsetY = {-it/2})
-            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it/2})
+            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it/3})
             None -> null
         }
 }

@@ -7,14 +7,14 @@ import retrofit2.http.*
 
 interface AuthApi {
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @POST(Api.Auth.Login)
+    @POST(Api.Auth.login)
     suspend fun post(
         @Body params: Map<String, String>
     ): ApiResponse<UserAuth>?
 
 
     @Headers("Content-Type: application/json;charset=UTF-8")
-    @POST(Api.Auth.Login)
+    @POST(Api.Auth.login)
     suspend fun reflash(
         @Body params: Map<String, String>
     ): ApiResponse<UserAuth>?

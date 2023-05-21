@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,6 +28,7 @@ import com.ironraft.pupping.bero.store.api.rest.AlbumCategory
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.PageComposePresenter
+import com.lib.util.isScrolledToEnd
 import com.lib.util.showCustomToast
 import com.lib.util.toggle
 import com.skeleton.component.item.EmptyItem
@@ -98,46 +100,49 @@ fun AlbumList(
     }
 
     val isEmpty = viewModel.isEmpty.observeAsState()
-    val albums = viewModel.listDatas.observeAsState()
+    val albums by viewModel.listDatas.observeAsState()
     val albumSize:Size by remember { mutableStateOf(updateAlbum()) }
     var isCheckAll:Boolean by remember { mutableStateOf(false) }
+
+    val endOfListReached by remember {
+        derivedStateOf { scrollState.isScrolledToEnd() }
+    }
+    if(endOfListReached) { viewModel.load() }
+
     AppTheme {
         Column(
             modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
         ) {
             if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
-            else if(albums.value != null)
-                albums.value?.let { datas->
+            else if(albums != null)
+                albums?.let { datas->
                     LazyColumn(
                         modifier = Modifier.weight(1.0f),
                         state = scrollState,
                         verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
                         contentPadding = PaddingValues(bottom = marginBottom.dp)
                     ) {
-                        item {
+                        items(datas) {data ->
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(type.marginRow.dp)
                             ) {
-                                datas.forEach { data ->
-                                    WrapTransparentButton(
-                                        {
-                                            pagePresenter.openPopup(
-                                                PageProvider.getPageObject(PageID.PictureViewer)
-                                                    .addParam(PageParam.data, data)
-                                            )
-                                        }
-                                    ) {
-                                        AlbumListItem(
-                                            type = type,
-                                            data = data,
-                                            user = user,
-                                            pet = pet,
-                                            imgSize = albumSize,
-                                            isEdit = isEdit
+                                WrapTransparentButton(
+                                    {
+                                        pagePresenter.openPopup(
+                                            PageProvider.getPageObject(PageID.PictureViewer)
+                                                .addParam(PageParam.data, data)
                                         )
                                     }
-
+                                ) {
+                                    AlbumListItem(
+                                        type = type,
+                                        data = data,
+                                        user = user,
+                                        pet = pet,
+                                        imgSize = albumSize,
+                                        isEdit = isEdit
+                                    )
                                 }
                             }
                         }
@@ -165,7 +170,7 @@ fun AlbumList(
                         isActive = isCheckAll
                     ) {
                         isCheckAll = isCheckAll.toggle()
-                        albums.value?.forEach { it.isDelete.value = isCheckAll }
+                        albums?.forEach { it.isDelete.value = isCheckAll }
                     }
                     FillButton(
                         modifier = Modifier.weight(1.0f),

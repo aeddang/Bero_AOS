@@ -63,3 +63,5 @@ fun rememberForeverScrollState(
     }
     return scrollState
 }
+
+fun LazyListState.isScrolledToEnd() = layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1

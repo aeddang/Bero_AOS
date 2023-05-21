@@ -7,12 +7,16 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -26,6 +30,7 @@ import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
+import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.my.PageMy
 import com.ironraft.pupping.bero.scene.page.pet.PageDog
 import com.ironraft.pupping.bero.scene.page.popup.PageAlbum
@@ -43,9 +48,8 @@ import com.ironraft.pupping.bero.store.RepositoryStatus
 import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.lib.page.*
 import com.lib.util.PageLog
-import com.skeleton.theme.AppTheme
-import com.skeleton.theme.ColorApp
-import com.skeleton.theme.ColorBrand
+import com.skeleton.theme.*
+import com.skeleton.view.progress.LoadingIndicator
 import org.koin.compose.koinInject
 
 enum class SceneEventType {
@@ -70,7 +74,7 @@ class AppSceneObserver {
 
 
 
-@SuppressLint("MutableCollectionMutableState")
+@SuppressLint("MutableCollectionMutableState", "UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun PageApp(
@@ -81,13 +85,12 @@ fun PageApp(
     modifier: Modifier = Modifier
 ) {
     val activityModel = koinInject<ActivityModel>()
-    val pagePresenter = koinInject<PageComposePresenter>()
     val pageAppViewModel = koinInject<PageAppViewModel>()
     val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
-    val viewModel = koinInject<AppSceneObserver>()
+
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
-    var isLoading by remember { mutableStateOf(false) }
-    var isLock by remember { mutableStateOf(false) }
+    val isLoading by pageAppViewModel.isLoading.observeAsState()
+    val isLock by pageAppViewModel.isLock.observeAsState()
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -98,13 +101,12 @@ fun PageApp(
                     if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
                 }
             }
-        ) { innerPadding ->
+        ) {
             AppTheme {
                 AnimatedNavHost(
                     navController = pageNavController,
                     startDestination = PageID.Splash.value,
                     modifier = modifier
-                        .padding(innerPadding)
                         .fillMaxSize()
                         .background(ColorBrand.bg)
                 ) {
@@ -118,12 +120,27 @@ fun PageApp(
                         )
                     }
                 }
+
+
+
             }
         }
         ActivitySelectController(modalSheetState = selectState)
         ActivityRadioController(modalSheetState = radioState)
         ActivitySheetController(modalSheetState = sheetState)
         ActivityAlertController()
+
+        AnimatedVisibility(visible = isLoading == true, enter = fadeIn(), exit = fadeOut()) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(color = if(isLock == true) ColorTransparent.black70 else ColorTransparent.clearUi),
+                contentAlignment = Alignment.BottomCenter,
+            ) {
+                LoadingIndicator(
+                    modifier = Modifier.padding(bottom = DimenApp.bottom.dp)
+                )
+            }
+        }
 
     }
 
@@ -146,7 +163,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
             PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
             PageID.Walk.value -> PageTest(Modifier.fillMaxSize())
-            PageID.Explore.value -> PageTest1(Modifier.fillMaxSize())
+            PageID.Explore.value -> PageExplore(Modifier.fillMaxSize())
             PageID.Chat.value -> PageTest(Modifier.fillMaxSize())
             PageID.My.value -> PageMy(Modifier.fillMaxSize())
             PageID.Dog.value -> PageDog(Modifier.fillMaxSize())

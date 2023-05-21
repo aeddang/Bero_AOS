@@ -100,8 +100,8 @@ fun SelectComposePreview(){
         Select(
             sheetState = modalSheetState,
             buttons = listOf<SelectBtnData>(
-                SelectBtnData(title = "btn0", index = 0),
-                SelectBtnData(title = "btn1", index = 1)
+                SelectBtnData(title = "btn0", index = 0, isSelected = false),
+                SelectBtnData(title = "btn1", index = 1, isSelected = true)
             ),
             cancel = {
 

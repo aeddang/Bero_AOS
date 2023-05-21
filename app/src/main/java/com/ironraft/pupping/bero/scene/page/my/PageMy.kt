@@ -37,8 +37,7 @@ import dev.burnoo.cokoin.get
 
 @Composable
 fun PageMy(
-    modifier: Modifier = Modifier,
-    page: PageObject? = null
+    modifier: Modifier = Modifier
 ){
     val appTag = PageID.My.value
     val dataProvider:DataProvider = get()
@@ -53,8 +52,7 @@ fun PageMy(
     Column (
         modifier = modifier
             .fillMaxSize()
-            .background(ColorBrand.bg)
-            .padding(bottom = DimenMargin.regular.dp),
+            .background(ColorBrand.bg),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(

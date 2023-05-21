@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
+import com.ironraft.pupping.bero.scene.component.viewmodel.ReportFunctionViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.rest.ReportType
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -35,20 +36,32 @@ fun UserProfileItem(
 ) {
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
-    val viewModel: FriendFunctionViewModel by remember { mutableStateOf(
+    val friendFunctionViewModel: FriendFunctionViewModel by remember { mutableStateOf(
         FriendFunctionViewModel(repository, profile.userId, profile.status.value).initSetup(owner)
     ) }
-    val currentStatus = viewModel.currentStatus.observeAsState()
+    val currentStatus = friendFunctionViewModel.currentStatus.observeAsState()
+    val reportFunctionViewModel: ReportFunctionViewModel by remember { mutableStateOf(
+        ReportFunctionViewModel(repository, profile.userId, name = profile.nickName.value).initSetup(owner)
+    ) }
+
     currentStatus.value?.let {
         profile.status.value = it
     }
 
+    fun onAction(type:HorizontalProfileFuncType?){
+        when(type){
+            HorizontalProfileFuncType.MoreFunc ->
+                reportFunctionViewModel.more(type = reportType, postId = postId)
+            else -> action?.let { it() }
+        }
+    }
     if(action != null)
         WrapTransparentButton(
             { action() }
         ) {
             UserProfileItemBody(
                 modifier = modifier,
+                isMe = reportFunctionViewModel.isMe,
                 profile = profile,
                 type = type,
                 title = title,
@@ -57,11 +70,14 @@ fun UserProfileItem(
                 description = description,
                 date = date,
                 useBg = useBg
-            )
+            ){
+                onAction(it)
+            }
         }
     else
         UserProfileItemBody(
             modifier = modifier,
+            isMe = reportFunctionViewModel.isMe,
             profile = profile,
             type = type,
             title = title,
@@ -70,13 +86,16 @@ fun UserProfileItem(
             description = description,
             date = date,
             useBg = useBg
-        )
+        ){
+            onAction(it)
+        }
 }
 
 
 @Composable
 fun UserProfileItemBody(
     modifier: Modifier = Modifier,
+    isMe:Boolean,
     profile:UserProfile,
     type:HorizontalProfileType = HorizontalProfileType.Pet,
     title:String? = null,
@@ -84,15 +103,16 @@ fun UserProfileItemBody(
     imagePath:String? = null,
     description:String? = null,
     date:String? =null,
-    useBg:Boolean = false
+    useBg:Boolean = false,
+    action: ((HorizontalProfileFuncType?) -> Unit)? = null
 ) {
-    val dataProvider: DataProvider = get()
+
     AppTheme {
         HorizontalProfile(
             modifier = modifier,
             type = type,
             sizeType = HorizontalProfileSizeType.Small,
-            funcType = if(dataProvider.user.isSameUser(profile)) null else HorizontalProfileFuncType.MoreFunc,
+            funcType = if(isMe) null else HorizontalProfileFuncType.MoreFunc,
             imagePath = imagePath,
             lv = lv,
             name = title ?: profile.nickName.value,
@@ -100,7 +120,8 @@ fun UserProfileItemBody(
             age = if(date == null) profile.birth.value?.toAge() else null,
             description = description ?: date,
             isSelected = false,
-            useBg = useBg
+            useBg = useBg,
+            action = action
         )
     }
 }

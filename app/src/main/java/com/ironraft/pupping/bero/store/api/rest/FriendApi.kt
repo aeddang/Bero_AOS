@@ -12,12 +12,12 @@ import retrofit2.http.*
 
 
 interface FriendApi {
-    @GET(Api.Friend.friends)
+    @GET(Api.Friend.friend)
     suspend fun get(
         @Path(Api.CONTENT_ID) contentID: String
     ): ApiResponse<UserData>?
 
-    @GET(Api.Friend.friends)
+    @GET(Api.Friend.friend)
     suspend fun getFriends(
         @Path(Api.CONTENT_ID) contentID: String,
         @Query(ApiField.page) page: Int? = 0,

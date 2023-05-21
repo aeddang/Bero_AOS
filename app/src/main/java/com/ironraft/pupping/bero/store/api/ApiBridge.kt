@@ -68,6 +68,7 @@ class ApiBridge(
             ApiType.ChangeRepresentativePet -> getUpdateRepresentative(apiQ.contentID)
             ApiType.DeletePet -> pet.delete(apiQ.contentID)
             ApiType.GetAlbumPictures -> album.get(apiQ.contentID, apiQ.query?.get(ApiField.pictureType),apiQ.page, apiQ.pageSize)
+            ApiType.GetExplorePictures -> album.getExplorer(apiQ.contentID, apiQ.query?.get(ApiField.searchType),apiQ.page, apiQ.pageSize)
             ApiType.RegistAlbumPicture -> getRegistAlbumPicture(apiQ.contentID, snsUser?.snsID, apiQ.requestData as? AlbumData)
             ApiType.UpdateAlbumPicturesLike -> getUpdateLikeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
             ApiType.UpdateAlbumPicturesExpose -> getUpdateExposeAlbumPicture(apiQ.contentID, apiQ.requestData as? Boolean)
@@ -80,6 +81,10 @@ class ApiBridge(
             ApiType.AcceptFriend -> friend.accept(apiQ.contentID)
             ApiType.RejectFriend -> friend.reject(apiQ.contentID)
             ApiType.DeleteFriend -> friend.delete(apiQ.contentID)
+            ApiType.GetBlockUsers -> user.getBlocks(apiQ.page, apiQ.pageSize)
+            ApiType.RequestBlock -> user.block(apiQ.contentID, apiQ.requestData as? Boolean )
+            ApiType.PostReport-> getReport(apiQ.contentID, ReportType.Post, apiQ.requestData as? String)
+            ApiType.Report-> getReport(apiQ.contentID, apiQ.requestData as? ReportType ?: ReportType.User)
         }
     }
 
@@ -209,8 +214,15 @@ class ApiBridge(
         album.put(params)
     }
 
-    private fun getVisionCheck(data:Bitmap?) = runBlocking {
+    private fun getReport(userId:String, type:ReportType, postId:String? = null) = runBlocking {
+        val params = java.util.HashMap<String, String>()
+        params["reportType"] = type.apiCoreKey
+        postId?.let { params["postId"] = it }
+        params["refUserId"] = userId
+        misc.report(params)
+    }
 
+    private fun getVisionCheck(data:Bitmap?) = runBlocking {
         var image: MultipartBody.Part? = null
         data?.let {resource->
             val file = resource.toFile(context)

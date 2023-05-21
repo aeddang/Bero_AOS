@@ -26,6 +26,12 @@ open class AlbumListViewModel(val repo: PageRepository)
         return this
     }
 
+    fun lazySetup(id: String? = null, type: AlbumCategory? = null): AlbumListViewModel {
+        id?.let { currentId = it }
+        type?.let { currentType = it }
+        return this
+    }
+
     override fun onReset(){
     }
 

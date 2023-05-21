@@ -1,9 +1,15 @@
 package com.ironraft.pupping.bero.scene.component.viewmodel
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
+import android.os.Environment.getExternalStoragePublicDirectory
 import androidx.activity.result.ActivityResult
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSelectEvent
@@ -20,7 +26,11 @@ import com.lib.page.PageEventType
 import com.lib.page.PageRequestPermission
 import com.lib.util.AppUtil
 import com.lib.util.getBitmap
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
     val requestId:Int = UUID.randomUUID().hashCode()
@@ -31,16 +41,29 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
         setDefaultLifecycleOwner(owner)
         return this
     }
+    fun meSetup(): AlbumPickViewModel {
+        currentId = repo.dataProvider.user.userId ?: ""
+        currentType = AlbumCategory.User
+        return this
+    }
+    fun lazySetup(id: String? = null, type: AlbumCategory? = null): AlbumPickViewModel {
+        id?.let { currentId = it }
+        type?.let { currentType = it }
+        return this
+    }
 
+    private var pickUri:Uri? = null
     fun onPick(){
         repo.appSceneObserver.select.value = ActivitSelectEvent(
             type = ActivitSelectType.ImgPicker
         ){ select ->
             if (select == -1) return@ActivitSelectEvent
             when(select){
-                0 ->
+                0 -> {
+                    pickUri = null
                     AppUtil.openIntentImagePick(repo.pagePresenter.activity, false, requestId)
-                1 ->
+                }
+                1 ->{
                     repo.pagePresenter.requestPermission(
                         arrayOf(Manifest.permission.CAMERA),
                         requester = object : PageRequestPermission {
@@ -49,10 +72,13 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
                                 permissions: List<Boolean>?
                             ) {
                                 if (!resultAll) return
-                                AppUtil.openIntentImagePick(repo.pagePresenter.activity, true, requestId)
+                                pickUri = AppUtil.getPickImgUri(repo.pagePresenter.activity)
+                                AppUtil.openIntentImagePick(repo.pagePresenter.activity, true, requestId, fileUri = pickUri)
                             }
                         }
                     )
+                }
+
             }
         }
     }
@@ -84,16 +110,24 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
             }
         }
     }
-    fun onResultData(data: Intent){
-        val imageBitmap = data.extras?.get("data") as? Bitmap
+    fun onResultData(data: Intent?){
+        pickUri?.let {uri->
+            uri.getBitmap(repo.pagePresenter.activity)?.let {
+                updateConfirm(it)
+                return
+            }
+        }
+
+        val imageBitmap = data?.extras?.get("data") as? Bitmap
         imageBitmap?.let{ resource->
             updateConfirm(resource)
             return
         }
-        data.data?.let { galleryImgUri ->
+        data?.data?.let { galleryImgUri ->
             galleryImgUri.getBitmap(repo.pagePresenter.activity)?.let { updateConfirm(it) }
         }
     }
+
 
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.setDefaultLifecycleOwner(owner)
@@ -103,7 +137,7 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
                 PageEventType.OnActivityForResult -> {
                     if (requestId == evt.hashId) {
                         val data = evt.data as? ActivityResult
-                        data?.data?.let { onResultData(it) }
+                        onResultData(data?.data)
                     }
                 }
                 else -> {}

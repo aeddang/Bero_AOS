@@ -5,7 +5,6 @@ import com.ironraft.pupping.bero.store.api.rest.CodeCategory
 
 object Api {
     private const val VERSION_V1 = "v1"
-    const val ACTION = "action"
     const val CONTENT_ID = "contentID"
 
     /**
@@ -13,25 +12,27 @@ object Api {
      */
     object Auth {
         private const val PATH = "auth"
-        const val Login = "$VERSION_V1/$PATH/login"
+        const val login = "$VERSION_V1/$PATH/login"
     }
 
     object User {
         private const val PATH = "users"
-        const val Users = "$VERSION_V1/$PATH"
-        const val User = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
+        const val user = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
+        const val usersBlock = "$VERSION_V1/$PATH/block/{${CONTENT_ID}}"
+        const val usersBlockLists = "$VERSION_V1/$PATH/block/list"
     }
 
     object Pet {
         private const val PATH = "pets"
-        const val Pets = "$VERSION_V1/$PATH"
-        const val Pet = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
+        const val pets = "$VERSION_V1/$PATH"
+        const val pet = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
     }
 
     object Misc {
         private const val PATH = "misc"
         const val weather = "$VERSION_V1/$PATH/weather"
         const val codes = "$VERSION_V1/$PATH/codes"
+        const val report = "$VERSION_V1/$PATH/report/things"
     }
 
     object Mission {
@@ -44,6 +45,7 @@ object Api {
     object Album {
         private const val PATH = "album"
         const val pictures = "$VERSION_V1/$PATH/pictures"
+        const val picturesExplorer = "$VERSION_V1/$PATH/pictures/explorer"
         const val picturesThumbsup = "${Album.pictures}/thumbsup"
     }
 
@@ -54,12 +56,13 @@ object Api {
 
     object Friend {
         private const val PATH = "friends"
-        const val friends = "$VERSION_V1/${Friend.PATH}/{${CONTENT_ID}}"
-        const val friendsIsRequested = "${Friend.friends}/isRequested/{${CONTENT_ID}}"
-        const val friendsRequesting = "${Friend.friends}/requesting/{${CONTENT_ID}}"
-        const val friendsRequest = "${Friend.friends}/request"
-        const val friendsAccept = "${Friend.friends}/accept"
-        const val friendsReject = "${Friend.friends}/reject"
+        const val friend = "$VERSION_V1/${Friend.PATH}/{${CONTENT_ID}}"
+        const val friends = "$VERSION_V1/${Friend.PATH}"
+        const val friendsIsRequested = "${friend}/isRequested"
+        const val friendsRequesting = "${friend}/requesting"
+        const val friendsRequest = "${friends}/request"
+        const val friendsAccept = "${friends}/accept"
+        const val friendsReject = "${friends}/reject"
     }
 }
 
@@ -82,6 +85,7 @@ object ApiField {
     const val distance = "distance"
     const val userId = "userId"
     const val petId ="petId"
+    const val randId ="randId"
     const val searchType = "searchType"
     const val missionCategory = "missionCategory"
     const val page = "page"
@@ -121,10 +125,13 @@ enum class ApiType{
     GetWeather, GetCode,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
-    GetAlbumPictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,
+    GetAlbumPictures, GetExplorePictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,
     CheckHumanWithDog,
     GetFriends, GetRequestFriends, GetRequestedFriends,
-    RequestFriend, DeleteFriend, RejectFriend, AcceptFriend;
+    RequestFriend, DeleteFriend, RejectFriend, AcceptFriend,
+    GetBlockUsers, RequestBlock,
+    PostReport, Report
+    ;
 
     fun coreDataKey(requestData:Any?) : String? {
         return when (this) {

@@ -14,6 +14,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.telephony.TelephonyManager
 import android.util.DisplayMetrics
@@ -22,7 +23,10 @@ import androidx.core.content.FileProvider
 import com.google.android.gms.maps.model.LatLng
 import com.lib.page.PageComposeable
 import java.io.File
+import java.io.IOException
+import java.net.URI
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.math.sqrt
@@ -94,25 +98,48 @@ object AppUtil {
         }
     }
 
-    const val pickName = "PickImage.jpg"
+    const val pickName = "PickImage"
+    fun getPickImgUri(context: Context): Uri? {
+        try {
+            val f = createPickImageFile()
+            return FileProvider.getUriForFile(
+                context,
+                "com.ironraft.pupping.bero.provider",
+                f
+            )
+        } catch (ex: IOException) {
+        }
+        return null
+    }
+    @SuppressLint("SimpleDateFormat")
+    @Throws(IOException::class)
+    fun createPickImageFile(): File {
+        // Create an image file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = pickName //"JPEG_" + timeStamp + "_"
+        val storageDir: File =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
+        val image: File = File.createTempFile(
+            imageFileName,  /* prefix */
+            ".jpg",  /* suffix */
+            storageDir /* directory */
+        )
+        // Save a file: path for use with ACTION_VIEW intents
+        return image
+    }
+
     fun openIntentImagePick(context: Context, isCamera:Boolean = false, id:Int? = null,
-                            fileName:String? = null) {
+                            fileUri:Uri? = null) {
 
         Intent(
                 if (isCamera) MediaStore.ACTION_IMAGE_CAPTURE else Intent.ACTION_PICK,
                 if (isCamera) null else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         ).also { takePictureIntent ->
             if (isCamera) {
-                val f = File(fileName ?: pickName)
-                if (f.exists()){
-                    val imageUri = FileProvider.getUriForFile(
-                        context,
-                        "com.raftgroup.pupping.provider",
-                        f
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                fileUri?.let {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, it)
                 }
-
             } else {
                 takePictureIntent.type = "image/*"
                 takePictureIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION

@@ -42,6 +42,8 @@ class PageAppViewModel {
     val networkStatus = MutableLiveData<PageNetworkStatus>()
     val status = MutableLiveData<PageStatus>()
     val currentTopPage:MutableLiveData<PageObject?> = MutableLiveData(null)
+    val isLoading = MutableLiveData<Boolean>( false )
+    val isLock = MutableLiveData<Boolean>( false )
     init {
         status.value = PageStatus.Free
         networkStatus.value = PageNetworkStatus.Undefined

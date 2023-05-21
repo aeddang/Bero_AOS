@@ -5,9 +5,13 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,9 +19,11 @@ import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -88,6 +94,7 @@ enum class FriendButtonFuncType {
 @Composable
 fun FriendButton(
     modifier:Modifier = Modifier,
+    friendFunctionViewModel: FriendFunctionViewModel? = null,
     type:FriendButtonType = FriendButtonType.Fill,
     userId:String? = null,
     userName:String? = null,
@@ -96,12 +103,13 @@ fun FriendButton(
     radius:Float = DimenRadius.thin,
     textSize:Float = FontSize.light
 ) {
-    val appTag = "FriendButton"
 
+    val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
-    val appSceneObserver:AppSceneObserver = get()
     val dataProvider:DataProvider = get()
-
+    val viewModel: FriendFunctionViewModel by remember { mutableStateOf(
+        friendFunctionViewModel ?: FriendFunctionViewModel(repository, userId ?: "")
+    ) }
 
     fun action(){
        val id = userId ?: return
@@ -109,8 +117,7 @@ fun FriendButton(
        when (funcType) {
 
            FriendButtonFuncType.Request -> {
-               val q = ApiQ(appTag, ApiType.RequestFriend,  contentID = id)
-               dataProvider.requestData(q)
+               viewModel.requestFriend()
            }
            FriendButtonFuncType.Requested -> {
                Toast(pagePresenter.activity).showCustomToast(
@@ -119,29 +126,16 @@ fun FriendButton(
                )
            }
            FriendButtonFuncType.Delete -> {
-               val ac = pagePresenter.activity
-               appSceneObserver.sheet.value = ActivitSheetEvent(
-                   type = ActivitSheetType.Select,
-                   title =  ac.getString(R.string.alert_friendDeleteConfirm).replace(userName ?: ""),
-                   text = ac.getString(R.string.alert_friendDeleteConfirmText),
-                   buttons = arrayListOf(ac.getString(R.string.cancel), ac.getString(R.string.button_removeFriend))
-               ){
-                   if (it == 1) {
-                       val q = ApiQ(appTag, ApiType.DeleteFriend,  contentID = id)
-                       dataProvider.requestData(q)
-                   }
-               }
+               viewModel.removeFriend(userName = userName)
            }
            FriendButtonFuncType.Chat -> {
-               //self.appSceneObserver.event = .sendChat(userId: self.userId ?? "")
+               viewModel.sendChat()
            }
            FriendButtonFuncType.Accept -> {
-               val q = ApiQ(appTag, ApiType.AcceptFriend,  contentID = id)
-               dataProvider.requestData(q)
+               viewModel.acceptFriend()
            }
            FriendButtonFuncType.Reject -> {
-               val q = ApiQ(appTag, ApiType.RejectFriend,  contentID = id)
-               dataProvider.requestData(q)
+               viewModel.rejectFriend()
            }
            FriendButtonFuncType.Move ->{
                pagePresenter.openPopup(

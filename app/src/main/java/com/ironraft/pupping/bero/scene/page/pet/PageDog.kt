@@ -127,8 +127,6 @@ fun PageDog(
     )}
     val currentPage by viewModel.currentPage.observeAsState()
     val screenWidth = LocalConfiguration.current.screenWidthDp
-
-
     fun getListWidth(): Float {
         val margin = DimenApp.pageHorinzontal * 2.0f
         return screenWidth.toFloat() - margin
@@ -144,29 +142,32 @@ fun PageDog(
             .padding(bottom = DimenMargin.regular.dp),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        currentPage?.let { pageObject->
-            val scrollState: ScrollState = rememberForeverScrollState(key = pageObject.key)
-            TitleTab(
-                parentScrollState = scrollState,
-                useBack = true
-            ){
-                when(it){
-                    TitleTabButtonType.Back -> { pagePresenter.goBack() }
-                    else -> {}
+        profile?.let { profile ->
+            currentPage?.let { pageObject ->
+                val scrollState: ScrollState = rememberForeverScrollState(key = pageObject.key)
+                TitleTab(
+                    parentScrollState = scrollState,
+                    useBack = true
+                ) {
+                    when (it) {
+                        TitleTabButtonType.Back -> {
+                            pagePresenter.goBack()
+                        }
+                        else -> {}
+                    }
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f)
-                    .verticalScroll(scrollState)
-                    .padding(
-                        top = DimenMargin.medium.dp,
-                        bottom = DimenMargin.heavyExtra.dp
-                    ),
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-            ) {
-                profile?.let { profile ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.0f)
+                        .verticalScroll(scrollState)
+                        .padding(
+                            top = DimenMargin.medium.dp,
+                            bottom = DimenMargin.heavyExtra.dp
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                ) {
+
                     PetProfileTopInfo(
                         modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
                         profile = profile,
@@ -183,11 +184,11 @@ fun PageDog(
                         },
                         editProfile = {
                             /*
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.modifyPet)
-                                .addParam(key: .data, value: profile)
-                            )
-                             */
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.modifyPet)
+                            .addParam(key: .data, value: profile)
+                        )
+                         */
                         }
                     )
                     PetTagSection(
@@ -202,28 +203,28 @@ fun PageDog(
                             .padding(top = DimenMargin.heavyExtra.dp),
                         profile = profile
                     )
-                }
 
-                Spacer(modifier = Modifier
-                    .padding(top = DimenMargin.medium.dp)
-                    .fillMaxWidth()
-                    .height(DimenLine.heavy.dp)
-                    .background(ColorApp.grey50)
-                )
-                if(user != null && profile != null) {
-                    AlbumSection(
-                        modifier
-                            .padding(horizontal = DimenApp.pageHorinzontal.dp)
-                            .padding(top = DimenMargin.heavyExtra.dp),
-                        listSize = listWidth,
-                        user = user,
-                        pet = profile
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(top = DimenMargin.medium.dp)
+                            .fillMaxWidth()
+                            .height(DimenLine.heavy.dp)
+                            .background(ColorApp.grey50)
                     )
+                    if (user != null && profile != null) {
+                        AlbumSection(
+                            modifier
+                                .padding(horizontal = DimenApp.pageHorinzontal.dp)
+                                .padding(top = DimenMargin.heavyExtra.dp),
+                            listSize = listWidth,
+                            user = user,
+                            pet = profile
+                        )
+                    }
+
                 }
-
             }
-
-
         }
 
     }

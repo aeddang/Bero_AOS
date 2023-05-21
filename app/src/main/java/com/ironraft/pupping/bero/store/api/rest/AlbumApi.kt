@@ -1,7 +1,9 @@
 package com.ironraft.pupping.bero.store.api.rest
 
 import android.graphics.Bitmap
+import androidx.annotation.StringRes
 import com.google.gson.annotations.SerializedName
+import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiResponse
@@ -29,6 +31,30 @@ enum class AlbumCategory{
     }
 }
 
+enum class ExplorerSearchType {
+    Friends, All;
+
+    val getApiCode : String
+        get() = when(this) {
+            Friends -> "Friends"
+            All -> "All"
+        }
+
+    @get:StringRes
+    val title : Int
+        get() = when(this) {
+            Friends -> R.string.sort_friends
+            All -> R.string.sort_all
+        }
+
+    @get:StringRes
+    val text : Int
+        get() = when(this) {
+            Friends -> R.string.sort_friendsText
+            All -> R.string.sort_allText
+        }
+}
+
 data class AlbumData(
     val type:AlbumCategory,
     val image:Bitmap?,
@@ -42,6 +68,14 @@ interface AlbumApi {
     suspend fun get(
         @Query(ApiField.ownerId) ownerId: String,
         @Query(ApiField.pictureType) pictureType: String?,
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
+    ): ApiResponse<PictureData>?
+
+    @GET(Api.Album.picturesExplorer)
+    suspend fun getExplorer(
+        @Query(ApiField.randId) randId: String,
+        @Query(ApiField.searchType) pictureType: String?,
         @Query(ApiField.page) page: Int? = 0,
         @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<PictureData>?
@@ -87,5 +121,7 @@ data class PictureData (
     @SerializedName("isChecked") var isChecked: Boolean? = null,
     @SerializedName("createdAt") var createdAt: String? = null,
     @SerializedName("isExpose") var isExpose: Boolean? = null,
-    @SerializedName("referenceId") var referenceId: String? = null
+    @SerializedName("referenceId") var referenceId: String? = null,
+    @SerializedName("user") var user: UserData? = null,
+    @SerializedName("pets") var pets: List<PetData>? = null
 )
