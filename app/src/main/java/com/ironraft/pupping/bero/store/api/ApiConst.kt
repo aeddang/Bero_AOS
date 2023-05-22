@@ -33,6 +33,7 @@ object Api {
         const val weather = "$VERSION_V1/$PATH/weather"
         const val codes = "$VERSION_V1/$PATH/codes"
         const val report = "$VERSION_V1/$PATH/report/things"
+        const val alarms = "$VERSION_V1/$PATH/alarms"
     }
 
     object Mission {

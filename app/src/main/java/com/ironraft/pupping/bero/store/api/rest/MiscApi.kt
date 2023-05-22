@@ -7,6 +7,7 @@ import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiResponse
+import com.ironraft.pupping.bero.store.api.ApiValue
 import retrofit2.http.*
 
 enum class CodeCategory{
@@ -63,6 +64,12 @@ interface MiscApi {
     suspend fun report(
         @Body params: Map<String, String>
     ): ApiResponse<Any>?
+
+    @GET(Api.Misc.alarms)
+    suspend fun getAlarms(
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
+    ): ApiResponse<AlarmData>?
 }
 
 data class WeatherData(
@@ -76,4 +83,14 @@ data class CodeData(
     @SerializedName("category") var category: String? = null,
     @SerializedName("id") var id: Int? = null,
     @SerializedName("value") var value: String? = null
+)
+
+data class AlarmData (
+    @SerializedName("category") var alarmType: String? = null,
+    @SerializedName("category") var user: UserData? = null,
+    @SerializedName("category") var pet: PetData? = null,
+    @SerializedName("category") var album: PictureData? = null,
+    @SerializedName("category") var title: String? = null,
+    @SerializedName("category") var contents: String? = null,
+    @SerializedName("category") var createdAt: String? = null
 )

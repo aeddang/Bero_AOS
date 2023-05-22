@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.AppSceneObserver
@@ -20,9 +21,13 @@ import com.ironraft.pupping.bero.activityui.ActivitRadioEvent
 import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
+import com.ironraft.pupping.bero.scene.component.viewmodel.ReportFunctionViewModel
+import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.FriendData
 import com.ironraft.pupping.bero.store.api.rest.MissionData
+import com.ironraft.pupping.bero.store.api.rest.ReportType
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
 import com.lib.util.replace
@@ -100,34 +105,18 @@ class FriendListItemData{
 fun FriendListItem(
     modifier: Modifier = Modifier,
     data:FriendListItemData,
-    imgSize:Float,
+    imgSize:Float = DimenProfile.medium,
     isMe:Boolean,
     status:FriendStatus? = null,
     isHorizontal:Boolean = true,
     action: () -> Unit
 ){
-    val dataProvider:DataProvider = get()
-    var currentStatus: FriendStatus? by remember { mutableStateOf(status) }
-    val apiResult = dataProvider.result.observeAsState()
-
-    @Suppress("UNCHECKED_CAST")
-    apiResult.value.let { res ->
-        res?.type ?: return@let
-        if(res.contentID != data.userId) return@let
-        when ( res.type ){
-            ApiType.RequestFriend -> {
-                currentStatus = FriendStatus.RequestFriend
-            }
-            ApiType.AcceptFriend -> {
-                currentStatus = FriendStatus.Friend
-            }
-            ApiType.RejectFriend, ApiType.DeleteFriend -> {
-                currentStatus = FriendStatus.Norelation
-            }
-            else ->{}
-        }
-    }
-
+    val owner = LocalLifecycleOwner.current
+    val repository: PageRepository = get()
+    val friendFunctionViewModel: FriendFunctionViewModel by remember { mutableStateOf(
+        FriendFunctionViewModel(repository,  data.userId ?: "", status).initSetup(owner)
+    ) }
+    val currentStatus by friendFunctionViewModel.currentStatus.observeAsState()
     WrapTransparentButton(action = action) {
         if(isHorizontal)
             FriendListItemBodyHorizontal(
@@ -143,7 +132,6 @@ fun FriendListItem(
             FriendListItemBodyVertical(
                 modifier = modifier,
                 data = data,
-                imgSize = imgSize,
                 isMe = isMe,
                 currentStatus = currentStatus
             ) {
@@ -179,73 +167,16 @@ fun FriendListItemBodyHorizontal(
 fun FriendListItemBodyVertical(
     modifier: Modifier = Modifier,
     data:FriendListItemData,
-    imgSize:Float,
     isMe:Boolean,
     currentStatus:FriendStatus? = null,
     action: () -> Unit
 ){
-    val appSceneObserver:AppSceneObserver = get()
-    val pagePresenter: PageComposePresenter = get()
+    val owner = LocalLifecycleOwner.current
+    val repository: PageRepository = get()
+    val reportFunctionViewModel: ReportFunctionViewModel by remember { mutableStateOf(
+        ReportFunctionViewModel(repository, data.userId ?: "", name =  data.name).initSetup(owner)
+    ) }
 
-    fun block(){
-        appSceneObserver.sheet.value = ActivitSheetEvent(
-            type = ActivitSheetType.Select,
-            title = pagePresenter.activity.getString(R.string.alert_blockUserConfirm).replace(data.name ?: ""),
-            text = pagePresenter.activity.getString(R.string.alert_blockUserConfirmText),
-            buttons = arrayListOf(
-                pagePresenter.activity.getString(R.string.cancel),
-                pagePresenter.activity.getString(R.string.button_block)
-            ),
-            isNegative = true
-        ){
-            if(it == 1){
-                //self.dataProvider.requestData(q: .init(type: .blockUser(userId: self.data.userId  ?? "", isBlock: true)))
-            }
-        }
-    }
-    fun accuse(){
-        appSceneObserver.sheet.value = ActivitSheetEvent(
-            type = ActivitSheetType.Select,
-            title = pagePresenter.activity.getString(R.string.alert_accuseUserConfirm).replace(data.name ?: data.petName ?: ""),
-            text = pagePresenter.activity.getString(R.string.alert_accuseUserConfirmText),
-            buttons = arrayListOf(
-                pagePresenter.activity.getString(R.string.cancel),
-                pagePresenter.activity.getString(R.string.button_accuse)
-            ),
-            isNegative = true
-        ){
-            if(it == 1){
-                //self.dataProvider.requestData(q: .init(type: .sendReport(
-                //                    reportType: .user , userId: self.data.userId
-                //                ))
-            }
-        }
-    }
-    fun more(){
-        val datas:List<RadioBtnData> = listOf(
-            RadioBtnData(
-                index = 0,
-                icon = R.drawable.block,
-                title = pagePresenter.activity.getString(R.string.button_block)
-            ),
-            RadioBtnData(
-                index = 1,
-                icon = R.drawable.warning,
-                title = pagePresenter.activity.getString(R.string.button_accuseUser)
-            )
-        )
-        appSceneObserver.radio.value = ActivitRadioEvent(
-            type = ActivitRadioType.Select,
-            title = pagePresenter.activity.getString(R.string.alert_supportAction),
-            radioButtons = datas
-        ){
-            when(it){
-                0 -> block()
-                1 -> accuse()
-                else -> {}
-            }
-        }
-    }
     Box(modifier = modifier
         .fillMaxWidth()
         .padding(vertical = DimenMargin.thin.dp),
@@ -266,7 +197,7 @@ fun FriendListItemBodyVertical(
             useBg = false
         ){
             when(it){
-                HorizontalProfileFuncType.MoreFunc -> more()
+                HorizontalProfileFuncType.MoreFunc -> reportFunctionViewModel.more(ReportType.User)
                 else -> action()
             }
         }

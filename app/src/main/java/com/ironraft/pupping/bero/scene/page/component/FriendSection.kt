@@ -118,7 +118,6 @@ fun FriendSection(
                                 data = data,
                                 imgSize = imageSize,
                                 isMe = isMe,
-                                //status = if(isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
                                 isHorizontal = true)
                             {
                                 moveFriend(data.userId)

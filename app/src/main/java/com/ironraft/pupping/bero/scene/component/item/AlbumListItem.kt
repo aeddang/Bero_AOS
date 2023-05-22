@@ -60,7 +60,7 @@ class AlbumListItemData{
     var walkId:Int? = null; private set
     var type:MissionCategory? = null; private set
 
-    fun setData(data:PictureData, idx:Int) : AlbumListItemData{
+    fun setData(data:PictureData, idx:Int = -1) : AlbumListItemData{
         index = idx
         imagePath = data.pictureUrl
         thumbIagePath = data.smallPictureUrl
