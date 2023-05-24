@@ -26,14 +26,12 @@ interface FriendApi {
 
     @GET(Api.Friend.friendsIsRequested)
     suspend fun requestedFriends(
-        @Path(Api.CONTENT_ID) contentID: String,
         @Query(ApiField.page) page: Int? = 0,
         @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<FriendData>?
 
     @GET(Api.Friend.friendsRequesting)
     suspend fun requestFriends(
-        @Path(Api.CONTENT_ID) contentID: String,
         @Query(ApiField.page) page: Int? = 0,
         @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<FriendData>?

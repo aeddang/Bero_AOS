@@ -1,6 +1,7 @@
 package com.ironraft.pupping.bero.scene.component.viewmodel
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.scene.component.item.UserAlbumListItemData
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiField
@@ -20,6 +21,7 @@ open class UserAlbumListViewModel(val repo: PageRepository)
 
     var currentId:String = round(System.currentTimeMillis()/1000.0).toInt().toString(); private set
     var currentType:ExplorerSearchType = ExplorerSearchType.All
+
 
     fun initSetup(owner: LifecycleOwner): UserAlbumListViewModel {
         this.pageSize = ApiValue.PAGE_SIZE

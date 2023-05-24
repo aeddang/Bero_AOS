@@ -41,6 +41,7 @@ enum class PageID(val value: String, val position: Int = 9999){
     Dog("dog"),
     User("user"),
     Album("album"),
+    Friend("friend"),
     Webview("webview"),
     Privacy("privacy"),
     ServiceTerms("serviceTerms"),

@@ -101,8 +101,8 @@ fun TitleTab(
     sortPetProfile:PetProfile? = null,
     sortButton:String? = null,
     sort:(() -> Unit)? = null,
-    buttons:ArrayList<TitleTabButtonType> = arrayListOf(),
-    icons:ArrayList<String?> = arrayListOf(),
+    buttons:List<TitleTabButtonType> = listOf(),
+    icons:List<String?> = listOf(),
     action: ((TitleTabButtonType) -> Unit)? = null
 ) {
 

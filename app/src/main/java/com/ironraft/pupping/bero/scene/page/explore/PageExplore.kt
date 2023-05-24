@@ -63,7 +63,7 @@ fun PageExplore(
     }
     val scrollState: LazyListState = rememberForeverLazyListState(key = appTag)
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val hasNewAlarm:Boolean by remember { mutableStateOf( true ) }
+    val hasNewAlarm by repository.hasNewAlarm.observeAsState()
     var searchType:ExplorerSearchType by remember { mutableStateOf( ExplorerSearchType.All ) }
 
     fun onSort(){
@@ -112,7 +112,7 @@ fun PageExplore(
             sortButton = stringResource(id = searchType.title),
             sort = { onSort() },
             buttons = arrayListOf(TitleTabButtonType.AddAlbum,TitleTabButtonType.Alarm),
-            icons = if(hasNewAlarm) arrayListOf(null, "N") else arrayListOf()
+            icons = if(hasNewAlarm == true) arrayListOf(null, "N") else arrayListOf()
         ){
             when(it){
                 TitleTabButtonType.AddAlbum -> albumPickViewModel.onPick()
