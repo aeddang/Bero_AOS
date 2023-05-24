@@ -1,10 +1,13 @@
 package com.ironraft.pupping.bero.store.provider.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import com.ironraft.pupping.bero.R
 import com.lib.util.PageLog
 import com.ironraft.pupping.bero.store.api.rest.UserData
+import com.lib.util.replace
 import com.lib.util.toDate
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
@@ -37,7 +40,12 @@ class UserProfile(val isMine:Boolean = false){
     var date:String? = null; private set
     var type:SnsType? = null; private set
     var originData:UserData? = null; private set
-
+    fun getIntroduction(ctx: Context):String{
+        introduction.value?.let {
+            return it
+        }
+        return ctx.getString(R.string.introductionDefault).replace(nickName.value ?: "")
+    }
     fun setData(data:SnsUser) : UserProfile{
         type = data.snsType
         return this

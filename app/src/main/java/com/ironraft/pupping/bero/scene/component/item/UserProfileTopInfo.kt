@@ -11,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +62,12 @@ fun UserProfileTopInfo(
                     name = name,
                     gender = gender,
                     age = birth?.toAge(),
-                    description = if(isSimple) null else description,
+                    description =
+                        if(isSimple) null
+                        else {
+                            if(description?.isNotEmpty() == true) description
+                            else profile.getIntroduction(LocalContext.current)
+                        },
                     viewProfileImage = viewProfileImage,
                     editProfile = if(profile.isMine) action else null
                 )
@@ -79,20 +85,19 @@ fun UserProfileTopInfo(
                     useBg = false
                 )
             if(!isSimple && isHorizontal)
-                description?.let {
-                    Text(
-                        it.ifEmpty { stringResource(id = R.string.introductionDefault).replace(name ?: "") },
-                        fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey400,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
-                            .background(ColorApp.whiteDeepLight)
-                            .padding(all = DimenMargin.light.dp)
+                Text(
+                    if(description?.isNotEmpty() == true) description!!
+                    else profile.getIntroduction(LocalContext.current),
+                    fontSize = FontSize.thin.sp,
+                    color = ColorApp.grey400,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
+                        .background(ColorApp.whiteDeepLight)
+                        .padding(all = DimenMargin.light.dp)
 
-                    )
-                }
+                )
         }
     }
 }

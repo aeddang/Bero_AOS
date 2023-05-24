@@ -55,7 +55,7 @@ class PetProfile {
                 if (values.isEmpty()) return ""
                 return values.reduce { acc, s ->
                     return "$acc,$s"
-                }.dropLast(1)
+                }
             }
             return ""
         }
@@ -99,6 +99,13 @@ class PetProfile {
     val sortIdx:Int
         get() = if (isRepresentative) 0 else 1
 
+    fun getIntroduction(ctx:Context):String{
+        introduction.value?.let {
+            return it
+        }
+        return ctx.getString(R.string.introductionDefault).replace(name.value ?: "")
+    }
+
     override fun equals(other: Any?): Boolean {
         (other as? PetProfile)?.let {
             return this.id == it.id
@@ -135,7 +142,7 @@ class PetProfile {
         this.animalId.value = data.animalId
         this.weight.value = data.weight
         this.size.value = data.size
-        this.isNeutralized.value = data.status?.contains("neutralization")
+        this.isNeutralized.value = data.isNeutered ?: false
         this.immunStatus.value = data.tagStatus
         this.hashStatus.value = data.tagPersonality
         this.exerciseDistance = data.exerciseDistance
@@ -144,6 +151,7 @@ class PetProfile {
 
         return this
     }
+
 
     fun empty() : PetProfile{
         this.isEmpty = true

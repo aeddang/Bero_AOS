@@ -50,7 +50,8 @@ enum class PageID(val value: String, val position: Int = 9999){
     PictureViewer("pictureViewer"),
     ModifyUser("modifyUser"),
     ModifyPet("modifyPet"),
-    ModifyPetHealth("modifyPetHealth")
+    ModifyPetHealth("modifyPetHealth"),
+    EditProfile("editProfile"),
 }
 
 class PageProvider {

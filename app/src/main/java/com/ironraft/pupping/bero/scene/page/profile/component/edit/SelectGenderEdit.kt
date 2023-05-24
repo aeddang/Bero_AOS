@@ -68,7 +68,7 @@ fun SelectGenderEdit(
     var isNeutralized:Boolean by remember { mutableStateOf(prevNeutralized ?: false) }
     fun onAction(){
         val gender = selectGender ?: return
-        if (!isAgree) return
+        if (!isAgree && needAgree) return
         if (prevData == gender && isNeutralized == prevNeutralized) return
         when (type){
             ProfileEditType.Gender -> edit(
@@ -124,7 +124,7 @@ fun SelectGenderEdit(
                         selectGender = Gender.Female
                     }
                 }
-                if (needAgree)
+                if (!needAgree)
                     AgreeButton(
                         type = AgreeButtonType.Neutralized,
                         isChecked = isNeutralized
@@ -147,7 +147,7 @@ fun SelectGenderEdit(
                     text = stringResource(id = R.string.button_save),
                     color = ColorBrand.primary,
                     isActive =
-                        if( !isAgree) false
+                        if( !isAgree && needAgree ) false
                         else (isNeutralized != prevNeutralized || selectGender != prevData)
                 ) {
                     onAction()

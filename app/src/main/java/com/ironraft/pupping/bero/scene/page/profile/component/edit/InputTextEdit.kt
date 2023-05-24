@@ -46,17 +46,16 @@ fun InputTextEdit(
     var isAgree:Boolean by remember { mutableStateOf(prevData.isNotEmpty()) }
     val focusManager = LocalFocusManager.current
     fun onAction(){
-        if (!isAgree) return
+        if (!isAgree && needAgree) return
         if (input.isEmpty()) return
         if (prevData == input) return
         when (type){
-
             ProfileEditType.Name -> edit(ProfileEditData(name = input))
             ProfileEditType.Introduction -> edit(ProfileEditData(introduction = input))
             ProfileEditType.Weight -> edit(ProfileEditData(weight = input.toDouble()))
-            ProfileEditType.Height -> {ProfileEditData(size = input.toDouble())}
-            ProfileEditType.AnimalId -> {ProfileEditData(animalId = input)}
-            ProfileEditType.Microchip -> {ProfileEditData(microchip = input)}
+            ProfileEditType.Height -> edit(ProfileEditData(size = input.toDouble()))
+            ProfileEditType.AnimalId -> edit(ProfileEditData(animalId = input))
+            ProfileEditType.Microchip -> edit(ProfileEditData(microchip = input))
             else -> {}
         }
     }
@@ -121,7 +120,7 @@ fun InputTextEdit(
                         type = FillButtonType.Fill,
                         text = stringResource(id = R.string.button_save),
                         color = ColorBrand.primary,
-                        isActive = input.isNotEmpty() && (prevData != input) && isAgree
+                        isActive = input.isNotEmpty() && (prevData != input) && (isAgree || !needAgree)
                     ) {
                         onAction()
                     }

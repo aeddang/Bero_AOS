@@ -39,6 +39,7 @@ import com.ironraft.pupping.bero.scene.page.popup.PagePictureViewer
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
+import com.ironraft.pupping.bero.scene.page.profile.PageEditProfile
 import com.ironraft.pupping.bero.scene.page.profile.PageModifyPet
 import com.ironraft.pupping.bero.scene.page.profile.PageModifyPetHealth
 import com.ironraft.pupping.bero.scene.page.profile.PageModifyUser
@@ -183,6 +184,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.ModifyUser.value -> PageModifyUser(Modifier.fillMaxSize())
             PageID.ModifyPet.value -> PageModifyPet(Modifier.fillMaxSize())
             PageID.ModifyPetHealth.value -> PageModifyPetHealth(Modifier.fillMaxSize())
+            PageID.EditProfile.value -> PageEditProfile(Modifier.fillMaxSize())
         }
     }
 }

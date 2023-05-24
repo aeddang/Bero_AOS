@@ -31,6 +31,10 @@ import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabType
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
+import com.ironraft.pupping.bero.scene.page.profile.ProfileEditType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
@@ -112,13 +116,11 @@ fun PetTagSection(
                 ){ type ->
                     when (type){
                         TitleTabButtonType.Edit ->{
-                            /*
-                            self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.editProfile)
-                                .addParam(key: .data, value: self.profile)
-                                .addParam(key: .type, value: PageEditProfile.EditType.hash)
+                            pagePresenter.openPopup(
+                                PageProvider.getPageObject(PageID.EditProfile)
+                                    .addParam(PageParam.type, ProfileEditType.Hash )
+                                    .addParam(PageParam.data, profile)
                             )
-                             */
                         }
                         else -> {}
                     }

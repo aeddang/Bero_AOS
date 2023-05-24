@@ -20,9 +20,11 @@ interface UserApi {
     suspend fun put(
         @Path(Api.CONTENT_ID) contentID: String,
         @Part("name") name: RequestBody? = null,
+        @Part("birthdate") birthdate: RequestBody? = null,
+        @Part("sex") sex: RequestBody? = null,
+        @Part("introduce") introduce: RequestBody? = null,
         @Part contents: MultipartBody.Part?
     ): ApiResponse<Any?>?
-
     @GET(Api.User.user)
     suspend fun post(
         @Body params: Map<String, String>
@@ -53,7 +55,7 @@ data class UserData(
     @SerializedName("roleType") var roleType: String? = null,
     @SerializedName("point") var point: Int? = null,
     @SerializedName("birthdate") var birthdate: String? = null,
-    @SerializedName("sext") var sex: String? = null,
+    @SerializedName("sex") var sex: String? = null,
     @SerializedName("introduce") var introduce: String? = null,
     @SerializedName("exp") var exp:Double? = null,
     @SerializedName("exerciseDistance") var exerciseDistance: Double? = null,

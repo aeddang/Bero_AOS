@@ -8,6 +8,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -17,7 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.profile.component.step.*
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
+import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -25,6 +29,7 @@ import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.UserEventType
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
+import com.lib.page.PagePresenter
 import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
 import com.skeleton.view.button.FillButton
@@ -36,9 +41,13 @@ fun PageAddDogCompleted(
     modifier: Modifier = Modifier,
     page: PageObject? = null
 ){
-    val appTag = "PageAddDogCompleted"
-    val pagePresenter:PageComposePresenter = get()
+    val appTag = PageID.AddDogCompleted.value
+    val owner = LocalLifecycleOwner.current
+    val repository: PageRepository = get()
     val dataProvider:DataProvider = get()
+    val pagePresenter: PagePresenter = get()
+
+    val viewModel: PageViewModel by remember { mutableStateOf(PageViewModel(PageID.AddDogCompleted, repository).initSetup(owner)) }
     var profile:ModifyPetProfileData by remember { mutableStateOf( ModifyPetProfileData() ) }
     val userEvent = dataProvider.user.event.observeAsState()
     @Suppress("UNCHECKED_CAST")
@@ -46,18 +55,21 @@ fun PageAddDogCompleted(
         evt?.type ?: return@let
         when ( evt.type ){
             UserEventType.AddedDog -> {
-                pagePresenter.closePopup(page?.key)
+                pagePresenter.goBack()
                 dataProvider.user.event.value = null
             }
             else ->{}
         }
     }
 
-    if(page?.isInit == false) {
-        page.isInit = true
-        val pro = page.getParamValue(PageParam.data) as? ModifyPetProfileData
-        pro?.let {
-            profile = it
+    val currentPage = viewModel.currentPage.observeAsState()
+    currentPage.value?.let { page ->
+        if (!viewModel.isInit) {
+            viewModel.isInit = true
+            val pro = page.getParamValue(PageParam.data) as? ModifyPetProfileData
+            pro?.let {
+                profile = it
+            }
         }
     }
 

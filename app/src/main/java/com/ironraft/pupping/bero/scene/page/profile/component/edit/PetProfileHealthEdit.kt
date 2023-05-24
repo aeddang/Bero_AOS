@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Picture
+import android.graphics.pdf.PdfDocument
+import android.graphics.pdf.PdfRenderer.Page
 import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,6 +24,10 @@ import com.ironraft.pupping.bero.activityui.ActivitSelectEvent
 import com.ironraft.pupping.bero.activityui.ActivitSelectType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.scene.page.profile.ProfileEditType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
@@ -55,6 +61,7 @@ fun PetProfileHealthEdit(
 ) {
     val appTag = "PetProfileHealthEdit"
     val dataProvider:DataProvider = get()
+    val pagePresenter:PagePresenter = get()
     val viewModel: ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
 
     val immunStatus by profile.immunStatus.observeAsState()
@@ -64,7 +71,7 @@ fun PetProfileHealthEdit(
     val microchip by profile.microchip.observeAsState()
     fun getCodeData():Boolean{
         val params = HashMap<String, String>()
-        params[ApiField.category] = CodeCategory.Personality.name.lowercase()
+        params[ApiField.category] = CodeCategory.Status.name.lowercase()
         val q = ApiQ(appTag, ApiType.GetCode, query = params, requestData = CodeCategory.Status)
         dataProvider.requestData(q)
         return true
@@ -104,7 +111,11 @@ fun PetProfileHealthEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Weight )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -118,7 +129,11 @@ fun PetProfileHealthEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Height )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -135,7 +150,11 @@ fun PetProfileHealthEdit(
                     useStroke = false,
                     useMargin = false
                 ){
-
+                    pagePresenter.openPopup(
+                        PageProvider.getPageObject(PageID.EditProfile)
+                            .addParam(PageParam.type, ProfileEditType.Immun )
+                            .addParam(PageParam.data, profile)
+                    )
                 }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -149,7 +168,11 @@ fun PetProfileHealthEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.AnimalId )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -163,7 +186,11 @@ fun PetProfileHealthEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Microchip )
+                        .addParam(PageParam.data, profile)
+                )
             }
         }
     }

@@ -52,14 +52,14 @@ fun SelectDateEdit(
 ) {
     val appTag = "SelectDateEdit"
     var selectDate:LocalDate by remember { mutableStateOf(prevData) }
-    var isAgree:Boolean by remember { mutableStateOf(prevData.isEqual(LocalDate.now())) }
+    var isAgree:Boolean by remember { mutableStateOf(!prevData.isEqual(LocalDate.now())) }
 
     val calendar:Calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
 
     fun onAction(){
 
-        if (!isAgree) return
+        if (!isAgree && needAgree) return
         if (prevData.isEqual(selectDate)) return
         when (type){
             ProfileEditType.Birth -> edit(
@@ -124,7 +124,7 @@ fun SelectDateEdit(
                     text = stringResource(id = R.string.button_save),
                     color = ColorBrand.primary,
                     isActive =
-                    if( !isAgree) false
+                    if( !isAgree && needAgree ) false
                     else (!prevData.isEqual(selectDate))
                 ) {
                     onAction()

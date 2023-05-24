@@ -6,16 +6,23 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.page.profile.ProfileEditType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.provider.model.UserProfile
+import com.lib.page.PagePresenter
 import com.lib.util.toAge
 import com.skeleton.sns.SnsUser
 import com.skeleton.theme.*
 import com.skeleton.view.button.SelectButton
 import com.skeleton.view.button.SelectButtonType
+import dev.burnoo.cokoin.get
 
 
 @Composable
@@ -24,7 +31,7 @@ fun UserProfileEdit(
     profile:UserProfile,
     user:SnsUser? = null
 ) {
-
+    val pagePresenter: PagePresenter = get()
     val name by profile.nickName.observeAsState()
     val gender by profile.gender.observeAsState()
     val birth by profile.birth.observeAsState()
@@ -43,7 +50,11 @@ fun UserProfileEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Name )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -57,7 +68,11 @@ fun UserProfileEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Gender )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -71,7 +86,11 @@ fun UserProfileEdit(
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Birth )
+                        .addParam(PageParam.data, profile)
+                )
             }
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -81,11 +100,16 @@ fun UserProfileEdit(
             SelectButton(
                 type = SelectButtonType.Medium,
                 title = stringResource(id = R.string.introduction),
-                text = introduction ?: "",
+                text = if(introduction?.isNotEmpty() == true) introduction!!
+                else profile.getIntroduction(LocalContext.current),
                 useStroke = false,
                 useMargin = false
             ){
-
+                pagePresenter.openPopup(
+                    PageProvider.getPageObject(PageID.EditProfile)
+                        .addParam(PageParam.type, ProfileEditType.Introduction )
+                        .addParam(PageParam.data, profile)
+                )
             }
         }
     }

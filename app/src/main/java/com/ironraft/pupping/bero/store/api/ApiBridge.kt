@@ -98,7 +98,10 @@ class ApiBridge(
             image = MultipartBody.Part.createFormData("contents", file.name, imgBody)
         }
         val name: RequestBody? = getRequestBody(model?.nickName)
-        user.put(userId ?: "", name, image)
+        val birthdate: RequestBody? = getRequestBody(model?.birth?.toFormatString()?.substring(0, 19))
+        val sex: RequestBody? = getRequestBody(model?.gender?.apiDataKey)
+        val introduce: RequestBody? = getRequestBody(model?.introduction)
+        user.put(userId ?: "", name, birthdate, sex, introduce, image)
     }
 
     private fun getUpdatePetProfile(petId:String, img: Bitmap?) = runBlocking {
