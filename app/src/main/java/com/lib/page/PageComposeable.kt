@@ -374,8 +374,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         } else {
             resetScrollState(pageObject.pageID)
             navController?.navigate(pageObject.pageID){
-                if(top?.isHistory == false) {
-                    popUpTo(top.pageID) {inclusive = true }
+                top?.let { top->
+                    val isHistory = activityModel.isHistoryPage(top)
+                    if(!isHistory) {
+                        popUpTo(top.pageID) {inclusive = true }
+                    }
                 }
             }
         }
@@ -409,8 +412,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         popups.add(pageObject)
         onWillChangePage(null, pageObject)
         navController?.navigate(pageObject.pageID) {
-            if(top?.isHistory == false) {
-                popUpTo(top.pageID) {inclusive = true}
+            top?.let { top->
+                val isHistory = activityModel.isHistoryPage(top)
+                if(!isHistory) {
+                    popUpTo(top.pageID) {inclusive = true }
+                }
             }
         }
         onChangedPage()

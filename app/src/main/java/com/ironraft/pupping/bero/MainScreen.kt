@@ -39,6 +39,9 @@ import com.ironraft.pupping.bero.scene.page.popup.PagePictureViewer
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyPet
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyPetHealth
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyUser
 import com.ironraft.pupping.bero.scene.page.user.PageUser
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
@@ -133,8 +136,9 @@ fun PageApp(
 
         AnimatedVisibility(visible = isLoading == true, enter = fadeIn(), exit = fadeOut()) {
             Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(color = if(isLock == true) ColorTransparent.black70 else ColorTransparent.clearUi),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = if (isLock == true) ColorTransparent.black70 else ColorTransparent.clearUi),
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 LoadingIndicator(
@@ -176,6 +180,9 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize())
             PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize())
             PageID.PictureViewer.value -> PagePictureViewer(Modifier.fillMaxSize())
+            PageID.ModifyUser.value -> PageModifyUser(Modifier.fillMaxSize())
+            PageID.ModifyPet.value -> PageModifyPet(Modifier.fillMaxSize())
+            PageID.ModifyPetHealth.value -> PageModifyPetHealth(Modifier.fillMaxSize())
         }
     }
 }

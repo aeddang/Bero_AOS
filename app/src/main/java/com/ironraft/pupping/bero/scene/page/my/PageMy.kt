@@ -24,6 +24,8 @@ import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
 import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
@@ -41,6 +43,7 @@ fun PageMy(
 ){
     val appTag = PageID.My.value
     val dataProvider:DataProvider = get()
+    val pagePresenter:PageComposePresenter = get()
     val scrollState: ScrollState = rememberForeverScrollState(key = appTag)
     val screenWidth = LocalConfiguration.current.screenWidthDp
     fun getListWidth(): Float {
@@ -83,24 +86,20 @@ fun PageMy(
                     modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
                     profile = representativePet!!,
                     viewProfile = {
-                        /*
                         pagePresenter.openPopup(
-                            PageProvider.getPageObject(.dog)
-                            .addParam(key: .data, value: pet)
-                            .addParam(key: .subData, value: self.dataProvider.user)
+                            PageProvider.getPageObject(PageID.Dog)
+                                .addParam(key = PageParam.data, value = representativePet)
+                                .addParam(key = PageParam.subData, value = dataProvider.user)
                         )
-                        */
                     }
                 )
             } else {
                 UserProfileTopInfo(
                     modifier = Modifier.padding(horizontal = DimenApp.pageHorinzontal.dp),
                     profile = dataProvider.user.currentProfile){
-                        /*
                         pagePresenter.openPopup(
-                            PageProvider.getPageObject(.modifyUser)
+                            PageProvider.getPageObject(PageID.ModifyUser)
                         )
-                        */
                 }
             }
             UserPlayInfo(

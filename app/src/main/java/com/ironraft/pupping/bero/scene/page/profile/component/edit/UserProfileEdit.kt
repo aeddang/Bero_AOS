@@ -46,7 +46,6 @@ fun UserProfileEdit(
 
             }
             Spacer(modifier = Modifier
-                .padding(top = DimenMargin.medium.dp)
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
                 .background(ColorApp.grey50)
@@ -61,7 +60,6 @@ fun UserProfileEdit(
 
             }
             Spacer(modifier = Modifier
-                .padding(top = DimenMargin.medium.dp)
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
                 .background(ColorApp.grey50)
@@ -76,7 +74,6 @@ fun UserProfileEdit(
 
             }
             Spacer(modifier = Modifier
-                .padding(top = DimenMargin.medium.dp)
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
                 .background(ColorApp.grey50)

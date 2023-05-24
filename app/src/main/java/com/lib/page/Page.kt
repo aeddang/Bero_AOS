@@ -46,7 +46,6 @@ data class PageObject(
     var params:HashMap<String, Any?>? = null
     var isPopup = false ; internal set
     var isHome = false
-    var isHistory = true
     var isGoBackAble = true
     var animationType:PageAnimationType = PageAnimationType.Opacity
     val screenID:String get() { return "$pageID$pageIDX"}

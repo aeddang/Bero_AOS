@@ -28,6 +28,14 @@ kotlin {
     }
 }
 */
+kotlin {
+    jvmToolchain(17)
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 @Suppress("UnstableApiUsage")
 android {
     compileSdk = 33
@@ -53,6 +61,13 @@ android {
         correctErrorTypes = true
     }
     //koin
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     applicationVariants.all {
         val variantName = name
@@ -101,23 +116,27 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    /*
     withGroovyBuilder {
         "kotlinOptions" {
             setProperty("jvmTarget", "1.8")
         }
+    }*/
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     namespace = "com.ironraft.pupping.bero"
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

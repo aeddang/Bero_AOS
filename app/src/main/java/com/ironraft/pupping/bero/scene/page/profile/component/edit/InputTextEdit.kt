@@ -46,6 +46,7 @@ fun InputTextEdit(
     var isAgree:Boolean by remember { mutableStateOf(prevData.isNotEmpty()) }
     val focusManager = LocalFocusManager.current
     fun onAction(){
+        if (!isAgree) return
         if (input.isEmpty()) return
         if (prevData == input) return
         when (type){
@@ -53,19 +54,9 @@ fun InputTextEdit(
             ProfileEditType.Name -> edit(ProfileEditData(name = input))
             ProfileEditType.Introduction -> edit(ProfileEditData(introduction = input))
             ProfileEditType.Weight -> edit(ProfileEditData(weight = input.toDouble()))
-            ProfileEditType.AnimalId -> {}
-            ProfileEditType.AnimalId -> {}
-
-            case .introduction :
-            self.edit(.init(introduction : self.input))
-            case .weight :
-            self.edit(.init(weight : self.input.toDouble()))
-            case .height :
-            self.edit(.init(size : self.input.toDouble()))
-            case .microchip :
-            self.edit(.init(microchip : self.input))
-            case .animalId :
-            self.edit(.init(animalId : self.input))
+            ProfileEditType.Height -> {ProfileEditData(size = input.toDouble())}
+            ProfileEditType.AnimalId -> {ProfileEditData(animalId = input)}
+            ProfileEditType.Microchip -> {ProfileEditData(microchip = input)}
             else -> {}
         }
     }
@@ -127,11 +118,10 @@ fun InputTextEdit(
                             isAgree = isAgree.toggle()
                         }
                     FillButton(
-                        modifier = Modifier.weight(1.0f),
                         type = FillButtonType.Fill,
                         text = stringResource(id = R.string.button_save),
                         color = ColorBrand.primary,
-                        isActive = input.isNotEmpty() && (prevData != input)
+                        isActive = input.isNotEmpty() && (prevData != input) && isAgree
                     ) {
                         onAction()
                     }
@@ -143,22 +133,17 @@ fun InputTextEdit(
 
 @Preview
 @Composable
-fun InputTextStepComposePreview(){
+fun InputTextEditComposePreview(){
     Column (
         modifier = Modifier
             .background(Color.White)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        InputTextStep(
-            profile = ModifyPetProfileData(),
-            step = PageAddDogStep.Name,
-            next = {
+        InputTextEdit(
+            type = ProfileEditType.AnimalId
+        ){
 
-            },
-            prev = {
-
-            }
-        )
+        }
     }
 }
