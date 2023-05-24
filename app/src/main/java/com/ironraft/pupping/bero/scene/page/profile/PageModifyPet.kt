@@ -59,6 +59,9 @@ fun PageModifyPet(
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(
+            modifier = Modifier
+                .padding(top = DimenApp.pageHorinzontal.dp)
+                .padding(horizontal = DimenApp.pageHorinzontal.dp),
             type = TitleTabType.Section,
             title = stringResource(id = R.string.pageTitle_dogProfile),
             alignment = TextAlign.Center,

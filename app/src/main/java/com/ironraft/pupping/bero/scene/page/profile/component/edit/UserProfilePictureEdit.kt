@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSelectEvent
@@ -57,9 +59,10 @@ fun UserProfilePictureEdit(
     val image by profile.image.observeAsState()
     val imagePath by profile.imagePath.observeAsState()
     val requestId:Int  by remember {mutableStateOf(UUID.randomUUID().hashCode())}
-    fun onEdit(img:Bitmap = BitmapFactory.decodeResource(pagePresenter.activity.resources, R.drawable.profile_user_default)){
+    fun onEdit(img:Bitmap? = null){
+        val imgData = img ?: ContextCompat.getDrawable(pagePresenter.activity, R.drawable.profile_user_default)?.toBitmap()
         user?.let {
-            val data: ModifyUserProfileData = ModifyUserProfileData(image = img)
+            val data: ModifyUserProfileData = ModifyUserProfileData(image = imgData)
             val q = ApiQ(appTag,
                 ApiType.UpdateUser,
                 contentID = user.snsID,
