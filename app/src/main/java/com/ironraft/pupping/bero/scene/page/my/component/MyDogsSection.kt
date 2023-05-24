@@ -128,10 +128,9 @@ fun MyDogsSection(
                                 sizeType = HorizontalProfileSizeType.Big,
                                 modifier = Modifier.width(DimenItem.petList.dp)
                             ) {
-                                /*
                                 pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.modifyUser)
-                                )*/
+                                    PageProvider.getPageObject(PageID.ModifyUser)
+                                )
                             }
                         }
                     }

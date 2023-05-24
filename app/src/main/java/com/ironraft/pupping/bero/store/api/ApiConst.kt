@@ -59,8 +59,8 @@ object Api {
         private const val PATH = "friends"
         const val friend = "$VERSION_V1/${Friend.PATH}/{${CONTENT_ID}}"
         const val friends = "$VERSION_V1/${Friend.PATH}"
-        const val friendsIsRequested = "${friend}/isRequested"
-        const val friendsRequesting = "${friend}/requesting"
+        const val friendsIsRequested = "${friends}/isRequested"
+        const val friendsRequesting = "${friends}/requesting"
         const val friendsRequest = "${friends}/request"
         const val friendsAccept = "${friends}/accept"
         const val friendsReject = "${friends}/reject"
@@ -128,10 +128,11 @@ enum class ApiType{
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, GetExplorePictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,
     CheckHumanWithDog,
-    GetFriends, GetRequestFriends, GetRequestedFriends,
+    GetFriends, GetRequestFriends, GetRequestedFriends, CheckRequestFriends,
     RequestFriend, DeleteFriend, RejectFriend, AcceptFriend,
     GetBlockUsers, RequestBlock,
-    PostReport, Report
+    PostReport, Report,
+    GetAlarms
     ;
 
     fun coreDataKey(requestData:Any?) : String? {

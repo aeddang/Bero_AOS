@@ -97,6 +97,7 @@ enum class FriendListType {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FriendList(
+    friendListViewModel:FriendListViewModel? = null,
     modifier: Modifier,
     scrollState: LazyListState = rememberLazyListState(),
     type:FriendListType = FriendListType.Friend,
@@ -109,12 +110,11 @@ fun FriendList(
     val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel: FriendListViewModel by remember { mutableStateOf(
-        FriendListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE )
+        friendListViewModel ?: FriendListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE )
     )}
 
     fun updateFriend(): Boolean {
-        viewModel.currentId = user.userId ?: ""
-        viewModel.currentType = type
+        viewModel.lazySetup(id = user.userId, type = type)
         viewModel.reset()
         viewModel.load()
         return true
@@ -122,8 +122,6 @@ fun FriendList(
 
     val isEmpty = viewModel.isEmpty.observeAsState()
     val friends by viewModel.listDatas.observeAsState()
-    val isMe:Boolean by remember { mutableStateOf(repository.dataProvider.user.isSameUser(user)) }
-
     var onInit:Boolean by remember { mutableStateOf(updateFriend()) }
 
     val endOfListReached by remember {
@@ -147,7 +145,7 @@ fun FriendList(
                         items(datas) {data ->
                             FriendListItem(
                                 data = data,
-                                isMe = isMe,
+                                isMe = viewModel.isMe,
                                 status = if(isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
                                 isHorizontal = false
                             ){

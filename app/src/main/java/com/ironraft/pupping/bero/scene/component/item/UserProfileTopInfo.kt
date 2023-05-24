@@ -96,7 +96,6 @@ fun UserProfileTopInfo(
         }
     }
 }
-
 @Preview
 @Composable
 fun UserProfileTopInfoComposePreview() {

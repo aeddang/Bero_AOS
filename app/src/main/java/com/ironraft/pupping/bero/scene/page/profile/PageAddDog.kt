@@ -3,14 +3,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
@@ -18,7 +16,6 @@ import com.ironraft.pupping.bero.scene.page.profile.component.step.*
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
-import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageObject
@@ -28,7 +25,6 @@ import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenMargin
 import dev.burnoo.cokoin.get
-import org.koin.compose.koinInject
 
 enum class PageAddDogStep{
     Name, Picture, Gender, Birth, Breed, Hash;
@@ -179,9 +175,10 @@ fun PageAddDog(
                     next ={onNextStep(it)}
                 )
             PageAddDogStep.Birth ->
-                SelectDateStep(profile = profile, step = currentStep,
-                    prev = {onPrevStep()},
-                    next ={onNextStep(it)}
+                SelectDateStep(profile = profile,
+                    step = currentStep,
+                    prev = { onPrevStep() },
+                    next = { onNextStep(it) }
                 )
             PageAddDogStep.Breed ->
                 SelectListStep(profile = profile, step = currentStep,

@@ -34,10 +34,14 @@ import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.my.PageMy
 import com.ironraft.pupping.bero.scene.page.pet.PageDog
 import com.ironraft.pupping.bero.scene.page.popup.PageAlbum
+import com.ironraft.pupping.bero.scene.page.popup.PageFriend
 import com.ironraft.pupping.bero.scene.page.popup.PagePictureViewer
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDog
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogCompleted
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyPet
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyPetHealth
+import com.ironraft.pupping.bero.scene.page.profile.PageModifyUser
 import com.ironraft.pupping.bero.scene.page.user.PageUser
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
@@ -132,8 +136,9 @@ fun PageApp(
 
         AnimatedVisibility(visible = isLoading == true, enter = fadeIn(), exit = fadeOut()) {
             Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(color = if(isLock == true) ColorTransparent.black70 else ColorTransparent.clearUi),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = if (isLock == true) ColorTransparent.black70 else ColorTransparent.clearUi),
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 LoadingIndicator(
@@ -169,11 +174,15 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.Dog.value -> PageDog(Modifier.fillMaxSize())
             PageID.User.value -> PageUser(Modifier.fillMaxSize())
             PageID.Album.value -> PageAlbum(Modifier.fillMaxSize())
+            PageID.Friend.value -> PageFriend(Modifier.fillMaxSize())
             PageID.Splash.value -> PageSplash(Modifier.fillMaxSize())
             PageID.ServiceTerms.value -> PageServiceTerms(Modifier.fillMaxSize())
             PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize())
             PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize())
             PageID.PictureViewer.value -> PagePictureViewer(Modifier.fillMaxSize())
+            PageID.ModifyUser.value -> PageModifyUser(Modifier.fillMaxSize())
+            PageID.ModifyPet.value -> PageModifyPet(Modifier.fillMaxSize())
+            PageID.ModifyPetHealth.value -> PageModifyPetHealth(Modifier.fillMaxSize())
         }
     }
 }

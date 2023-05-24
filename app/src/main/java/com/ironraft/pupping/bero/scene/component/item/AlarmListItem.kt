@@ -73,7 +73,7 @@ fun AlarmListItem(
         when(data.type) {
            AlarmType.Friend ->
                pagePresenter.openPopup(
-                   PageProvider.getPageObject(PageID.Album)
+                   PageProvider.getPageObject(PageID.Friend)
                        .addParam(key = PageParam.data, value = dataProvider.user)
                        .addParam(key = PageParam.type, value = FriendListType.Requested)
                        .addParam(key = PageParam.isEdit, value = true)

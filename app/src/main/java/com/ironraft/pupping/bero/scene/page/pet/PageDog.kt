@@ -183,12 +183,10 @@ fun PageDog(
 
                         },
                         editProfile = {
-                            /*
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.modifyPet)
-                            .addParam(key: .data, value: profile)
-                        )
-                         */
+                            pagePresenter.openPopup(
+                                PageProvider.getPageObject(PageID.ModifyPet)
+                                    .addParam(key = PageParam.data, value = profile)
+                            )
                         }
                     )
                     PetTagSection(

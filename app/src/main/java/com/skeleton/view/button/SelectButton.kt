@@ -66,7 +66,9 @@ fun SelectButton(
                 .background(bgColor)
                 .border(
                     width = if(useStroke) DimenStroke.light.dp else 0.0f.dp,
-                    color = if(isSelected) ColorBrand.primary  else ColorApp.grey200,
+                    color = if(useStroke)
+                        if(isSelected) ColorBrand.primary  else ColorApp.grey200
+                        else ColorTransparent.clear ,
                     shape = RoundedCornerShape(type.radius.dp)
                 )
             ,
@@ -105,8 +107,9 @@ fun SelectButton(
                     }
                 }
                 Column (
-                    modifier = Modifier.padding(0.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                    modifier = Modifier.weight(1.0f).padding(0.dp),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    horizontalAlignment = Alignment.Start
                 ) {
                     title?.let {
                         Text(
@@ -133,6 +136,15 @@ fun SelectButton(
                             textAlign = TextAlign.Start
                         )
                     }
+                }
+                if(isMore){
+                    Image(
+                        painterResource(R.drawable.direction_right),
+                        contentDescription = "",
+                        contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(if (isSelected) ColorBrand.primary else ColorApp.black),
+                        modifier = Modifier.size(DimenIcon.light.dp, DimenIcon.light.dp)
+                    )
                 }
             }
             TransparentButton(

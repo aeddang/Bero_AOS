@@ -52,8 +52,14 @@ fun PageIntro(
     )
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
-    var isComplete by remember { mutableStateOf(false) }
 
+    var isComplete by remember { mutableStateOf(false) }
+    LaunchedEffect(pagerState) {
+        // Collect from the a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            isComplete = page == pages.count()-1
+        }
+    }
     fun movePage(dr:Int){
         val move = pagerState.currentPage + dr
         if (move < 0) return
@@ -69,6 +75,7 @@ fun PageIntro(
             isComplete = pagerState.currentPage == pages.count()-1
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()

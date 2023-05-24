@@ -124,7 +124,7 @@ fun FriendListItem(
                 data = data,
                 imgSize = imgSize,
                 isMe = isMe,
-                currentStatus = currentStatus
+                currentStatus = status
             ) {
                 action()
             }
@@ -187,7 +187,7 @@ fun FriendListItemBodyVertical(
             type = if(data.lv == null) HorizontalProfileType.Multi else HorizontalProfileType.Pet,
             typeValue = data.subImagePath,
             sizeType = HorizontalProfileSizeType.Small,
-            funcType = if(currentStatus?.useMore == true) HorizontalProfileFuncType.More  else null,
+            funcType = if(currentStatus?.useMore == true) HorizontalProfileFuncType.MoreFunc  else null,
             userId = if(isMe) data.userId else null,
             friendStatus = currentStatus,
             imagePath = data.imagePath,

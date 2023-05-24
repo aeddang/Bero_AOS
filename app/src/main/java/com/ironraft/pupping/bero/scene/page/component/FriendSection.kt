@@ -95,12 +95,13 @@ fun FriendSection(
             ){
                 when(it){
                     TitleTabButtonType.ViewMore -> {
-                        /*
-                        PageProvider.getPageObject(.friend)
-                        .addParam(key: .data, value: self.user)
-                        .addParam(key: .type, value: self.type)
-                        .addParam(key: .isEdit, value: self.isEdit)
-                         */
+                        pagePresenter.openPopup(
+                            PageProvider.getPageObject(PageID.Friend)
+                                .addParam(key = PageParam.data, value = user)
+                                .addParam(key = PageParam.type, value = type)
+                                .addParam(key = PageParam.isEdit,value = isEdit)
+                        )
+
                     }
                     else -> {}
                 }

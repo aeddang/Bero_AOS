@@ -15,76 +15,80 @@ import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.list.AlbumList
 import com.ironraft.pupping.bero.scene.component.list.AlbumListType
+import com.ironraft.pupping.bero.scene.component.list.FriendList
+import com.ironraft.pupping.bero.scene.component.list.FriendListType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.viewmodel.AlbumPickViewModel
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendListViewModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.store.api.ApiValue
 import com.ironraft.pupping.bero.store.api.rest.AlbumCategory
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.*
 import com.lib.util.rememberForeverLazyListState
+import com.lib.util.replace
 import com.skeleton.theme.ColorBrand
+import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenMargin
 import dev.burnoo.cokoin.get
 
 
 @Composable
-fun PageAlbum(
+fun PageFriend(
     modifier: Modifier = Modifier
 ){
     val owner = LocalLifecycleOwner.current
     val repository:PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
-    val viewModel:PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Album, repository).initSetup(owner)) }
-    val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(AlbumPickViewModel(repo = repository).initSetup(owner)) }
-
+    val viewModel:PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Friend, repository).initSetup(owner)) }
+    val friendListViewModel: FriendListViewModel by remember { mutableStateOf(
+        FriendListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE )
+    )}
     val currentPage = viewModel.currentPage.observeAsState()
     val goBackPage = viewModel.goBack.observeAsState()
     var scrollStateKey: String by remember { mutableStateOf( "") }
-    val screenWidth = LocalConfiguration.current.screenWidthDp
+
+    val hasRequested by friendListViewModel.hasRequested.observeAsState()
     var user: User? by remember { mutableStateOf( null ) }
-    var pet: PetProfile? by remember { mutableStateOf( null ) }
     var isEdit: Boolean by remember { mutableStateOf( false ) }
 
+    var originSortType:FriendListType = FriendListType.Friend
+    var sortType:FriendListType = FriendListType.Friend
+    var title:String? by remember { mutableStateOf( null ) }
+
     currentPage.value?.let { page->
-        if(!albumPickViewModel.isInit){
-            albumPickViewModel.isInit = true
+        if(!friendListViewModel.isInit){
+            friendListViewModel.isInit = true
+            val sortData =  page.getParamValue(PageParam.type) as? FriendListType ?: FriendListType.Friend
             val userData = page.getParamValue(PageParam.data) as? User
-            val petData = page.getParamValue(PageParam.subData) as? PetProfile
-            var currentId:String = ""
-            var currentType:AlbumCategory = AlbumCategory.User
-            if (petData != null){
-                currentType = AlbumCategory.Pet
-                currentId = petData.petId.toString()
+            friendListViewModel.lazySetup(userData?.userId, sortType)
+            if( friendListViewModel.isMe ){
+                isEdit = page.getParamValue(PageParam.isEdit) as? Boolean ?: false
             } else {
-                currentType = AlbumCategory.User
-                currentId = userData?.userId ?: ""
+                userData?.representativeName?.let {
+                    title = pagePresenter.activity.getString(R.string.pageTitle_friends).replace(it)
+                }
             }
-            albumPickViewModel.currentType = currentType
-            albumPickViewModel.currentId = currentId
             scrollStateKey = page.key
-            albumPickViewModel.setDefaultLifecycleOwner(LocalLifecycleOwner.current)
+            originSortType = sortData
+            sortType = sortData
             user = userData
-            pet = petData
         }
     }
-
-    fun onEdit(){
-        isEdit = true
-        viewModel.currentPage.value?.isGoBackAble = false
-
+    fun onSort(type:FriendListType){
+        friendListViewModel.resetLoad(type)
+        sortType = type
+        viewModel.currentPage.value?.isGoBackAble = type == originSortType
     }
-    fun onEdited(){
-        isEdit = false
-        viewModel.currentPage.value?.isGoBackAble = true
-    }
+
     goBackPage.value?.let {
         viewModel.goBackCompleted()
-        if (isEdit) onEdited()
+        onSort(originSortType)
     }
 
     Column (
@@ -94,32 +98,35 @@ fun PageAlbum(
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(
-            title = stringResource(id = R.string.pageTitle_album),
+            title = title ?: sortType.text,
             useBack = true,
-            buttons =
-                if(user?.isMe == true)
-                    if(isEdit) listOf() else listOf(TitleTabButtonType.AddAlbum, TitleTabButtonType.Setting)
-                else listOf()
+            buttons =  if(user?.isMe == true) sortType.buttons else listOf(),
+            icons =  if(sortType == FriendListType.Friend) {
+                if( hasRequested == true ) listOf("N") else listOf(null)
+            } else {
+                listOf()
+            }
+
         ){
             when(it){
-                TitleTabButtonType.Back -> {
-                    if (isEdit) onEdited()
+                TitleTabButtonType.Back ->
+                    if (sortType != originSortType) onSort(originSortType)
                     else pagePresenter.goBack()
-                }
-                TitleTabButtonType.AddAlbum -> albumPickViewModel.onPick()
-                TitleTabButtonType.Setting -> onEdit()
+                TitleTabButtonType.AddFriend -> onSort(FriendListType.Requested)
+                TitleTabButtonType.Friend -> onSort(FriendListType.Friend)
                 else -> {}
             }
         }
         user?.let {
             val scrollState: LazyListState = rememberForeverLazyListState(key = scrollStateKey)
-            AlbumList(
-                modifier = Modifier.weight(1.0f),
+            FriendList(
+                friendListViewModel = friendListViewModel,
+                modifier = Modifier
+                    .weight(1.0f)
+                    .padding(horizontal = DimenApp.pageHorinzontal.dp),
                 scrollState = scrollState,
-                type = AlbumListType.Detail,
-                user = user,
-                pet = pet,
-                listSize = screenWidth.toFloat(),
+                type = sortType,
+                user = it,
                 isEdit = isEdit
             )
         }
@@ -129,7 +136,7 @@ fun PageAlbum(
 
 @Preview
 @Composable
-fun PageAlbumPreview(){
-    PageAlbum(
+fun PageFriendPreview(){
+    PageFriend(
     )
 }

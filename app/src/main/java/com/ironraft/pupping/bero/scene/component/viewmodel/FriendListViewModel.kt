@@ -1,21 +1,28 @@
 package com.ironraft.pupping.bero.scene.component.viewmodel
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.scene.component.item.FriendListItemData
 import com.ironraft.pupping.bero.scene.component.list.FriendListType
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
+import com.ironraft.pupping.bero.store.api.rest.AlbumCategory
+import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
 import com.ironraft.pupping.bero.store.api.rest.FriendData
+import com.ironraft.pupping.bero.store.provider.model.FriendStatus
 import com.lib.page.ListViewModel
 import java.util.*
+import kotlin.math.round
 
-open class FriendListViewModel(val repo: PageRepository)
+open class FriendListViewModel(val repo: PageRepository, id:String = "", initType: FriendListType = FriendListType.Friend)
     :ListViewModel<List<FriendListItemData>,List<FriendData>>() {
 
-    var currentId:String = ""
-    var currentType:FriendListType =  FriendListType.Friend
+    var currentId:String = id
+    var currentType:FriendListType = initType
     var limitedSize:Int? = null
+    var isMe:Boolean = repo.dataProvider.user.isSameUser(id); private set
+    val hasRequested = MutableLiveData<Boolean>(false)
     fun initSetup(owner: LifecycleOwner, pageSize:Int, limitedSize:Int? = null): FriendListViewModel {
         this.pageSize = pageSize
         this.limitedSize = limitedSize
@@ -23,7 +30,27 @@ open class FriendListViewModel(val repo: PageRepository)
         return this
     }
 
-    override fun onReset(){
+    fun lazySetup(id: String? = null, type: FriendListType? = null): FriendListViewModel {
+        id?.let { currentId = it }
+        type?.let { currentType = it }
+        isMe = repo.dataProvider.user.isSameUser(currentId);
+        return this
+    }
+
+    fun resetLoad(type: FriendListType){
+        currentType = type
+        reset()
+        load()
+    }
+
+    fun checkRequeste(){
+        val q = ApiQ(tag,
+            ApiType.CheckRequestFriends,
+            contentID = currentId,
+            page = currentPage,
+            pageSize = 1,
+            requestData = currentType)
+        repo.dataProvider.requestData(q)
     }
 
     override fun onLoad(page: Int) {
@@ -73,6 +100,10 @@ open class FriendListViewModel(val repo: PageRepository)
                 ApiType.GetRequestedFriends -> {
                     if(res.page == 0) { reset() }
                     loaded(res.data as? List<FriendData> ?: listOf())
+                }
+                ApiType.CheckRequestFriends -> {
+                    val datas = res.data as? List<FriendData> ?: listOf()
+                    hasRequested.value = datas.isNotEmpty()
                 }
                 else ->{}
             }

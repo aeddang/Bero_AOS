@@ -75,8 +75,9 @@ class ApiBridge(
             ApiType.DeleteAlbumPictures -> album.delete(apiQ.query?.get(ApiField.pictureIds) ?: "")
             ApiType.CheckHumanWithDog -> getVisionCheck(apiQ.requestData as? Bitmap)
             ApiType.GetFriends -> friend.getFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
-            ApiType.GetRequestFriends -> friend.requestFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
-            ApiType.GetRequestedFriends -> friend.requestedFriends(apiQ.contentID, apiQ.page, apiQ.pageSize)
+            ApiType.GetRequestFriends -> friend.requestFriends(apiQ.page, apiQ.pageSize)
+            ApiType.CheckRequestFriends -> friend.requestFriends(apiQ.page, apiQ.pageSize)
+            ApiType.GetRequestedFriends -> friend.requestedFriends( apiQ.page, apiQ.pageSize)
             ApiType.RequestFriend -> friend.request(apiQ.contentID)
             ApiType.AcceptFriend -> friend.accept(apiQ.contentID)
             ApiType.RejectFriend -> friend.reject(apiQ.contentID)
@@ -85,6 +86,7 @@ class ApiBridge(
             ApiType.RequestBlock -> user.block(apiQ.contentID, apiQ.requestData as? Boolean )
             ApiType.PostReport-> getReport(apiQ.contentID, ReportType.Post, apiQ.requestData as? String)
             ApiType.Report-> getReport(apiQ.contentID, apiQ.requestData as? ReportType ?: ReportType.User)
+            ApiType.GetAlarms -> misc.getAlarms(apiQ.page, apiQ.pageSize)
         }
     }
 
