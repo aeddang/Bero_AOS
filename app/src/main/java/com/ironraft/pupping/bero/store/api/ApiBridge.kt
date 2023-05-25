@@ -41,6 +41,8 @@ class ApiBridge(
         .create(VisionApi::class.java)
     private val friend: FriendApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(FriendApi::class.java)
+    private val reward: RewardApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(RewardApi::class.java)
 
     @Suppress("UNCHECKED_CAST")
     fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
@@ -48,6 +50,7 @@ class ApiBridge(
             ApiType.AuthLogin -> auth.post(apiQ.body as Map<String, String>)
             ApiType.AuthReflash -> auth.reflash(apiQ.body as Map<String, String>)
             ApiType.GetUser -> user.get(apiQ.contentID)
+            ApiType.DeleteUser -> user.delete()
             ApiType.UpdateUser -> getUpdateUserProfile( snsUser?.snsID,  apiQ.requestData as? ModifyUserProfileData )
             ApiType.RegistPush -> user.post(apiQ.body as Map<String, String>)
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
@@ -87,6 +90,7 @@ class ApiBridge(
             ApiType.PostReport-> getReport(apiQ.contentID, ReportType.Post, apiQ.requestData as? String)
             ApiType.Report-> getReport(apiQ.contentID, apiQ.requestData as? ReportType ?: ReportType.User)
             ApiType.GetAlarms -> misc.getAlarms(apiQ.page, apiQ.pageSize)
+            ApiType.GetRewardHistory -> reward.getHistorys(apiQ.contentID, apiQ.page, apiQ.pageSize, (apiQ.requestData as? RewardValueType)?.name)
         }
     }
 

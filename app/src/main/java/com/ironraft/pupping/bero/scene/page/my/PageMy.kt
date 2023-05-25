@@ -65,7 +65,9 @@ fun PageMy(
         ){
             when(it){
                 TitleTabButtonType.Setting -> {
-                    //pagePresenter.closePopup(key = page?.key)
+                    pagePresenter.openPopup(
+                        PageProvider.getPageObject(PageID.Setup)
+                    )
                 }
                 else -> {}
             }

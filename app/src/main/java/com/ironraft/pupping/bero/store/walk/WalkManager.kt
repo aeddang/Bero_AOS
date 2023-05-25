@@ -1,11 +1,13 @@
 package com.ironraft.pupping.bero.store.walk
 import androidx.lifecycle.LifecycleOwner
+import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageLifecycleUser
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.util.secToMinString
 import kotlin.math.ceil
 
-class WalkManager(private val user: User) : PageLifecycleUser {
+class WalkManager(private val dataProvider: DataProvider) : PageLifecycleUser {
+    private val user: User = dataProvider.user
     companion object{
         var todayWalkCount:Int = 0
         const val distanceUnit:Double = 5000.0
@@ -41,5 +43,5 @@ class WalkManager(private val user: User) : PageLifecycleUser {
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {}
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {}
 
-
+    fun endWalk(){}
 }

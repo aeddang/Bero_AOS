@@ -9,7 +9,7 @@ class SystemEnvironment {
         var systemVersion:String = ""
         var firstLaunch :Boolean = false
         var isTablet = false
-
+        var isTestMode = false
         var breedCode = HashMap<String,String>()
         const val platform = "AOS"
     }

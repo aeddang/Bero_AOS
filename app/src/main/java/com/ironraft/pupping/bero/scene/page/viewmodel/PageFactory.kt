@@ -41,6 +41,7 @@ enum class PageID(val value: String, val position: Int = 9999){
     Dog("dog"),
     User("user"),
     Album("album"),
+    Alarm("alarm"),
     Friend("friend"),
     Webview("webview"),
     Privacy("privacy"),
@@ -52,6 +53,11 @@ enum class PageID(val value: String, val position: Int = 9999){
     ModifyPet("modifyPet"),
     ModifyPetHealth("modifyPetHealth"),
     EditProfile("editProfile"),
+    Setup("setup"),
+    MyAccount("myAccount"),
+    BlockUser("blockUser"),
+    MyLv("myLv"),
+    MyPoint("myPoint")
 }
 
 class PageProvider {

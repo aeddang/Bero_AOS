@@ -2,9 +2,7 @@ package com.ironraft.pupping.bero.store
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.provider.Settings
-import android.util.Size
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -31,10 +29,8 @@ import com.skeleton.module.Repository
 import com.skeleton.sns.SnsManager
 import com.skeleton.sns.SnsUser
 import com.skeleton.sns.SnsUserInfo
-import com.skeleton.theme.DimenApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 enum class RepositoryStatus{
@@ -213,6 +209,7 @@ class PageRepository (
     private fun respondApi(res:ApiSuccess<ApiType>){
         //self.walkManager.respondApi(res)
         when (res.type) {
+            ApiType.DeleteUser -> clearLogin()
             ApiType.RegistPush -> {
                 val token = res.requestData as? String?
                 token?.let { registedPushToken(it) }
@@ -311,9 +308,9 @@ class PageRepository (
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun onAlarmUpdated(res:ApiSuccess<ApiType>){
+    private fun onAlarmUpdated(res:ApiSuccess<ApiType>){
         val datas = res.data as? List<AlarmData> ?: return
-        datas.first().let { data ->
+        datas.firstOrNull()?.let { data ->
             if (res.id == appTag) {
                 hasNewAlarm.value = storage.alarmDate != data.createdAt
             } else {
@@ -325,7 +322,7 @@ class PageRepository (
         }
     }
     @Suppress("UNCHECKED_CAST")
-    fun onMassageUpdated(res:ApiSuccess<ApiType>){
+    private fun onMassageUpdated(res:ApiSuccess<ApiType>){
         if (res.id != appTag)  return
         /*
         val datas = res.data as? List<ChatData> ?: return
@@ -387,6 +384,9 @@ class PageRepository (
         storage.registPushToken = ""
         DataLog.d("registFailPushToken", appTag)
     }
-
+    fun setupExpose(isOn:Boolean){
+        storage.isExposeSetup = true
+        storage.isExpose = isOn
+    }
 }
 

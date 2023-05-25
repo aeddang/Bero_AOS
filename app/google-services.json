@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "474132217178-5h9kamn6mma89s9ijr8vekqbd117mvrm.apps.googleusercontent.com",
+          "client_id": "474132217178-29v511ts8sirt589mbekvu4t8k87igmo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ironraft.pupping.bero",
-            "certificate_hash": "48e81fd090a259e75ddf13d36d95eeb4dd8906aa"
+            "certificate_hash": "c268434530d9dabd03f7694e49e59167715e2e5d"
           }
         },
         {
@@ -27,14 +27,6 @@
           "android_info": {
             "package_name": "com.ironraft.pupping.bero",
             "certificate_hash": "be9b6c85f85279629024f64585daa8fa0cfc2192"
-          }
-        },
-        {
-          "client_id": "474132217178-siu8d7s2ia6so8h7bk3kq8ic5s75cmun.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ironraft.pupping.bero",
-            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
           }
         },
         {

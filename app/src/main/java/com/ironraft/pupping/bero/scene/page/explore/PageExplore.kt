@@ -32,6 +32,7 @@ import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
 import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
 import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
@@ -55,6 +56,7 @@ fun PageExplore(
     val appTag = PageID.Explore.value
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
+    val pagePresenter:PageComposePresenter = get()
     val viewModel: UserAlbumListViewModel by remember { mutableStateOf(
          UserAlbumListViewModel(repo = repository).initSetup(owner)
     )}
@@ -116,7 +118,11 @@ fun PageExplore(
         ){
             when(it){
                 TitleTabButtonType.AddAlbum -> albumPickViewModel.onPick()
-                TitleTabButtonType.Alarm -> {}
+                TitleTabButtonType.Alarm -> {
+                    pagePresenter.openPopup(
+                        PageProvider.getPageObject(PageID.Alarm)
+                    )
+                }
                 else -> {}
             }
         }

@@ -3,7 +3,6 @@ package com.ironraft.pupping.bero.store.api.rest
 import androidx.annotation.StringRes
 import com.google.gson.annotations.SerializedName
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiResponse
@@ -86,11 +85,11 @@ data class CodeData(
 )
 
 data class AlarmData (
-    @SerializedName("category") var alarmType: String? = null,
-    @SerializedName("category") var user: UserData? = null,
-    @SerializedName("category") var pet: PetData? = null,
-    @SerializedName("category") var album: PictureData? = null,
-    @SerializedName("category") var title: String? = null,
-    @SerializedName("category") var contents: String? = null,
-    @SerializedName("category") var createdAt: String? = null
+    @SerializedName("alarmType") var alarmType: String? = null,
+    @SerializedName("user") var user: UserData? = null,
+    @SerializedName("pet") var pet: PetData? = null,
+    @SerializedName("album") var album: PictureData? = null,
+    @SerializedName("title") var title: String? = null,
+    @SerializedName("contents") var contents: String? = null,
+    @SerializedName("createdAt") var createdAt: String? = null
 )

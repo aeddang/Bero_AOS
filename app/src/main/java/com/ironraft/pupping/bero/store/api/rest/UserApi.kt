@@ -15,6 +15,10 @@ interface UserApi {
         @Path(Api.CONTENT_ID) contentID: String
     ): ApiResponse<UserData>?
 
+    @DELETE(Api.User.userDelete)
+    suspend fun delete(
+    ): ApiResponse<Any?>
+
     @Multipart
     @PUT(Api.User.user)
     suspend fun put(
@@ -25,7 +29,7 @@ interface UserApi {
         @Part("introduce") introduce: RequestBody? = null,
         @Part contents: MultipartBody.Part?
     ): ApiResponse<Any?>?
-    @GET(Api.User.user)
+    @POST(Api.User.userRegistPushToken)
     suspend fun post(
         @Body params: Map<String, String>
     ): ApiResponse<Any?>?

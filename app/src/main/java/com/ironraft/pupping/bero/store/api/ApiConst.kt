@@ -18,6 +18,8 @@ object Api {
     object User {
         private const val PATH = "users"
         const val user = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
+        const val userRegistPushToken = "$VERSION_V1/$PATH/pushToken"
+        const val userDelete = "$VERSION_V1/$PATH"
         const val usersBlock = "$VERSION_V1/$PATH/block/{${CONTENT_ID}}"
         const val usersBlockLists = "$VERSION_V1/$PATH/block/list"
     }
@@ -64,6 +66,12 @@ object Api {
         const val friendsRequest = "${friends}/request"
         const val friendsAccept = "${friends}/accept"
         const val friendsReject = "${friends}/reject"
+    }
+
+    object Reward {
+        private const val PATH = "rewards"
+        const val rewards = "$VERSION_V1/${PATH}"
+        const val rewardsHistory = "$VERSION_V1/${PATH}/histories"
     }
 }
 
@@ -118,11 +126,12 @@ object ApiField {
 
     const val isExpose = "isExpose"
     const val referenceId = "referenceId"
+    const val rewardType = "rewardType"
 }
 
 
 enum class ApiType{
-    AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush,
+    AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush, DeleteUser,
     GetWeather, GetCode,
     GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
@@ -132,7 +141,8 @@ enum class ApiType{
     RequestFriend, DeleteFriend, RejectFriend, AcceptFriend,
     GetBlockUsers, RequestBlock,
     PostReport, Report,
-    GetAlarms
+    GetAlarms,
+    GetRewardHistory
     ;
 
     fun coreDataKey(requestData:Any?) : String? {
