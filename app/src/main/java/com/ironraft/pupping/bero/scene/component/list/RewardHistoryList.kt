@@ -58,11 +58,10 @@ import dev.burnoo.cokoin.get
 
 @Composable
 fun RewardHistoryList(
+    modifier: Modifier = Modifier,
     type:HistoryType = HistoryType.Exp,
     rewardHistoryListViewModel:RewardHistoryListViewModel? = null,
-    modifier: Modifier,
-    scrollState: LazyListState = rememberLazyListState(),
-    marginBottom:Float = DimenMargin.medium
+    scrollState: LazyListState = rememberLazyListState()
 ) {
 
     val owner = LocalLifecycleOwner.current
@@ -99,7 +98,10 @@ fun RewardHistoryList(
                         modifier = Modifier.weight(1.0f),
                         state = scrollState,
                         verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
-                        contentPadding = PaddingValues(bottom = marginBottom.dp)
+                        contentPadding = PaddingValues(
+                            vertical = DimenMargin.medium.dp,
+                            horizontal = DimenApp.pageHorinzontal.dp
+                        )
                     ) {
                         items(datas) {data ->
                             RewardHistoryListItem(

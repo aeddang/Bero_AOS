@@ -14,7 +14,7 @@ import com.lib.page.ListViewModel
 import java.util.*
 
 open class AlbumListViewModel(val repo: PageRepository)
-    :ListViewModel<List<AlbumListItemData>,List<PictureData>>() {
+    :ListViewModel<AlbumListItemData,List<PictureData>>() {
 
     var currentId:String = ""
     var currentType:AlbumCategory = AlbumCategory.User

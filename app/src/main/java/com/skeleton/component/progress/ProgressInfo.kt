@@ -34,6 +34,7 @@ import com.skeleton.view.progress.Step
 
 @Composable
 fun ProgressInfo(
+    modifier:Modifier = Modifier,
     title:String? = null,
     leadingText:String? = null,
     trailingText:String? = null,
@@ -43,7 +44,7 @@ fun ProgressInfo(
 ) {
     AppTheme {
         Column (
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(DimenMargin.tiny.dp),
             horizontalAlignment = Alignment.Start
         ) {

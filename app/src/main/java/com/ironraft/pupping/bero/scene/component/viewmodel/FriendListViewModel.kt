@@ -16,7 +16,7 @@ import java.util.*
 import kotlin.math.round
 
 open class FriendListViewModel(val repo: PageRepository, id:String = "", initType: FriendListType = FriendListType.Friend)
-    :ListViewModel<List<FriendListItemData>,List<FriendData>>() {
+    :ListViewModel<FriendListItemData,List<FriendData>>() {
 
     var currentId:String = id
     var currentType:FriendListType = initType

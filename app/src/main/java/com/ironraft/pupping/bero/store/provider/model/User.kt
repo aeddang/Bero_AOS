@@ -10,7 +10,8 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.button.FriendButtonFuncType
 import com.ironraft.pupping.bero.store.api.MetaData
 import com.ironraft.pupping.bero.store.api.rest.*
-import com.lib.page.PageEventType
+import com.ironraft.pupping.bero.store.walk.model.Mission
+import com.ironraft.pupping.bero.store.walk.model.MissionType
 import com.lib.util.toDate
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
@@ -99,43 +100,6 @@ class User(val isMe:Boolean = false){
     }
 
 
-    /*
-    fun setData(data:WalkData, isMe:Boolean = false): User {
-        if let user = data.user {
-            self.setData(data:user)
-        }
-        if let pets = data.pets {
-            self.setData(data:pets, isMyPet:isMe)
-        }
-        if let type = SnsType.getType(code: data.user?.providerType), let id = data.user?.userId {
-            self.snsUser = SnsUser(
-                snsType: type,
-                snsID: id,
-                snsToken: ""
-            )
-        }
-        self.finalGeo = data.geos?.first
-        return self
-    }
-    */
-    fun setData(data:MissionData) : User {
-        data.user?.let{
-            setData(it)
-        }
-        data.pets?.let{
-            setData(it, false)
-        }
-        val type = SnsType.getType(data.user?.providerType)
-        val userId = data.user?.userId
-        if (type != null && userId != null){
-            snsUser = SnsUser(type, userId, "")
-        }
-        data.geos?.let {
-            if (it.isEmpty()) return@let
-            finalGeo = it.first()
-        }
-        return this
-    }
     fun setData(data:UserData):User{
         if (snsUser == null) {
             val type = SnsType.getType(data.providerType)
@@ -157,7 +121,44 @@ class User(val isMe:Boolean = false){
         event.value = UserEvent(UserEventType.UpdatedProfile)
         return this
     }
-
+    fun setWalkData(data:WalkData, isMe:Boolean = false) : User {
+        data.user?.let {
+            setData(it)
+        }
+        data.pets?.let{
+            setData(data = it, isMyPet = isMe)
+        }
+        SnsType.getType(data.user?.providerType)?.let { type ->
+            data.user?.userId?.let { id ->
+                snsUser = SnsUser(
+                    snsType = type,
+                    snsID = id,
+                    snsToken = ""
+                )
+            }
+        }
+        finalGeo = data.geos?.firstOrNull()
+        return this
+    }
+    fun setMissionData(data:MissionData) : User {
+        data.user?.let {
+            setData(it)
+        }
+        data.pets?.let{
+            setData(data = it, isMyPet = isMe)
+        }
+        SnsType.getType(data.user?.providerType)?.let { type ->
+            data.user?.userId?.let { id ->
+                snsUser = SnsUser(
+                    snsType = type,
+                    snsID = id,
+                    snsToken = ""
+                )
+            }
+        }
+        finalGeo = data.geos?.firstOrNull()
+        return this
+    }
     fun setData(data:List<PetData>, isMyPet:Boolean = true){
         val profiles = data.map{ PetProfile().init(it, isMyPet = isMyPet, lv = lv) }
         pets = profiles.toMutableList()
@@ -203,7 +204,7 @@ class User(val isMe:Boolean = false){
     }
 
 
-    fun missionCompleted(mission:Mission) {
+    fun missionCompleted(mission: Mission) {
         if (!mission.isCompleted) return
         when(mission.type){
             MissionType.Walk ->{
@@ -258,7 +259,7 @@ class History{
     var date: String? = null ; private set
     var duration: Double? = null ; private set
     var distance: Double? = null ; private set
-    var point: Double? = null ; private set
+    var point: Int? = null ; private set
     var missionCategory:MissionCategory? = null ; private set
     var index:Int = -1; private set
     var isExpanded:Boolean = false
@@ -270,7 +271,7 @@ class History{
         description = data.description
         duration = data.duration
         distance = data.distance
-        point = data.point ?: 0.0
+        point = data.point ?: 0
         date = data.createdAt?.toDate("yyyy-MM-dd'T'HH:mm:ss")?.toFormatString("yy-MM-dd HH:mm")
         return this
     }

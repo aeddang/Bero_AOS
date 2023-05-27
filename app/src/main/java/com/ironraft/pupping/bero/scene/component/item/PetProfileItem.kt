@@ -66,7 +66,7 @@ fun PetProfileUser(
 fun PetProfileEditable(
     modifier: Modifier = Modifier,
     profile:PetProfile,
-    sizeType:HorizontalProfileSizeType = HorizontalProfileSizeType.Big,
+    sizeType:HorizontalProfileSizeType = HorizontalProfileSizeType.Small,
     funcType:HorizontalProfileFuncType = HorizontalProfileFuncType.Delete,
     isSelected:Boolean = false,
     action: (HorizontalProfileFuncType?) -> Unit

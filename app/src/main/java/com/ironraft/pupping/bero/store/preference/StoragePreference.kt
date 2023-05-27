@@ -83,7 +83,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         set(value:Boolean){ put(StoragePreference.isFirstWalk, value) }
 
     fun isDailyBannerCheck(id:PageID):Boolean{
-        val now = AppUtil.networkTimeDate().toFormatString("yyyyMMdd")
+        val now = AppUtil.networkDate().toFormatString("yyyyMMdd")
         val prev =  getPageBannerCheckDate(id)
         return now == prev
     }
@@ -99,7 +99,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         return get(StoragePreference.bannerDate + id, null) as? String
     }
     fun updatedPageBannerValue(id:PageID, value:String){
-        val now = AppUtil.networkTimeDate().toFormatString("yyyyMMdd")
+        val now = AppUtil.networkDate().toFormatString("yyyyMMdd")
         put(StoragePreference.bannerValue + id, value)
         put(StoragePreference.bannerDate + id, now)
     }

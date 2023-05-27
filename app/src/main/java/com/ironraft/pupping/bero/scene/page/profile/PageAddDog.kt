@@ -97,8 +97,7 @@ enum class PageAddDogStep{
 
 @Composable
 fun PageAddDog(
-    modifier: Modifier = Modifier,
-    page: PageObject? = null
+    modifier: Modifier = Modifier
 ){
     val appTag = "PageAddDog"
     val pagePresenter:PageComposePresenter = get()
@@ -149,7 +148,7 @@ fun PageAddDog(
         ){
             when(it){
                 TitleTabButtonType.Close -> {
-                    pagePresenter.closePopup(key = page?.key)
+                    pagePresenter.goBack()
                 }
                 else -> {}
             }

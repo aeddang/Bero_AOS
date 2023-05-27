@@ -30,6 +30,7 @@ import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.*
 import com.lib.util.*
+import com.skeleton.view.button.WrapTransparentButton
 import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -118,7 +119,9 @@ fun AlbumSection(
 
     AppTheme {
         Column (
-            modifier = modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             verticalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp)
         ) {
             TitleTab(
@@ -151,13 +154,21 @@ fun AlbumSection(
                             horizontalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp)
                         ) {
                             datas.forEach { data ->
-                                AlbumListItem(
-                                    data = data,
-                                    user = user,
-                                    pet = pet,
-                                    imgSize = albumSize,
-                                    isEdit = false
-                                )
+                                WrapTransparentButton({
+                                    pagePresenter.openPopup(
+                                        PageProvider.getPageObject(PageID.PictureViewer)
+                                            .addParam(PageParam.data, data)
+                                    )
+                                }) {
+                                    AlbumListItem(
+                                        data = data,
+                                        user = user,
+                                        pet = pet,
+                                        imgSize = albumSize,
+                                        isEdit = false
+                                    )
+                                }
+
                             }
                         }
                     }

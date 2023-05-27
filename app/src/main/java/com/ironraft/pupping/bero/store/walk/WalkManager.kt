@@ -1,13 +1,23 @@
 package com.ironraft.pupping.bero.store.walk
+import android.location.Location
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageLifecycleUser
 import com.ironraft.pupping.bero.store.provider.model.User
+import com.ironraft.pupping.bero.store.walk.model.Mission
+import com.ironraft.pupping.bero.store.walk.model.Place
 import com.lib.util.secToMinString
+import java.time.LocalDateTime
 import kotlin.math.ceil
 
-class WalkManager(private val dataProvider: DataProvider) : PageLifecycleUser {
-    private val user: User = dataProvider.user
+enum class WalkStatus {
+    Ready, Walking
+}
+class WalkManager(
+    private var appSceneObserver:AppSceneObserver,
+    private val dataProvider: DataProvider) : PageLifecycleUser {
     companion object{
         var todayWalkCount:Int = 0
         const val distanceUnit:Double = 5000.0
@@ -40,6 +50,20 @@ class WalkManager(private val dataProvider: DataProvider) : PageLifecycleUser {
         }
     }
     private val appTag = javaClass.simpleName
+    private val user: User = dataProvider.user
+    var missionUsers:List<Mission> = listOf()
+    var missionUsersSummary:ArrayList<Mission> = arrayListOf()
+    var originPlaces:List<Place> = listOf()
+    var places:ArrayList<Place> = arrayListOf()
+    var placesSummary:ArrayList<Place> = arrayListOf()
+    var startTime:LocalDateTime = LocalDateTime.now()
+    var startLocation:Location? = null
+    var updateLocation:Location? = null
+    var updateZipCode:String? = null
+    var completedMissions:ArrayList<Int> = arrayListOf()
+    var completedWalk:Mission? = null
+
+    val status:MutableLiveData<WalkStatus> = MutableLiveData<WalkStatus>(WalkStatus.Ready)
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {}
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {}
 

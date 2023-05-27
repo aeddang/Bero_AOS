@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,15 +55,12 @@ fun CircleButton(
     modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
-    var imagePath: String? = null
-    var text:String? = null
-    value?.let {
-        when (type) {
-            CircleButtonType.Text -> text = it
-            CircleButtonType.Image -> imagePath =it
-            else -> {}
-        }
-    }
+    val imagePath: String? by remember { mutableStateOf(
+        if(type == CircleButtonType.Image) value else null
+    )}
+    val text:String? by remember { mutableStateOf(
+        if(type == CircleButtonType.Text) value else null
+    )}
 
     AppTheme {
         Box(

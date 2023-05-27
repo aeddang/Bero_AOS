@@ -45,6 +45,13 @@ object Api {
         const val summary = "$VERSION_V1/$PATH/summary"
     }
 
+    object Place {
+        private const val PATH = "place"
+        const val place = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
+        const val search = "$VERSION_V1/$PATH/search"
+        const val visit = "$VERSION_V1/$PATH/visit"
+    }
+
     object Album {
         private const val PATH = "album"
         const val pictures = "$VERSION_V1/$PATH/pictures"
@@ -99,7 +106,6 @@ object ApiField {
     const val missionCategory = "missionCategory"
     const val page = "page"
     const val size = "size"
-
     const val name = "name"
     const val breed = "breed"
     const val birthdate = "birthdate"
@@ -110,7 +116,6 @@ object ApiField {
     const val level = "level"
     const val weight = "weight"
     const val status = "status"
-
     const val pictureType = "pictureType"
     const val ownerId = "ownerId"
     const val pictureIds = "pictureIds"
@@ -119,14 +124,15 @@ object ApiField {
     const val tagBreed = "tagBreed"
     const val tagStatus = "tagStatus"
     const val tagPersonality = "tagPersonality"
-
     const val category = "category"
     const val searchText = "searchText"
     const val otherUserId = "otherUserId"
-
     const val isExpose = "isExpose"
     const val referenceId = "referenceId"
     const val rewardType = "rewardType"
+    const val radius = "radius"
+    const val placeType = "placeType"
+    const val zipCode = "zipCode"
 }
 
 
@@ -142,7 +148,8 @@ enum class ApiType{
     GetBlockUsers, RequestBlock,
     PostReport, Report,
     GetAlarms,
-    GetRewardHistory
+    GetRewardHistory,
+    SearchPlace, GetVisitors, RegistVisitor
     ;
 
     fun coreDataKey(requestData:Any?) : String? {

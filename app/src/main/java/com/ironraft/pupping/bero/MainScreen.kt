@@ -32,8 +32,11 @@ import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.my.PageBlockUser
+import com.ironraft.pupping.bero.scene.page.my.PageManageDogs
 import com.ironraft.pupping.bero.scene.page.my.PageMy
 import com.ironraft.pupping.bero.scene.page.my.PageMyAccount
+import com.ironraft.pupping.bero.scene.page.my.PageMyLv
+import com.ironraft.pupping.bero.scene.page.my.PageMyPoint
 import com.ironraft.pupping.bero.scene.page.my.PageSetup
 import com.ironraft.pupping.bero.scene.page.pet.PageDog
 import com.ironraft.pupping.bero.scene.page.popup.PageAlarm
@@ -195,6 +198,9 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.Setup.value -> PageSetup(Modifier.fillMaxSize())
             PageID.MyAccount.value -> PageMyAccount(Modifier.fillMaxSize())
             PageID.BlockUser.value -> PageBlockUser(Modifier.fillMaxSize())
+            PageID.ManageDogs.value -> PageManageDogs(Modifier.fillMaxSize())
+            PageID.MyLv.value -> PageMyLv(Modifier.fillMaxSize())
+            PageID.MyPoint.value -> PageMyPoint(Modifier.fillMaxSize())
         }
     }
 }

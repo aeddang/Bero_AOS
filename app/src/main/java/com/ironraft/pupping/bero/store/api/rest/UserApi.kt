@@ -48,27 +48,4 @@ interface UserApi {
     ): ApiResponse<Any>?
 }
 
-data class UserData(
-    @SerializedName("userId") var userId: String? = null,
-    @SerializedName("refUserId")  var refUserId: String? = null,
-    @SerializedName("password") var password: String? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("email") var email: String? = null,
-    @SerializedName("pictureUrl") var pictureUrl: String? = null,
-    @SerializedName("providerType") var providerType: String? = null,
-    @SerializedName("roleType") var roleType: String? = null,
-    @SerializedName("point") var point: Int? = null,
-    @SerializedName("birthdate") var birthdate: String? = null,
-    @SerializedName("sex") var sex: String? = null,
-    @SerializedName("introduce") var introduce: String? = null,
-    @SerializedName("exp") var exp:Double? = null,
-    @SerializedName("exerciseDistance") var exerciseDistance: Double? = null,
-    @SerializedName("exerciseDuration") var exerciseDuration: Double? = null,
-    @SerializedName("walkCompleteCnt") var walkCompleteCnt: Int? = null,
-    @SerializedName("level") var level: Int? = null,
-    @SerializedName("isChecked") var isChecked: Boolean? = null,
-    @SerializedName("isFriend") var isFriend: Boolean? = null,
-    @SerializedName("createdAt") var createdAt: String? = null,
-    @SerializedName("nextLevelExp") var nextLevelExp: Double? = null,
-    @SerializedName("prevLevelExp") var prevLevelExp: Double? = null
-)
+

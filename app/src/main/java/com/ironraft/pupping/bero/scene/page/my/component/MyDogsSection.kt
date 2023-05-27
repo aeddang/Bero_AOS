@@ -98,7 +98,8 @@ fun MyDogsSection(
             ){
                 when(it){
                     TitleTabButtonType.ManageDogs -> {
-                        //pagePresenter.openPopup(PageProvider.getPageObject(.manageDogs))
+                        pagePresenter.openPopup(
+                            PageProvider.getPageObject(PageID.ManageDogs))
                     }
                     else ->{}
                 }

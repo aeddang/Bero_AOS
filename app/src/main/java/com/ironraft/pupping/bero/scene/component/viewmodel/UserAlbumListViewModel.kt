@@ -17,7 +17,7 @@ import java.util.*
 import kotlin.math.round
 
 open class UserAlbumListViewModel(val repo: PageRepository)
-    :ListViewModel<List<UserAlbumListItemData>,List<PictureData>>() {
+    :ListViewModel<UserAlbumListItemData,List<PictureData>>() {
 
     var currentId:String = round(System.currentTimeMillis()/1000.0).toInt().toString(); private set
     var currentType:ExplorerSearchType = ExplorerSearchType.All

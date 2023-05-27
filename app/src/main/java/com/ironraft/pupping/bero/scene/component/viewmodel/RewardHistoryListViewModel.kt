@@ -12,7 +12,7 @@ import com.skeleton.component.item.HistoryType
 import java.util.*
 
 open class RewardHistoryListViewModel(val repo: PageRepository, val type: HistoryType)
-    :ListViewModel<List<RewardHistoryListItemData>,List<RewardHistoryData>>() {
+    :ListViewModel<RewardHistoryListItemData,List<RewardHistoryData>>() {
     val currentId:String = repo.dataProvider.user.userId ?: ""
 
     fun initSetup(owner: LifecycleOwner, pageSize:Int): RewardHistoryListViewModel {

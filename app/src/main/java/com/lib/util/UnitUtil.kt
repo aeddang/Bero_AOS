@@ -35,7 +35,20 @@ fun String.toDate(
     } catch (e: Exception) {
         null
     }
+}
+fun String.toDateTime(
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
+): LocalDateTime? {
+    return try {
+        val pattern = DateTimeFormatter.ofPattern(dateFormat)
+        return LocalDateTime.parse(this, pattern)
+    } catch (e: Exception) {
+        null
+    }
+}
 
+fun String.onlyNumric() : String {
+    return this.filter { it.isDigit() }.reduce { acc, c -> acc.plus(c.digitToInt()) }.toString()
 }
 
 fun LocalDate.toFormatString(
@@ -46,7 +59,7 @@ fun LocalDate.toFormatString(
     return date.toFormatString(dateFormat.replace("Z", ""))
 }
 fun LocalDateTime.toFormatString(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
 ): String? {
     return try {
         val pattern = DateTimeFormatter.ofPattern(dateFormat)

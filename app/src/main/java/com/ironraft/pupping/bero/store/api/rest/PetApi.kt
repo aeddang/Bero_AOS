@@ -66,30 +66,3 @@ interface PetApi {
         @Path(Api.CONTENT_ID) contentID: String
     ): ApiResponse<Any?>?
 }
-data class PetData (
-    @SerializedName("petId") var petId: Int? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("pictureUrl") var pictureUrl: String? = null,
-    @SerializedName("birthdate") var birthdate: String? = null,
-    @SerializedName("sex") var sex: String? = null,
-    @SerializedName("regNumber") var regNumber: String? = null,
-    @SerializedName("animalId") var animalId: String? = null,
-    @SerializedName("status") var status: String? = null,
-    @SerializedName("exerciseDistance") var exerciseDistance: Double? = null,
-    @SerializedName("exerciseDuration") var exerciseDuration: Double? = null,
-
-    @SerializedName("weight") var weight: Double? = null,
-    @SerializedName("size") var size: Double? = null,
-    @SerializedName("walkCompleteCnt") var walkCompleteCnt: Int? = null,
-    @SerializedName("thumbsupCount") var thumbsupCount: Int? = null,
-    @SerializedName("isChecked") var isChecked: Boolean? = null,
-    @SerializedName("tagStatus") var tagStatus: String? =null,
-    @SerializedName("tagPersonality") var tagPersonality: String? = null,
-    @SerializedName("tagHeight") var tagHeight: String? = null,
-    @SerializedName("tagInterest") var tagInterest: String? = null,
-    @SerializedName("tagBreed") var tagBreed: String? = null,
-    @SerializedName("introduce") var introduce: String? = null,
-    @SerializedName("userId") var userId:String? = null,
-    @SerializedName("isRepresentative") var isRepresentative:Boolean? = null,
-    @SerializedName("isNeutered") var isNeutered:Boolean? = null
-)

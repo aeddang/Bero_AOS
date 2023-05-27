@@ -7,7 +7,6 @@ import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiResponse
 import com.ironraft.pupping.bero.store.api.ApiValue
-import com.ironraft.pupping.bero.store.provider.model.MissionType
 import retrofit2.http.*
 
 enum class MissionCategory {
@@ -104,15 +103,23 @@ data class MissionData (
     @SerializedName("pictureUrl") var pictureUrl: String? = null,
     @SerializedName("duration") var duration: Double? = null,
     @SerializedName("distance") var distance: Double? = null,
-    @SerializedName("point") var point: Double? = null,
+    @SerializedName("point") var point: Int? = null,
+    @SerializedName("exp") var exp: Double? = null,
     @SerializedName("user") var user: UserData? = null,
-    @SerializedName("geos") var geos: ArrayList<GeoData>? = null,
-    @SerializedName("pets") var pets: ArrayList<PetData>? = null
+    @SerializedName("geos") var geos: List<GeoData>? = null,
+    @SerializedName("pets") var pets: List<PetData>? = null,
+    @SerializedName("place") var place:MissionPlace? = null
 )
-
-data class GeoData(
-    @SerializedName("lat") var lat: Double? = null,
-    @SerializedName("lng") var lng: Double? = null
+data class MissionPlace (
+    @SerializedName("geometry") var geometry: GeometryData? = null,
+    @SerializedName("icon") var icon: String? = null,
+    @SerializedName("icon_background_color") var icon_background_color: String? = null,
+    @SerializedName("name") var name: String? = null,
+    //private(set) var photos: String? = nil
+    @SerializedName("place_id")  var place_id: String? = null,
+    @SerializedName("scope") var scope: String? = null,
+    @SerializedName("types") var types: List<String>? = null,
+    @SerializedName("vicinity") var vicinity: String? = null
 )
 
 data class MissionSummary (
@@ -125,7 +132,7 @@ data class MissionSummary (
 data class MissionReport (
     @SerializedName("totalMissionCount") var totalMissionCount: Double? = null,
     @SerializedName("avgMissionCount") var avgMissionCount: Double? = null,
-    @SerializedName("missionTimes") var missionTimes: ArrayList<MissionTime>? = null
+    @SerializedName("missionTimes") var missionTimes: List<MissionTime>? = null
 )
 
 data class MissionTime (

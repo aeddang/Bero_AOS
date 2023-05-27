@@ -28,6 +28,7 @@ import java.net.URI
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.sqrt
 
@@ -57,10 +58,12 @@ object AppUtil {
         return diagonalInches >= check
     }
 
-    fun networkTimeDate(): LocalDate {
+    fun networkTimeDate(): LocalDateTime {
+        return LocalDateTime.now()
+    }
+    fun networkDate(): LocalDate {
         return LocalDate.now()
     }
-
     fun clearAppData(ctx: Context) {
         // clearing appTag data
         if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {

@@ -10,7 +10,7 @@ import com.lib.page.ListViewModel
 import java.util.*
 
 open class AlarmListViewModel(val repo: PageRepository)
-    :ListViewModel<List<AlarmListItemData>,List<AlarmData>>() {
+    :ListViewModel<AlarmListItemData,List<AlarmData>>() {
     val currentId:String = repo.dataProvider.user.userId ?: ""
 
 

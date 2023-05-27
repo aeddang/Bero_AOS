@@ -258,6 +258,7 @@
     
 
     <string name="sort_all">All</string>
+    <string name="sort_park">Park</string>
     <string name="sort_notUsed">notUsed</string>
     <string name="sort_friends">Friends</string>
     <string name="sort_myFriends">My friends</string>

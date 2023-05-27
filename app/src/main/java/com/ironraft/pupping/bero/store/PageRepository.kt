@@ -20,6 +20,7 @@ import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
+import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.model.SingleLiveData
 import com.lib.page.AppObserver
 import com.lib.page.PageAppViewModel
@@ -50,6 +51,7 @@ class PageRepository (
     val pagePresenter: PagePresenter,
     val appObserver: AppObserver,
     val appSceneObserver: AppSceneObserver,
+    val walkManager: WalkManager,
     val snsManager: SnsManager,
     val topic:Topic,
     private val interceptor: ApiInterceptor

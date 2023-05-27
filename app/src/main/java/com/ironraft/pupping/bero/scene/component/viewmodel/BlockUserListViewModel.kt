@@ -10,7 +10,7 @@ import com.lib.page.ListViewModel
 import java.util.*
 
 open class BlockUserListViewModel(val repo: PageRepository)
-    :ListViewModel<List<BlockUserItemData>,List<UserData>>() {
+    :ListViewModel<BlockUserItemData,List<UserData>>() {
     val currentId:String = repo.dataProvider.user.userId ?: ""
 
 

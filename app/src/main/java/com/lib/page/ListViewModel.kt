@@ -1,8 +1,9 @@
 package com.lib.page
 
 import androidx.lifecycle.MutableLiveData
+@Suppress("UNCHECKED_CAST")
 abstract class ListViewModel<T,V>:ComponentViewModel() {
-    val listDatas = MutableLiveData<T?>()
+    val listDatas = MutableLiveData<List<T>?>()
     val isEmpty = MutableLiveData<Boolean>(false)
     val isLoading = MutableLiveData<Boolean>(false)
     var pageSize:Int = 12
@@ -32,10 +33,16 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
     abstract fun onLoad(page:Int)
 
     fun loaded(datas:V?){
-        val result = onLoaded(listDatas.value, datas)
-        listDatas.value = result
+        val prev = listDatas.value
+        val added = onLoaded(prev, datas)
+        val resultList = ArrayList<T>()
+        prev?.let {
+            resultList.addAll(it)
+        }
+        resultList.addAll(added)
+        listDatas.value = resultList.toList()
         isBusy = false
         isLoading.value = false
     }
-    abstract fun onLoaded(prevDatas:T?, addDatas:V?):T
+    abstract fun onLoaded(prevDatas:List<T>?, addDatas:V?):List<T>
 }

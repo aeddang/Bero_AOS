@@ -111,18 +111,14 @@ fun PageMy(
             ){ data ->
                 when(data.valueType){
                     ValueInfoType.Point -> {
-                        /*
                         pagePresenter.openPopup(
-                            PageProvider.getPageObject(. myPoint)
+                            PageProvider.getPageObject(PageID.MyPoint)
                         )
-                        */
                     }
                     ValueInfoType.Lv -> {
-                        /*
                         pagePresenter.openPopup(
-                            PageProvider.getPageObject(.myLv)
+                            PageProvider.getPageObject(PageID.MyLv)
                         )
-                        */
                     }
                     else -> {}
                 }

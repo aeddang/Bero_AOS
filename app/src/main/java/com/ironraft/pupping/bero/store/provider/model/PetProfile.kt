@@ -7,9 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.R
 import com.lib.util.*
 import com.ironraft.pupping.bero.store.api.rest.PetData
+import com.ironraft.pupping.bero.store.walk.model.Mission
+import com.ironraft.pupping.bero.store.walk.model.MissionType
 import java.time.LocalDate
 import java.util.*
-import kotlin.math.floor
 
 data class ModifyPetProfileData (
     var image:Bitmap? = null,
@@ -184,7 +185,7 @@ class PetProfile {
         return this
     }
 
-    fun missionCompleted(mission:Mission) {
+    fun missionCompleted(mission: Mission) {
         if (!mission.isCompleted) return
         when (mission.type){
             MissionType.Walk -> {

@@ -18,7 +18,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.http.Part
+import java.util.HashMap
 
 class ApiBridge(
     private val context: Context,
@@ -43,6 +43,9 @@ class ApiBridge(
         .create(FriendApi::class.java)
     private val reward: RewardApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(RewardApi::class.java)
+
+    private val place: PlaceApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(PlaceApi::class.java)
 
     @Suppress("UNCHECKED_CAST")
     fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
@@ -91,6 +94,12 @@ class ApiBridge(
             ApiType.Report-> getReport(apiQ.contentID, apiQ.requestData as? ReportType ?: ReportType.User)
             ApiType.GetAlarms -> misc.getAlarms(apiQ.page, apiQ.pageSize)
             ApiType.GetRewardHistory -> reward.getHistorys(apiQ.contentID, apiQ.page, apiQ.pageSize, (apiQ.requestData as? RewardValueType)?.name)
+            ApiType.SearchPlace -> place.getSearch(
+                apiQ.query?.get(ApiField.lat),  apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
+                apiQ.query?.get(ApiField.searchType), apiQ.query?.get(ApiField.placeType),apiQ.query?.get(ApiField.zipCode)
+            )
+            ApiType.GetVisitors -> place.getVisitors(apiQ.contentID, apiQ.page, apiQ.pageSize)
+            ApiType.RegistVisitor -> place.postVisitor(apiQ.body as Map<String, Any>)
         }
     }
 
@@ -207,7 +216,7 @@ class ApiBridge(
     }
 
     private fun getUpdateLikeAlbumPicture(id:String, isLike:Boolean? = null) = runBlocking {
-        val param = java.util.HashMap<String, Any>()
+        val param = HashMap<String, Any>()
         param["id"] = id.toIntOrNull() ?: 0
         param["isChecked"] = isLike ?: true
         val params = java.util.HashMap<String, Any>()
@@ -215,7 +224,7 @@ class ApiBridge(
         album.putThumbsup(params)
     }
     private fun getUpdateExposeAlbumPicture(id:String, isExpose:Boolean? = null) = runBlocking {
-        val param = java.util.HashMap<String, Any>()
+        val param = HashMap<String, Any>()
         param["id"] = id.toIntOrNull() ?: 0
         param["isExpose"] = isExpose ?: true
         val params = java.util.HashMap<String, Any>()
@@ -224,7 +233,7 @@ class ApiBridge(
     }
 
     private fun getReport(userId:String, type:ReportType, postId:String? = null) = runBlocking {
-        val params = java.util.HashMap<String, String>()
+        val params = HashMap<String, String>()
         params["reportType"] = type.apiCoreKey
         postId?.let { params["postId"] = it }
         params["refUserId"] = userId

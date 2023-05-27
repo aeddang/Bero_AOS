@@ -38,17 +38,17 @@ enum class TitleSectionType{
 
 @Composable
 fun TitleSection(
+    modifier: Modifier = Modifier,
     type:TitleSectionType = TitleSectionType.Normal,
     @DrawableRes icon:Int? = null,
     header:String? = null,
     title:String? = null,
     trailer:String? = null,
-    color:Color = ColorApp.black,
-    action: (() -> Unit)
+    color:Color = ColorApp.black
 ) {
     AppTheme {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -111,29 +111,21 @@ fun TitleSectionComposePreview(){
             header = "bero's",
             title = "Strong",
             trailer = "bero"
-        ){
-
-        }
+        )
         TitleSection(
             type = TitleSectionType.Small,
             icon = R.drawable.chart,
             header = "bero's",
             title = "Small",
-        ){
-
-        }
+        )
         TitleSection(
             type = TitleSectionType.Normal,
             header = "bero's",
             title = "Normal",
-        ){
-
-        }
+        )
         TitleSection(
             title = "Normal",
-        ){
-
-        }
+        )
     }
 
 }
