@@ -44,7 +44,7 @@ enum class LvButtonType {
     Tiny{
         override var size:Float = DimenIcon.thin
         override var textSize:Float = FontSize.microExtra
-        override var textTop:Float = 8.0f
+        override var textTop:Float = 6.0f
     };
     @DrawableRes open var icon:Int? = null
     open var size:Float = 0.0f

@@ -28,6 +28,9 @@ import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.rest.MissionApi
 import com.ironraft.pupping.bero.store.api.rest.MissionCategory
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -70,11 +73,10 @@ fun MyHistorySection(
     }
     fun moveHistory(){
         dataProvider.user.currentPet = null
-        /*
-        self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.walkHistory)
-            .addParam(key: .data, value: self.dataProvider.user)
-        )*/
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(PageID.WalkHistory)
+            .addParam(PageParam.data, value = dataProvider.user)
+        )
     }
     AppTheme {
         Column (

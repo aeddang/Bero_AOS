@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
@@ -39,6 +40,7 @@ import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.CodeCategory
 import com.ironraft.pupping.bero.store.api.rest.CodeData
+import com.ironraft.pupping.bero.store.api.rest.WalkData
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.ComponentViewModel
@@ -114,7 +116,7 @@ fun CPCalendar(
     var mm:Int by remember { mutableStateOf(0) }
     var currentMonth:String by remember { mutableStateOf("") }
     var days:ArrayList<DayData> by remember { mutableStateOf(arrayListOf()) }
-    var select:String? by remember { mutableStateOf(null) }
+    var select:String? by remember { mutableStateOf(viewModel.select) }
     var hasNext:Boolean by remember { mutableStateOf(true) }
     var hasPrev:Boolean by remember { mutableStateOf(true) }
 
@@ -187,12 +189,13 @@ fun CPCalendar(
         }
         val firstDay = curentDays.first()
         currentMonth = firstDay.date?.toFormatString("MMMM, yyyy") ?: ""
-        days = arrayListOf()
-        days.addAll(prevDays)
-        days.addAll(curentDays)
-        days.addAll(nextDays)
-        viewModel.event.value = CalenderEvent(CalenderEventType.ChangedMonth, date = firstDay.date)
-        val nowValue = if (today.length > 4 ) today.substring(0, 4).toInt() else 999
+        val newDays:ArrayList<DayData> = arrayListOf()
+        newDays.addAll(prevDays)
+        newDays.addAll(curentDays)
+        newDays.addAll(nextDays)
+        if(days.isNotEmpty()) viewModel.event.value = CalenderEvent(CalenderEventType.ChangedMonth, date = firstDay.date)
+        days = newDays
+        val nowValue = if (today.length >= 6 ) today.substring(0, 6).toInt() else 999
         val currentValue = firstDay.date?.toFormatString("yyyyMM")?.toInt() ?: 0
         hasNext = nowValue > currentValue
 
@@ -258,7 +261,7 @@ fun CPCalendar(
     }
     AppTheme {
         Box(
-            modifier = modifier.width(calendarWidth.dp),
+            modifier = modifier.width(calendarWidth.dp).wrapContentHeight(),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -312,7 +315,7 @@ fun CPCalendar(
                             horizontalArrangement = Arrangement.spacedBy(0.dp),
                         ) {
                             days.forEach{day->
-                                val isSelectable by remember { mutableStateOf( selectAbleDate.find { it == day.yyyyMMdd } != null ) }
+                                val isSelectable = selectAbleDate.find { it == day.yyyyMMdd } != null
                                 when (day.status){
                                     DayStatus.Normal ->
                                         if (isSelectable)

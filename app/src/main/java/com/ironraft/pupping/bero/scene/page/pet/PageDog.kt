@@ -138,8 +138,7 @@ fun PageDog(
     Column (
         modifier = modifier
             .fillMaxSize()
-            .background(ColorBrand.bg)
-            .padding(bottom = DimenMargin.regular.dp),
+            .background(ColorBrand.bg),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         profile?.let { profile ->

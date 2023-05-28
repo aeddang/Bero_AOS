@@ -110,18 +110,20 @@ fun TitleTab(
 ) {
 
     val scrollState by remember { mutableStateOf( parentScrollState ?: ScrollState(-1) ) }
-    val lazyListState by remember { mutableStateOf( parentLazyListState ?: LazyListState(-1) ) }
+    //val lazyListState by remember { mutableStateOf( parentLazyListState ?: LazyListState(-1) ) }
     var onTop by remember { mutableStateOf( scrollState.value == 0 ) }
     if (scrollState.isScrollInProgress) {
         val pos = scrollState.value
         if(pos == 0 && !onTop) onTop = true
         else if(onTop && pos != 0) onTop = false
     }
+    /*
     if (lazyListState.isScrollInProgress){
         val pos by remember { derivedStateOf { lazyListState.firstVisibleItemScrollOffset } }
         if(pos == 0 && !onTop) onTop = true
         else if(onTop && (pos != 0)) onTop = false
     }
+    */
 
     AppTheme {
         Column(

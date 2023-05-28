@@ -171,10 +171,10 @@ fun TotalWalkSection(
                         Row(
                             modifier = Modifier.wrapContentSize(),
                             horizontalArrangement = Arrangement.spacedBy(
-                                space = 0.dp,
+                                space = DimenMargin.tinyExtra.dp,
                                 alignment = Alignment.Start
                             ),
-                            verticalAlignment = Alignment.Bottom
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = WalkManager.viewDistance(totalDistance, unit = null),
@@ -185,7 +185,8 @@ fun TotalWalkSection(
                             Text(
                                 text = stringResource(id = R.string.km),
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.grey400,
+                                modifier = Modifier.padding(top = 30.dp)
                             )
                         }
                     }
@@ -210,13 +211,11 @@ fun TotalWalkSection(
                         .padding(start = DimenMargin.tiny.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(
-                        space = DimenMargin.regularUltra.dp,
-                        alignment = Alignment.CenterHorizontally
+                        space = DimenMargin.regularUltra.dp
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     PropertyInfo(
-                        modifier = Modifier.weight(1.0f),
                         type = PropertyInfoType.Impect,
                         value = totalWalkCount.toString(),
                         unit = stringResource(id = R.string.walks),
@@ -224,7 +223,6 @@ fun TotalWalkSection(
                         alignment = Alignment.Start
                     )
                     PropertyInfo(
-                        modifier = Modifier.weight(1.0f),
                         type = PropertyInfoType.Impect,
                         value = WalkManager.viewDuration(totalDuration),
                         unit = stringResource(id = R.string.time) + "(" + stringResource(id = R.string.min) + ")",
@@ -232,7 +230,6 @@ fun TotalWalkSection(
                         alignment = Alignment.Start
                     )
                     PropertyInfo(
-                        modifier = Modifier.weight(1.0f),
                         type = PropertyInfoType.Impect,
                         value = speed,
                         unit =  stringResource(id = R.string.speed) + "(" + stringResource(id = R.string.kmPerH) + ")",
