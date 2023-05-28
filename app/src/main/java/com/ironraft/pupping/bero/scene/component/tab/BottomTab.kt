@@ -74,7 +74,7 @@ fun BottomTab(
             ) {
                 pages.forEach { page ->
                     ImageButton(
-                        modifier = Modifier.weight(1.0f),
+                        modifier = Modifier.weight(1.0f).fillMaxHeight(),
                         isSelected = page.idx == currentTopPage?.pageIDX,
                         defaultImage = page.icon,
                         text = page.text,

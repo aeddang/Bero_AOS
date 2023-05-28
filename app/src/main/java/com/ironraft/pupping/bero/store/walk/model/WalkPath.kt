@@ -15,8 +15,8 @@ data class WalkPathItem (
     var idx:Int = 0,
     val location:LatLng,
     var smallPictureUrl:String? = null,
-    var tx:Double = 0.0,
-    var ty:Double = 0.0,
+    var tx:Float = 0.0f,
+    var ty:Float = 0.0f,
 )
 data class WalkPictureItem(
     val id:String = UUID.randomUUID().toString(),
@@ -88,7 +88,7 @@ class WalkPath {
                 idx = loc.idx,
                 location = loc.location,
                 smallPictureUrl = loc.smallPictureUrl,
-                tx = tx, ty = ty
+                tx = tx.toFloat(), ty = ty.toFloat()
             )
         }
         return this
@@ -137,7 +137,7 @@ class WalkPath {
             WalkPathItem(
                 idx = loc.idx,
                 location = loc.location,
-                tx = tx, ty = ty
+                tx = tx.toFloat(), ty = ty.toFloat()
             )
         }
         return this

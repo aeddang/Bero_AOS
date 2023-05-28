@@ -69,7 +69,9 @@ fun UserAlbumList(
     val endOfListReached by remember {
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
-    if(endOfListReached) { viewModel.load() }
+    if(endOfListReached) {
+        viewModel.continueLoad()
+    }
 
     AppTheme {
         Box(
@@ -90,7 +92,7 @@ fun UserAlbumList(
                             bottom = marginBottom.dp
                         )
                     ) {
-                        items ( datas ){ data->
+                        items ( datas ,  key = {it.index}){ data->
                             UserAlbumListItem(
                                 data = data,
                                 imgSize = albumSize

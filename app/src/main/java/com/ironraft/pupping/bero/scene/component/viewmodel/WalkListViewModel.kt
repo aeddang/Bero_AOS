@@ -1,41 +1,45 @@
 package com.ironraft.pupping.bero.scene.component.viewmodel
 
 import androidx.lifecycle.LifecycleOwner
-import com.ironraft.pupping.bero.scene.component.item.AlarmListItemData
+import com.ironraft.pupping.bero.scene.component.item.WalkListItemData
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
-import com.ironraft.pupping.bero.store.api.rest.AlarmData
+import com.ironraft.pupping.bero.store.api.rest.WalkData
 import com.lib.page.ListViewModel
 import java.util.*
 
-open class AlarmListViewModel(val repo: PageRepository)
-    :ListViewModel<AlarmListItemData,List<AlarmData>>() {
-    val currentId:String = repo.dataProvider.user.userId ?: ""
+open class WalkListViewModel(val repo: PageRepository, id:String = "")
+    :ListViewModel<WalkListItemData,List<WalkData>>() {
+    var currentId:String = id
 
-
-    fun initSetup(owner: LifecycleOwner, pageSize:Int): AlarmListViewModel {
+    fun initSetup(owner: LifecycleOwner, pageSize:Int): WalkListViewModel {
         this.pageSize = pageSize
         setDefaultLifecycleOwner(owner)
+        return this
+    }
+    fun lazySetup(id: String? = null): WalkListViewModel {
+        id?.let { currentId = it }
         return this
     }
 
     override fun onLoad(page: Int) {
         val q = ApiQ(tag,
-            ApiType.GetAlarms,
+            ApiType.GetUserWalks,
             contentID = currentId,
             page = page,
             pageSize = pageSize)
         repo.dataProvider.requestData(q)
     }
 
-    override fun onLoaded(prevDatas: List<AlarmListItemData>?, addDatas: List<AlarmData>?): List<AlarmListItemData> {
+    override fun onLoaded(prevDatas: List<WalkListItemData>?, addDatas: List<WalkData>?): List<WalkListItemData> {
+        val activity = repo.pagePresenter.activity
         val prev = prevDatas ?: listOf()
         val datas = addDatas ?: listOf()
-        var added:List<AlarmListItemData> = listOf()
+        var added:List<WalkListItemData> = listOf()
         val start = prev.count()
         added = datas.mapIndexed { idx, d  ->
-            AlarmListItemData().setData(d,  idx = start + idx)
+            WalkListItemData().setData(d,  idx = start + idx, ctx = activity )
         }
         isLoadCompleted = datas.count() < pageSize
         isEmpty.value = added.isEmpty()
@@ -48,10 +52,10 @@ open class AlarmListViewModel(val repo: PageRepository)
         repo.dataProvider.result.observe(owner) {
             val res = it ?: return@observe
             when ( res.type ){
-                ApiType.GetAlarms -> {
+                ApiType.GetUserWalks -> {
                     if(res.contentID != currentId) return@observe
                     if(res.page == 0) { reset() }
-                    loaded(res.data as? List<AlarmData> ?: listOf())
+                    loaded(res.data as? List<WalkData> ?: listOf())
                 }
                 else ->{}
             }
@@ -60,7 +64,7 @@ open class AlarmListViewModel(val repo: PageRepository)
             val err = it ?: return@observe
             if(err.contentID != currentId) return@observe
             when ( err.type ){
-                ApiType.GetAlarms -> {
+                ApiType.GetUserWalks -> {
                     isBusy = false
                 }
                 else ->{}

@@ -12,12 +12,14 @@ import com.skeleton.module.network.NetworkFactory
 import com.skeleton.sns.SnsUser
 import com.skeleton.theme.DimenApp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.time.LocalDate
 import java.util.HashMap
 
 class ApiBridge(
@@ -47,6 +49,9 @@ class ApiBridge(
     private val place: PlaceApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(PlaceApi::class.java)
 
+    private val walk: WalkApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(WalkApi::class.java)
+
     @Suppress("UNCHECKED_CAST")
     fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
         return@runBlocking when(apiQ.type){
@@ -64,7 +69,7 @@ class ApiBridge(
                 apiQ.query?.get(ApiField.searchType), apiQ.query?.get(ApiField.distance),
                 apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.missionCategory),apiQ.page, apiQ.pageSize)
             ApiType.CompleteMission -> mission.post(apiQ.body as Map<String, Any>)
-            ApiType.CompleteWalk -> mission.post(apiQ.body as Map<String, Any>)
+
             ApiType.GetMissionSummary -> mission.getSummary(apiQ.contentID)
             ApiType.GetPet -> pet.get(apiQ.contentID)
             ApiType.GetPets -> pet.getUserPets(apiQ.contentID)
@@ -100,6 +105,21 @@ class ApiBridge(
             )
             ApiType.GetVisitors -> place.getVisitors(apiQ.contentID, apiQ.page, apiQ.pageSize)
             ApiType.RegistVisitor -> place.postVisitor(apiQ.body as Map<String, Any>)
+
+            ApiType.GetWalk -> walk.get(apiQ.contentID)
+            ApiType.GetWalks -> walk.getWalks(null,
+                (apiQ.requestData as? LocalDate)?.toFormatString("yyyy-MM-dd"),apiQ.page, apiQ.pageSize)
+            ApiType.GetUserWalks -> walk.getWalks(
+                apiQ.contentID, null,apiQ.page, apiQ.pageSize)
+            ApiType.SearchWalk -> walk.search(
+                apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
+                apiQ.query?.get(ApiField.latestWalkMin),apiQ.page, apiQ.pageSize)
+            ApiType.SearchWalkFriends -> walk.searchFriends(apiQ.page, apiQ.pageSize)
+            ApiType.RegistWalk -> walk.post(apiQ.body as Map<String, Any>)
+            ApiType.UpdateWalk -> getUpdateWalk(apiQ.contentID, apiQ.requestData as? WalkadditionalData)
+            ApiType.CompleteWalk -> getUpdateWalk(apiQ.contentID, apiQ.requestData as? WalkadditionalData)
+            ApiType.GetWalkSummary -> walk.getWalkSummary(apiQ.contentID)
+            ApiType.GetMonthlyWalk -> walk.getMonthlyWalks(apiQ.contentID, (apiQ.requestData as? LocalDate)?.toFormatString("yyyy-MM"))
         }
     }
 
@@ -199,21 +219,7 @@ class ApiBridge(
         album.post(owner, type, user, isExpose, referenceId, thumb, image)
     }
 
-    suspend fun create(img:Bitmap):Pair<Bitmap, Bitmap>{
-        return withContext(Dispatchers.IO) {
-            val hei = DimenApp.originImageSize * img.height / img.width
-            val crop = Size(img.width, img.height)
-                .getCropRatioSize(
-                    Size(
-                        DimenApp.thumbImageSize,
-                        DimenApp.thumbImageSize
-                    )
-                )
-            val originImg = img.size(DimenApp.originImageSize, hei)
-            val thumbImg = img.centerCrop(crop)
-            return@withContext Pair(originImg, thumbImg)
-        }
-    }
+
 
     private fun getUpdateLikeAlbumPicture(id:String, isLike:Boolean? = null) = runBlocking {
         val param = HashMap<String, Any>()
@@ -250,8 +256,42 @@ class ApiBridge(
         vision.post(image)
     }
 
+    private fun getUpdateWalk(id:String, data:WalkadditionalData?) = runBlocking {
+        val lat: RequestBody? = getRequestBody(data?.loc?.latitude.toString())
+        val lng: RequestBody? = getRequestBody(data?.loc?.longitude.toString())
+        val status: RequestBody? = getRequestBody(data?.status?.name)
+        val duration: RequestBody? = getRequestBody(data?.walkTime?.toInt()?.toString())
+        val distance: RequestBody? = getRequestBody(data?.walkDistance?.toInt()?.toString())
+        var image: MultipartBody.Part? = null
+        var thumb: MultipartBody.Part? = null
+        data?.img?.let {img->
+            val images = create(img)
+            val file = images.first.toFile(context)
+            val imgBody: RequestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            image = MultipartBody.Part.createFormData("contents", "albumImage.jpg" , imgBody)
+            val secondFile = images.second.toFile(context)
+            val secondImgBody: RequestBody = secondFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            thumb = MultipartBody.Part.createFormData("smallContents", "thumbAlbumImage.jpg" , secondImgBody)
+        }
+        walk.put(id, lat, lng, status, duration, distance, thumb, image)
+    }
     private  fun getRequestBody(value:String?):RequestBody?{
         value ?: return null
         return RequestBody.create("text/plain".toMediaTypeOrNull(), value)
+    }
+    suspend fun create(img:Bitmap):Pair<Bitmap, Bitmap>{
+        return withContext(Dispatchers.IO) {
+            val hei = DimenApp.originImageSize * img.height / img.width
+            val crop = Size(img.width, img.height)
+                .getCropRatioSize(
+                    Size(
+                        DimenApp.thumbImageSize,
+                        DimenApp.thumbImageSize
+                    )
+                )
+            val originImg = img.size(DimenApp.originImageSize, hei)
+            val thumbImg = img.centerCrop(crop)
+            return@withContext Pair(originImg, thumbImg)
+        }
     }
 }

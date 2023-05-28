@@ -1,9 +1,7 @@
 package com.ironraft.pupping.bero.scene.page.my
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -19,27 +17,17 @@ import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
-import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
-import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.page.*
-import com.lib.util.ComponentLog
-import com.lib.util.rememberForeverScrollState
-import com.lib.util.toggle
 import com.skeleton.sns.SnsEvent
 import com.skeleton.sns.SnsManager
-import com.skeleton.sns.SnsType
-import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
-import com.skeleton.theme.DimenLine
 import com.skeleton.theme.DimenMargin
-import com.skeleton.view.button.RadioButton
-import com.skeleton.view.button.RadioButtonType
 import com.skeleton.view.button.SelectButton
 import com.skeleton.view.button.SelectButtonType
 import dev.burnoo.cokoin.get
@@ -57,6 +45,7 @@ fun PageMyAccount(
     val pagePresenter:PageComposePresenter = get()
     val snsManager: SnsManager = get()
 
+    var isDeleteProsess:Boolean by remember { mutableStateOf( false ) }
 
     fun onDelete(){
         val ctx = pagePresenter.activity
@@ -101,6 +90,7 @@ fun PageMyAccount(
     val snsError = snsManager.error.observeAsState()
     val errorMsg = stringResource(R.string.alert_snsLoginError)
     snsError.value?.let{
+        if (!isDeleteProsess) return@let
         it ?: return@let
         when (it.event){
             SnsEvent.Login->
@@ -114,6 +104,7 @@ fun PageMyAccount(
         snsManager.error.value = null
     }
     snsUser.value?.let {
+        if (!isDeleteProsess) return@let
         onDelete()
     }
 
@@ -158,6 +149,7 @@ fun PageMyAccount(
                 useStroke = false,
                 useMargin = false
             ){
+                isDeleteProsess = true
                 dataProvider.user.snsUser?.snsType?.let {
                     snsManager.requestLogin(it)
                     return@SelectButton

@@ -58,7 +58,9 @@ enum class PageID(val value: String, val position: Int = 9999){
     BlockUser("blockUser"),
     MyLv("myLv"),
     MyPoint("myPoint"),
-    ManageDogs("manageDogs")
+    ManageDogs("manageDogs"),
+    WalkList("walkList"),
+    WalkHistory("walkHistory")
 }
 
 class PageProvider {

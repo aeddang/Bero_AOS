@@ -122,43 +122,45 @@ fun FriendList(
 
     val isEmpty = viewModel.isEmpty.observeAsState()
     val friends by viewModel.listDatas.observeAsState()
-    var onInit:Boolean by remember { mutableStateOf(updateFriend()) }
+    val isInit:Boolean by remember { mutableStateOf(updateFriend()) }
 
     val endOfListReached by remember {
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
-    if(endOfListReached) { viewModel.load() }
+    if(endOfListReached) { viewModel.continueLoad() }
     AppTheme {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
-        ) {
-            if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
-            else if(friends != null)
-                friends?.let { datas->
-                    LazyColumn(
-                        modifier = Modifier.weight(1.0f),
-                        state = scrollState,
-                        verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
-                        contentPadding = PaddingValues(bottom = marginBottom.dp)
-                    ) {
-                        items(datas) {data ->
-                            FriendListItem(
-                                data = data,
-                                isMe = viewModel.isMe,
-                                status = if(isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
-                                isHorizontal = false
-                            ){
-                                pagePresenter.openPopup(
-                                    PageProvider.getPageObject(PageID.User)
-                                        .addParam(key = PageParam.id, value = data.userId)
-                                )
+        if (isInit) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
+            ) {
+                if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
+                else if (friends != null)
+                    friends?.let { datas ->
+                        LazyColumn(
+                            modifier = Modifier.weight(1.0f),
+                            state = scrollState,
+                            verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
+                            contentPadding = PaddingValues(bottom = marginBottom.dp)
+                        ) {
+                            items(datas, key = {it.index}) { data ->
+                                FriendListItem(
+                                    data = data,
+                                    isMe = viewModel.isMe,
+                                    status = if (isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
+                                    isHorizontal = false
+                                ) {
+                                    pagePresenter.openPopup(
+                                        PageProvider.getPageObject(PageID.User)
+                                            .addParam(key = PageParam.id, value = data.userId)
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            else
-                Spacer(modifier = Modifier.fillMaxSize())
+                else
+                    Spacer(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }

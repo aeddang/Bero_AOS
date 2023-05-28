@@ -26,7 +26,7 @@ open class RewardHistoryListViewModel(val repo: PageRepository, val type: Histor
         val q = ApiQ(tag,
             ApiType.GetRewardHistory,
             contentID = currentId,
-            page = currentPage,
+            page = page,
             pageSize = pageSize,
             requestData = type.apiType
         )

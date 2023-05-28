@@ -38,7 +38,7 @@ interface PetApi {
         @Part(ApiField.tagPersonality) tagPersonality: RequestBody?,
 
         @Part contents: MultipartBody.Part?
-    ): ApiResponse<PetData?>?
+    ): ApiResponse<PetData>?
 
     @Multipart
     @PUT(Api.Pet.pet)
@@ -59,10 +59,10 @@ interface PetApi {
         @Part(ApiField.tagStatus) tagStatus: RequestBody? = null,
         @Part(ApiField.tagPersonality) tagPersonality: RequestBody? = null,
         @Part contents: MultipartBody.Part? = null
-    ): ApiResponse<Any?>?
+    ): ApiResponse<Any>?
 
     @DELETE(Api.Pet.pet)
     suspend fun delete(
         @Path(Api.CONTENT_ID) contentID: String
-    ): ApiResponse<Any?>?
+    ): ApiResponse<Any>?
 }

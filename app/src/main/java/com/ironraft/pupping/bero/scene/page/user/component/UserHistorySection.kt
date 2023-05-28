@@ -9,6 +9,9 @@ import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.rest.MissionCategory
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.provider.model.UserEventType
@@ -30,11 +33,12 @@ fun UserHistorySection(
 ) {
     val pagePresenter: PagePresenter = get()
     fun moveHistory(){
-        /*
-        self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.walkHistory)
-            .addParam(key: .data, value: self.dataProvider.user)
-        )*/
+        user.userId?.let {
+            pagePresenter.openPopup(
+                PageProvider.getPageObject(PageID.WalkList)
+                .addParam(PageParam.id, it)
+            )
+        }
     }
     AppTheme {
         Column (

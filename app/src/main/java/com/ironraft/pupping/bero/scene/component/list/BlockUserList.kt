@@ -77,35 +77,37 @@ fun BlockUserList(
 
     val isEmpty = viewModel.isEmpty.observeAsState()
     val users by viewModel.listDatas.observeAsState()
-    var onInit:Boolean by remember { mutableStateOf(updateUser()) }
+    val isInit:Boolean by remember { mutableStateOf(updateUser()) }
 
     val endOfListReached by remember {
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
-    if(endOfListReached) { viewModel.load() }
+    if(endOfListReached) { viewModel.continueLoad() }
     AppTheme {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
-        ) {
-            if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
-            else if(users != null)
-                users?.let { datas->
-                    LazyColumn(
-                        modifier = Modifier.weight(1.0f),
-                        state = scrollState,
-                        verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
-                        contentPadding = PaddingValues(bottom = marginBottom.dp)
-                    ) {
-                        items(datas) {data ->
-                            BlockUserItem(
-                                data = data
-                            )
+        if (isInit) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
+            ) {
+                if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
+                else if (users != null)
+                    users?.let { datas ->
+                        LazyColumn(
+                            modifier = Modifier.weight(1.0f),
+                            state = scrollState,
+                            verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
+                            contentPadding = PaddingValues(bottom = marginBottom.dp)
+                        ) {
+                            items(datas, key = {it.index}) { data ->
+                                BlockUserItem(
+                                    data = data
+                                )
+                            }
                         }
                     }
-                }
-            else
-                Spacer(modifier = Modifier.fillMaxSize())
+                else
+                    Spacer(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }

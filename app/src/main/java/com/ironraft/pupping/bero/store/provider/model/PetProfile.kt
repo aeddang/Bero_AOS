@@ -89,8 +89,8 @@ class PetProfile {
     val introduction:MutableLiveData<String?> = MutableLiveData<String?>(null)
     var isEmpty:Boolean = false; private set
     var isMypet:Boolean = false; private set
-    var exerciseDistance: Double? = null; private set
-    var exerciseDuration: Double? = null; private set
+    var exerciseDistance: Double = 0.0; private set
+    var exerciseDuration: Double = 0.0; private set
     val totalWalkCount: MutableLiveData<Int?> = MutableLiveData<Int?>(null)
     var originData:PetData? = null
     var isWith:Boolean = true
@@ -146,8 +146,8 @@ class PetProfile {
         this.isNeutralized.value = data.isNeutered ?: false
         this.immunStatus.value = data.tagStatus
         this.hashStatus.value = data.tagPersonality
-        this.exerciseDistance = data.exerciseDistance
-        this.exerciseDuration = data.exerciseDuration
+        this.exerciseDistance = data.exerciseDistance ?: 0.0
+        this.exerciseDuration = data.exerciseDuration ?: 0.0
         this.totalWalkCount.value = data.walkCompleteCnt
 
         return this
@@ -190,8 +190,8 @@ class PetProfile {
         when (mission.type){
             MissionType.Walk -> {
                 totalWalkCount.value = totalWalkCount.value?.plus(1)
-                exerciseDistance = exerciseDistance?.plus(mission.distance)
-                exerciseDuration = exerciseDuration?.plus(mission.duration)
+                exerciseDistance = exerciseDistance.plus(mission.distance)
+                exerciseDuration = exerciseDuration.plus(mission.duration)
             }
             else -> {}
         }

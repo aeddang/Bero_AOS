@@ -24,7 +24,7 @@ open class UserAlbumListViewModel(val repo: PageRepository)
 
 
     fun initSetup(owner: LifecycleOwner): UserAlbumListViewModel {
-        this.pageSize = ApiValue.PAGE_SIZE
+        this.pageSize = 5//ApiValue.PAGE_SIZE
         setDefaultLifecycleOwner(owner)
         return this
     }
@@ -32,6 +32,7 @@ open class UserAlbumListViewModel(val repo: PageRepository)
     fun resetLoad(type:ExplorerSearchType){
         currentId = round(System.currentTimeMillis()/1000.0).toInt().toString()
         currentType = type
+        currentPage = 0
         reset()
         load()
     }
@@ -42,7 +43,7 @@ open class UserAlbumListViewModel(val repo: PageRepository)
         val q = ApiQ(tag,
             ApiType.GetExplorePictures,
             contentID = currentId,
-            page = currentPage,
+            page = page,
             pageSize = pageSize,
             query = query,
             requestData = currentType)

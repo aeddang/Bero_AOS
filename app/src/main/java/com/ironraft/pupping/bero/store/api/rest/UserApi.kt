@@ -17,7 +17,7 @@ interface UserApi {
 
     @DELETE(Api.User.userDelete)
     suspend fun delete(
-    ): ApiResponse<Any?>
+    ): ApiResponse<Any>?
 
     @Multipart
     @PUT(Api.User.user)
@@ -28,11 +28,11 @@ interface UserApi {
         @Part("sex") sex: RequestBody? = null,
         @Part("introduce") introduce: RequestBody? = null,
         @Part contents: MultipartBody.Part?
-    ): ApiResponse<Any?>?
+    ): ApiResponse<Any>?
     @POST(Api.User.userRegistPushToken)
     suspend fun post(
         @Body params: Map<String, String>
-    ): ApiResponse<Any?>?
+    ): ApiResponse<Any>?
 
 
     @GET(Api.User.usersBlockLists)

@@ -41,7 +41,7 @@ open class AlbumListViewModel(val repo: PageRepository)
         val q = ApiQ(tag,
             ApiType.GetAlbumPictures,
             contentID = currentId,
-            page = currentPage,
+            page = page,
             pageSize = pageSize,
             query = query,
             requestData = currentType)

@@ -39,6 +39,7 @@ open class FriendListViewModel(val repo: PageRepository, id:String = "", initTyp
 
     fun resetLoad(type: FriendListType){
         currentType = type
+        currentPage = 0
         reset()
         load()
     }
@@ -47,7 +48,7 @@ open class FriendListViewModel(val repo: PageRepository, id:String = "", initTyp
         val q = ApiQ(tag,
             ApiType.CheckRequestFriends,
             contentID = currentId,
-            page = currentPage,
+            page = 0,
             pageSize = 1,
             requestData = currentType)
         repo.dataProvider.requestData(q)
@@ -57,7 +58,7 @@ open class FriendListViewModel(val repo: PageRepository, id:String = "", initTyp
         val q = ApiQ(tag,
             currentType.apiType,
             contentID = currentId,
-            page = currentPage,
+            page = page,
             pageSize = pageSize,
             requestData = currentType)
         repo.dataProvider.requestData(q)

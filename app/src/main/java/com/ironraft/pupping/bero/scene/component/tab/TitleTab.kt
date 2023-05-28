@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -24,6 +25,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.util.ComponentLog
+import com.lib.util.isScrolledToEnd
 import com.skeleton.view.button.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
@@ -92,6 +94,7 @@ enum class TitleTabButtonType {
 fun TitleTab(
     modifier: Modifier = Modifier,
     parentScrollState: ScrollState? = null,
+    parentLazyListState: LazyListState? = null,
     type:TitleTabType = TitleTabType.Page,
     title:String? = null,
     lineLimit:Int = Int.MAX_VALUE,
@@ -107,11 +110,17 @@ fun TitleTab(
 ) {
 
     val scrollState by remember { mutableStateOf( parentScrollState ?: ScrollState(-1) ) }
+    val lazyListState by remember { mutableStateOf( parentLazyListState ?: LazyListState(-1) ) }
     var onTop by remember { mutableStateOf( scrollState.value == 0 ) }
     if (scrollState.isScrollInProgress) {
         val pos = scrollState.value
         if(pos == 0 && !onTop) onTop = true
         else if(onTop && pos != 0) onTop = false
+    }
+    if (lazyListState.isScrollInProgress){
+        val pos by remember { derivedStateOf { lazyListState.firstVisibleItemScrollOffset } }
+        if(pos == 0 && !onTop) onTop = true
+        else if(onTop && (pos != 0)) onTop = false
     }
 
     AppTheme {

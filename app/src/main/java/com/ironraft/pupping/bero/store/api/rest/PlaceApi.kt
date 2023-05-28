@@ -90,5 +90,5 @@ interface PlaceApi {
     @POST(Api.Place.visit)
     suspend fun postVisitor(
         @Body params: Map<String, @JvmSuppressWildcards Any>
-    ): ApiResponse<Any?>?
+    ): ApiResponse<Any>?
 }

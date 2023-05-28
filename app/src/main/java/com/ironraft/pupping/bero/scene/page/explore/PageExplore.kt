@@ -48,6 +48,7 @@ import com.skeleton.component.item.ValueInfoType
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
+import kotlinx.coroutines.launch
 
 @Composable
 fun PageExplore(
@@ -63,11 +64,17 @@ fun PageExplore(
     val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(
         AlbumPickViewModel(repo = repository).initSetup(owner).meSetup())
     }
+    val coroutineScope = rememberCoroutineScope()
     val scrollState: LazyListState = rememberForeverLazyListState(key = appTag)
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val hasNewAlarm by repository.hasNewAlarm.observeAsState()
     var searchType:ExplorerSearchType by remember { mutableStateOf( ExplorerSearchType.All ) }
 
+    fun onResetScroll(){
+        coroutineScope.launch {
+            scrollState.scrollToItem(0)
+        }
+    }
     fun onSort(){
         repository.appSceneObserver.radio.value = ActivitRadioEvent(
             type = ActivitRadioType.Select,
@@ -89,11 +96,13 @@ fun PageExplore(
         ){ select ->
             when(select){
                 0 ->{
+                    onResetScroll()
                     searchType = ExplorerSearchType.All
                     viewModel.resetLoad(ExplorerSearchType.All)
                 }
 
                 1 -> {
+                    onResetScroll()
                     searchType = ExplorerSearchType.Friends
                     viewModel.resetLoad(ExplorerSearchType.Friends)
                 }

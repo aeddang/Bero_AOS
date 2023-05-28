@@ -25,7 +25,7 @@ open class BlockUserListViewModel(val repo: PageRepository)
         val q = ApiQ(tag,
             ApiType.GetBlockUsers,
             contentID = currentId,
-            page = currentPage,
+            page = page,
             pageSize = pageSize)
         repo.dataProvider.requestData(q)
     }

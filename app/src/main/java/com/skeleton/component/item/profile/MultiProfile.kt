@@ -28,7 +28,7 @@ import com.skeleton.view.button.CircleButton
 import com.skeleton.view.button.CircleButtonType
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
-import org.koin.compose.koinInject
+
 
 
 enum class MultiProfileType{

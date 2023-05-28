@@ -3,7 +3,7 @@ package com.ironraft.pupping.bero.store.api.rest
 import com.ironraft.pupping.bero.store.api.ApiResponse
 import com.skeleton.module.network.NetworkAdapter
 
-class ApiAdapter(getData: ()->ApiResponse<*>? ) : NetworkAdapter<ApiResponse<*>>(null, getData) {
+class ApiAdapter( getData: ()->ApiResponse<*>? ) : NetworkAdapter<ApiResponse<*>>(null, getData) {
 
     fun withRespondId(id:String): ApiAdapter {
         responseId = id

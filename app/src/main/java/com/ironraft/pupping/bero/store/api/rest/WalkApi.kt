@@ -1,10 +1,95 @@
 package com.ironraft.pupping.bero.store.api.rest
 
+import android.graphics.Bitmap
+import android.location.Location
 import com.google.gson.annotations.SerializedName
+import com.ironraft.pupping.bero.store.api.Api
+import com.ironraft.pupping.bero.store.api.ApiField
+import com.ironraft.pupping.bero.store.api.ApiResponse
+import com.ironraft.pupping.bero.store.api.ApiValue
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
 import retrofit2.http.*
+enum class WalkStatus {
+    Walking, Finish
+}
+data class WalkadditionalData(
+    val loc:Location,
+    val status:WalkStatus,
+    var img:Bitmap? = null,
+    var walkTime:Double? = null,
+    var walkDistance:Double? = null
+)
+interface WalkApi {
+    @GET(Api.Walk.walk)
+    suspend fun get(
+        @Path(Api.CONTENT_ID) contentID: String
+    ): ApiResponse<WalkData>?
 
+    @GET(Api.Walk.walks)
+    suspend fun getWalks(
+        @Query(ApiField.userId) userId: String? = null,
+        @Query(ApiField.date) date: String? = null,
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
+    ): ApiResponse<WalkData>?
+
+    @GET(Api.Walk.searchWalks)
+    suspend fun search(
+        @Query(ApiField.lat) lat: String? = null,
+        @Query(ApiField.lng) lng: String? = null,
+        @Query(ApiField.radius) radius:String? = "0",
+        @Query(ApiField.latestWalkMin) latestWalkMin:String? = "0",
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
+    ): ApiResponse<WalkUserData>?
+
+    @GET(Api.Walk.searchWalkFriends)
+    suspend fun searchFriends(
+        @Query(ApiField.page) page: Int? = 0,
+        @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
+    ): ApiResponse<WalkUserData>?
+
+    @POST(Api.Walk.walk)
+    suspend fun post(
+        @Body params: Map<String, Any>
+    ): ApiResponse<WalkRegistData>?
+
+    @Multipart
+    @PUT(Api.Walk.walk)
+    suspend fun put(
+        @Path(Api.CONTENT_ID) contentID: String,
+        @Part("lat") lat: RequestBody? = null,
+        @Part("lng") lng: RequestBody? = null,
+        @Part("status") status: RequestBody? = null,
+        @Part("duration") duration: RequestBody? = null,
+        @Part("distance") distance: RequestBody? = null,
+        @Part smallContents: MultipartBody.Part?,
+        @Part contents: MultipartBody.Part?
+    ): ApiResponse<Any>?
+
+    @GET(Api.Walk.route)
+    suspend fun getRoute(
+        @Query(ApiField.originLat) originLat: String? = null,
+        @Query(ApiField.originLng) originLng: String? = null,
+        @Query(ApiField.destLat) destLat: Int? = 0,
+        @Query(ApiField.destLng) destLng: Int? = 0
+    ): ApiResponse<WalkRoute>?
+
+    @GET(Api.Walk.monthlyWalks)
+    suspend fun getMonthlyWalks(
+        @Query(ApiField.userId) userId: String? = null,
+        @Query(ApiField.month) month: String? = null
+    ): ApiResponse<String>?
+
+    @GET(Api.Walk.walkSummary)
+    suspend fun getWalkSummary(
+        @Query(ApiField.petId) petId: String? = null
+    ): ApiResponse<WalkSummary>?
+
+}
 data class WalkData(
     @SerializedName("walkId") var walkId: Int? = null,
     @SerializedName("createdAt") var createdAt: String? = null,

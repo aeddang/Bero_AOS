@@ -80,6 +80,18 @@ object Api {
         const val rewards = "$VERSION_V1/${PATH}"
         const val rewardsHistory = "$VERSION_V1/${PATH}/histories"
     }
+
+    object Walk {
+        private const val PATH = "walk"
+        const val walks = "$VERSION_V1/${PATH}"
+        const val walk = "${walks}/{${CONTENT_ID}}"
+        const val searchWalks = "${walks}/search"
+        const val searchWalkFriends = "${searchWalks}/friends"
+        const val monthlyWalks = "${walks}/monthlyList"
+
+        const val walkSummary = "${walks}/summary"
+        const val route = "${walks}/directions"
+    }
 }
 
 
@@ -133,13 +145,20 @@ object ApiField {
     const val radius = "radius"
     const val placeType = "placeType"
     const val zipCode = "zipCode"
+    const val date = "date"
+    const val latestWalkMin = "latestWalkMin"
+    const val originLat = "originLat"
+    const val originLng = "originLng"
+    const val destLat = "destLat"
+    const val destLng = "destLng"
+    const val month = "month"
 }
 
 
 enum class ApiType{
     AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush, DeleteUser,
     GetWeather, GetCode,
-    GetMission, SearchMission, CompleteMission, CompleteWalk, GetMissionSummary,
+    GetMission, SearchMission, CompleteMission, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, GetExplorePictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,
     CheckHumanWithDog,
@@ -149,7 +168,11 @@ enum class ApiType{
     PostReport, Report,
     GetAlarms,
     GetRewardHistory,
-    SearchPlace, GetVisitors, RegistVisitor
+    SearchPlace, GetVisitors, RegistVisitor,
+    GetWalk,GetWalks, GetUserWalks,
+    SearchWalk, SearchWalkFriends,
+    RegistWalk, UpdateWalk, CompleteWalk,
+    GetWalkSummary, GetMonthlyWalk
     ;
 
     fun coreDataKey(requestData:Any?) : String? {

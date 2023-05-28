@@ -186,9 +186,9 @@ fun PageUser(
     Column (
         modifier = modifier
             .fillMaxSize()
-            .background(ColorBrand.bg)
-            .padding(bottom = DimenMargin.regular.dp),
-        verticalArrangement = Arrangement.spacedBy(0.dp)
+            .background(ColorBrand.bg),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
+
     ) {
         user?.let { user ->
             currentPage?.let { pageObject ->

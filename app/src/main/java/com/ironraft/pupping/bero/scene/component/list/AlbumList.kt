@@ -107,7 +107,7 @@ fun AlbumList(
     val endOfListReached by remember {
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
-    if(endOfListReached) { viewModel.load() }
+    if(endOfListReached) { viewModel.continueLoad() }
 
     AppTheme {
         Column(
@@ -123,7 +123,7 @@ fun AlbumList(
                         verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
                         contentPadding = PaddingValues(bottom = marginBottom.dp)
                     ) {
-                        items(datas) {data ->
+                        items(datas, key = {it.index}) {data ->
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(type.marginRow.dp)
                             ) {
