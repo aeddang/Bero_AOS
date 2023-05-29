@@ -32,6 +32,7 @@ import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.history.PageWalkHistory
+import com.ironraft.pupping.bero.scene.page.history.PageWalkInfo
 import com.ironraft.pupping.bero.scene.page.history.PageWalkList
 import com.ironraft.pupping.bero.scene.page.my.PageBlockUser
 import com.ironraft.pupping.bero.scene.page.my.PageManageDogs
@@ -44,6 +45,7 @@ import com.ironraft.pupping.bero.scene.page.pet.PageDog
 import com.ironraft.pupping.bero.scene.page.popup.PageAlarm
 import com.ironraft.pupping.bero.scene.page.popup.PageAlbum
 import com.ironraft.pupping.bero.scene.page.popup.PageFriend
+import com.ironraft.pupping.bero.scene.page.popup.PagePicture
 import com.ironraft.pupping.bero.scene.page.popup.PagePictureViewer
 import com.ironraft.pupping.bero.scene.page.popup.PagePrivacy
 import com.ironraft.pupping.bero.scene.page.popup.PageServiceTerms
@@ -192,6 +194,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.Privacy.value -> PagePrivacy(Modifier.fillMaxSize())
             PageID.AddDog.value -> PageAddDog(Modifier.fillMaxSize())
             PageID.AddDogCompleted.value -> PageAddDogCompleted(Modifier.fillMaxSize())
+            PageID.Picture.value -> PagePicture(Modifier.fillMaxSize())
             PageID.PictureViewer.value -> PagePictureViewer(Modifier.fillMaxSize())
             PageID.ModifyUser.value -> PageModifyUser(Modifier.fillMaxSize())
             PageID.ModifyPet.value -> PageModifyPet(Modifier.fillMaxSize())
@@ -205,6 +208,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.MyPoint.value -> PageMyPoint(Modifier.fillMaxSize())
             PageID.WalkList.value -> PageWalkList(Modifier.fillMaxSize())
             PageID.WalkHistory.value -> PageWalkHistory(Modifier.fillMaxSize())
+            PageID.WalkInfo.value -> PageWalkInfo(Modifier.fillMaxSize())
         }
     }
 }

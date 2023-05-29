@@ -12,9 +12,15 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.component.item.WalkListItem
+import com.ironraft.pupping.bero.scene.component.item.WalkListItemData
 import com.ironraft.pupping.bero.scene.component.viewmodel.WalkListViewModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiValue
+import com.ironraft.pupping.bero.store.provider.DataProvider
+import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.lib.page.PageComposePresenter
 import com.lib.util.isScrolledToEnd
 import com.skeleton.component.item.EmptyItem
@@ -33,6 +39,7 @@ fun WalkList(
 ) {
 
     val owner = LocalLifecycleOwner.current
+    val dataProvider: DataProvider = get()
     val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel: WalkListViewModel by remember { mutableStateOf(
@@ -55,6 +62,16 @@ fun WalkList(
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
     if(endOfListReached) { viewModel.continueLoad() }
+
+    fun onMoveInfo(data: WalkListItemData){
+        val walkData = data.originData ?: return
+        val isMe = dataProvider.user.isSameUser(userId = userId)
+        val mission = Mission().setData(walkData, userId = userId, isMe = isMe)
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(PageID.WalkInfo)
+                .addParam(PageParam.data, mission)
+        )
+    }
     AppTheme {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -78,7 +95,7 @@ fun WalkList(
                                 data = data,
                                 imgSize = walkListSize
                             ){
-
+                                onMoveInfo(data)
                             }
                         }
                     }

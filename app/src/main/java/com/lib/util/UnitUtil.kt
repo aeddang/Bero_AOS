@@ -37,11 +37,11 @@ fun String.toDate(
     }
 }
 fun String.toDateTime(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): LocalDateTime? {
     return try {
         val pattern = DateTimeFormatter.ofPattern(dateFormat)
-        return LocalDateTime.parse(this, pattern)
+        return LocalDateTime.parse(this.replace("Z", ""), pattern)
     } catch (e: Exception) {
         null
     }

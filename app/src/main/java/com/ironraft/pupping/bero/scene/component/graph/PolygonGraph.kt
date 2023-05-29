@@ -1,6 +1,5 @@
-package com.skeleton.view.graph
+package com.ironraft.pupping.bero.scene.component.graph
 
-import android.graphics.Camera
 import android.graphics.PointF
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Canvas
@@ -29,9 +28,10 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +43,7 @@ import com.skeleton.theme.ColorTransparent
 import com.skeleton.theme.DimenIcon
 import com.skeleton.theme.DimenMargin
 import com.skeleton.theme.DimenStroke
+import java.util.Locale
 import java.util.UUID
 
 
@@ -64,7 +65,7 @@ data class GraphPolygonPoint(
         pointColor:Color,
         lineColor:Color,
         count:Int
-    ):GraphPolygonPoint
+    ): GraphPolygonPoint
     {
         if( idx == 0 ){
             bgColor = selectedColor
@@ -91,7 +92,7 @@ data class GraphPolygonPoint(
 }
 
 @Composable
-fun GraphPolygon(
+fun PolygonGraph(
     modifier:Modifier = Modifier,
     screenHeight:Float = 100.0f,
     screenWidth:Float = 100.0f,
@@ -104,14 +105,14 @@ fun GraphPolygon(
     usePoint:Boolean = true,
     action: ((Int) -> Unit)? = null
 ) {
-    val camera:Camera by remember { mutableStateOf( Camera() ) }
-    val dpi = LocalConfiguration.current.densityDpi
+    val dpi = LocalDensity.current.density
     fun getPaint():Paint{
         val paint = Paint()
         paint.color = lineColor
         paint.style = PaintingStyle.Stroke
-        paint.strokeCap = StrokeCap.Square
-        paint.strokeWidth = stroke
+        paint.strokeCap = StrokeCap.Round
+        paint.strokeWidth = stroke * dpi
+        paint.strokeJoin = StrokeJoin.Round
         return paint
     }
     val paint by remember { mutableStateOf( getPaint() ) }
@@ -219,7 +220,7 @@ fun GraphPolygonComposePreview() {
             .background(ColorApp.white),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        GraphPolygon(
+        PolygonGraph(
             modifier = Modifier.size(100.dp, 100.dp),
             selectIdx = listOf(2,4),
             points = listOf(

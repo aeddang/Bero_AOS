@@ -67,7 +67,7 @@ fun TotalWalkSection(
     var totalDuration:Double by remember { mutableStateOf(0.0) }
     var totalWalkCount:Int by remember { mutableStateOf(0) }
     var speed:String by remember { mutableStateOf("") }
-    var totalPct:String? by remember { mutableStateOf(null) } // 사용안함
+    val totalPct:String? by remember { mutableStateOf(null) } // 사용안함
     var profile:PetProfile? by remember { mutableStateOf(user.currentPet) }
 
     fun onUpdatedWalk(){

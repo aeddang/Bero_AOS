@@ -93,7 +93,7 @@ fun AlarmListItem(
 
             AlarmType.Album ->
                 pagePresenter.openPopup(
-                    PageProvider.getPageObject(PageID.PictureViewer)
+                    PageProvider.getPageObject(PageID.Picture)
                         .addParam(key = PageParam.title,
                             value = pagePresenter.activity.getString(R.string.pageTitle_alarm)
                         )

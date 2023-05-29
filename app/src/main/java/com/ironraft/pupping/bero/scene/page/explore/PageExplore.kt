@@ -1,10 +1,8 @@
 package com.ironraft.pupping.bero.scene.page.explore
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,34 +15,19 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitRadioEvent
 import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.koin.pageModelModule
-import com.ironraft.pupping.bero.scene.component.item.PetProfileTopInfo
-import com.ironraft.pupping.bero.scene.component.item.UserProfileTopInfo
-import com.ironraft.pupping.bero.scene.component.list.AlbumList
-import com.ironraft.pupping.bero.scene.component.list.AlbumListType
 import com.ironraft.pupping.bero.scene.component.list.UserAlbumList
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.viewmodel.AlbumPickViewModel
 import com.ironraft.pupping.bero.scene.component.viewmodel.UserAlbumListViewModel
-import com.ironraft.pupping.bero.scene.page.component.AlbumSection
-import com.ironraft.pupping.bero.scene.page.component.FriendSection
-import com.ironraft.pupping.bero.scene.page.my.component.MyDogsSection
-import com.ironraft.pupping.bero.scene.page.my.component.MyHistorySection
-import com.ironraft.pupping.bero.scene.page.component.UserPlayInfo
+
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
-import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
-import com.ironraft.pupping.bero.store.api.rest.ReportType
-import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.lib.page.PageComposePresenter
-import com.lib.page.PageObject
 import com.lib.util.rememberForeverLazyListState
-import com.lib.util.rememberForeverScrollState
-import com.lib.util.toDp
 import com.skeleton.component.dialog.RadioBtnData
-import com.skeleton.component.item.ValueInfoType
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get

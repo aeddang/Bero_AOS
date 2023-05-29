@@ -30,7 +30,7 @@ import com.skeleton.component.item.PropertyInfo
 import com.skeleton.component.item.PropertyInfoType
 import com.skeleton.theme.AppTheme
 import com.skeleton.theme.DimenMargin
-import com.skeleton.view.graph.GraphPolygon
+import com.ironraft.pupping.bero.scene.component.graph.PolygonGraph
 
 @Composable
 fun WalkPropertySection(
@@ -58,7 +58,7 @@ fun WalkPropertySection(
                                 .height(200.dp)
                         )
                         val size:Float = 160.0f
-                        GraphPolygon(
+                        PolygonGraph(
                             modifier = Modifier.size(size.dp, size.dp),
                             screenHeight = size,
                             screenWidth = size,

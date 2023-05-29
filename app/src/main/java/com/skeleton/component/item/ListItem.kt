@@ -31,6 +31,7 @@ import com.skeleton.theme.*
 import com.skeleton.view.button.SortButton
 import com.skeleton.view.button.SortButtonSizeType
 import com.skeleton.view.button.SortButtonType
+import com.skeleton.view.button.TransparentButton
 
 
 @Composable
@@ -61,6 +62,7 @@ fun ListItem(
         )
     }
     AppTheme {
+
         Column(
             modifier = modifier.width(imgSize.width.dp),
             verticalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp),
@@ -90,7 +92,9 @@ fun ListItem(
                     )
                 }
                 Column(
-                    modifier = Modifier.matchParentSize().padding(all = DimenMargin.tiny.dp),
+                    modifier = Modifier
+                        .matchParentSize()
+                        .padding(all = DimenMargin.tiny.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -124,6 +128,9 @@ fun ListItem(
                             }
                         }
                     }
+                }
+                move?.let {
+                    TransparentButton { it() }
                 }
             }
             Row(
@@ -178,7 +185,9 @@ fun ListItem(
 @Composable
 fun ListItemComposePreview() {
     Column(
-        modifier = Modifier.background(ColorApp.white).padding(16.dp),
+        modifier = Modifier
+            .background(ColorApp.white)
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         ListItem(

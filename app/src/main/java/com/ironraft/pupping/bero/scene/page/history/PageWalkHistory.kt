@@ -52,6 +52,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.ironraft.pupping.bero.store.walk.WalkStatus
+import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.lib.page.*
 import com.lib.util.AppUtil
 import com.lib.util.rememberForeverLazyListState
@@ -77,7 +78,7 @@ import com.skeleton.view.button.SelectButtonType
 import dev.burnoo.cokoin.get
 import java.time.LocalDate
 
-internal class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHistory, repo){
+class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHistory, repo){
     var currentUserId:String = ""; private set
     val user = MutableLiveData<User?>(null)
     val walkDatas = MutableLiveData<List<WalkListItemData>>(listOf())
@@ -187,7 +188,15 @@ fun PageWalkHistory(
         }
     }
 
-
+    fun onMoveInfo(data:WalkListItemData){
+        val walkData = data.originData ?: return
+        val isMe = viewModel.user.value?.isMe ?: false
+        val mission = Mission().setData(walkData, userId = viewModel.currentUserId, isMe = isMe)
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(PageID.WalkInfo)
+                .addParam(PageParam.data, mission)
+        )
+    }
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -279,7 +288,7 @@ fun PageWalkHistory(
                                 data = data,
                                 imgSize = walkListSize
                             ){
-
+                                onMoveInfo(data)
                             }
                         }
                         if(isEmpty == true) {

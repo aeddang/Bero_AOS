@@ -18,6 +18,7 @@ import com.ironraft.pupping.bero.store.api.rest.WalkData
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.ironraft.pupping.bero.store.walk.model.WalkPath
 import com.skeleton.component.item.ListItem
+import com.skeleton.view.button.WrapTransparentButton
 
 
 class WalkListItemData{
@@ -55,6 +56,7 @@ fun WalkListItem(
     imgSize: Size,
     action: (() -> Unit)? = null
 ){
+
     ListItem(
         modifier = modifier,
         imagePath = data.imagePath,
@@ -67,6 +69,7 @@ fun WalkListItem(
         iconAction = action,
         move = action
     )
+
 }
 
 

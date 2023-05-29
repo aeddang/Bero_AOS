@@ -33,6 +33,7 @@ import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.provider.model.UserProfile
+import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.lib.page.PageComposePresenter
 import com.lib.page.PagePresenter
 import com.lib.util.replace
@@ -135,13 +136,11 @@ fun AlbumListItem(
         }
     }
     fun onMoveWalk(){
-        /*
         pagePresenter.openPopup(
-                            PageProvider.getPageObject(.walkInfo)
-                            .addParam(key: .id, value: self.data.walkId)
-                        .addParam(key: .data, value: self.user)
-                        )
-        */
+            PageProvider.getPageObject(PageID.WalkInfo)
+                .addParam(PageParam.id, data.walkId)
+                .addParam(PageParam.data, user ?: userProfile)
+        )
     }
     fun onMovePicture(){
         pagePresenter.openPopup(

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.ironraft.pupping.bero.R
 import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.theme.*
@@ -92,7 +93,9 @@ fun ProgressInfo(
                 color = ColorBrand.primary,
                 backgroundColor = ColorApp.grey50,
                 strokeCap = StrokeCap.Round,
-                progress = 0.5f)
+                progress = (progress/progressMax).toFloat()
+            )
+
         }
     }
 }
