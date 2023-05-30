@@ -104,7 +104,7 @@ fun TotalWalkSection(
     fun onSort(){
         val activity = pagePresenter.activity
         val pets = user.pets.map{it.name.value ?: ""}
-        var selects = arrayListOf<String>()
+        val selects = arrayListOf<String>()
         selects.addAll(pets)
         selects.add(activity.getString(R.string.button_all))
         appSceneObserver.radio.value = ActivitRadioEvent(

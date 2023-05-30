@@ -45,12 +45,14 @@ class ApiBridge(
         .create(FriendApi::class.java)
     private val reward: RewardApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(RewardApi::class.java)
-
     private val place: PlaceApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(PlaceApi::class.java)
-
     private val walk: WalkApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
         .create(WalkApi::class.java)
+    private val chat: ChatApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(ChatApi::class.java)
+    private val recommendation: RecommendationApi = networkFactory.getRetrofit(BuildConfig.APP_REST_ADDRESS, listOf( interceptor ) )
+        .create(RecommendationApi::class.java)
 
     @Suppress("UNCHECKED_CAST")
     fun getApi(apiQ: ApiQ, snsUser:SnsUser?) = runBlocking {
@@ -120,6 +122,14 @@ class ApiBridge(
             ApiType.CompleteWalk -> getUpdateWalk(apiQ.contentID, apiQ.requestData as? WalkadditionalData)
             ApiType.GetWalkSummary -> walk.getWalkSummary(apiQ.contentID)
             ApiType.GetMonthlyWalk -> walk.getMonthlyWalks(apiQ.contentID, (apiQ.requestData as? LocalDate)?.toFormatString("yyyy-MM"))
+            ApiType.GetChats -> chat.get(apiQ.contentID, apiQ.page, apiQ.pageSize)
+            ApiType.GetRoomChats -> chat.getRoomList(apiQ.contentID, apiQ.page, apiQ.pageSize)
+            ApiType.SendChat -> chat.post(apiQ.contentID, "", apiQ.requestData as? String)
+            ApiType.DeleteChat, ApiType.DeleteAllChat -> chat.delete(apiQ.contentID)
+            ApiType.GetChatRooms -> chat.getRoom(apiQ.page, apiQ.pageSize)
+            ApiType.DeleteChatRoom -> chat.deleteRoom(apiQ.contentID)
+            ApiType.ReadChatRoom -> chat.putRoom(apiQ.contentID)
+            ApiType.GetRecommandationFriends -> recommendation.getFriends()
         }
     }
 

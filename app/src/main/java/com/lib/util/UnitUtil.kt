@@ -13,6 +13,7 @@ import android.util.Patterns
 import android.util.Size
 import java.sql.Timestamp
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -58,6 +59,44 @@ fun LocalDate.toFormatString(
     val date  = LocalDateTime.of(this, LocalTime.MIN)
     return date.toFormatString(dateFormat.replace("Z", ""))
 }
+
+@SuppressLint("SimpleDateFormat")
+fun String.toDateUtc(
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
+): Date? {
+    val simpleDateFormat = SimpleDateFormat(dateFormat)
+    return simpleDateFormat.parse(this)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toFormatString(
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
+): String? {
+    return SimpleDateFormat(dateFormat).format(this)
+}
+fun Date.sinceNow():String {
+    val diff = -(this.time/1000.0)
+    return diff.since()
+}
+@SuppressLint("SimpleDateFormat")
+fun Date.sinceNowDate(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
+                      returnFormat:String = "MMMM d, yyyy",
+                      isLocale:Boolean = true):String {
+    val nowDate = SimpleDateFormat("yyyyMMdd").format(Date()) ?: return ""
+    val nowDay = nowDate.toDateUtc("yyyyMMdd") ?: return ""
+    val now = nowDay.time
+    val me = this.time
+    val diff = now - me
+    if (diff < 0) {
+        return sinceNow()
+    } else if (diff < 60 * 60 * 24.0) {
+        return "Yesterday"
+    }
+    if (!isLocale) return SimpleDateFormat(dateFormat).format(this)
+    return this.toFormatString(dateFormat)?.toDate(dateFormat)?.toFormatString(returnFormat) ?: ""
+}
+
+
 fun LocalDateTime.toFormatString(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
 ): String? {
@@ -138,6 +177,32 @@ fun Double.toThousandUnit(f:Int = 0) : String {
 
 fun Double.millisecToSec() : Double {
     return this/1000.0
+}
+fun Double.since() : String {
+    var value:Double = 0.0
+    var unit:String = ""
+    if (this < 60.0) return "just now"
+    else if (this < 60.0 * 60.0) {
+        value = this / 60.0
+        unit = "min before"
+    }
+    else if (this < 60.0 * 60.0 * 24.0) {
+        value = this / ( 60.0 * 60.0)
+        unit = "hour before"
+    }
+    else if (this < 60.0 * 60.0 * 24.0 * 30.0){
+        value = this / ( 60.0 * 60.0 * 24.0)
+        unit = "days before"
+    }
+    else if (this < 60.0 * 60.0 * 24.0 * 365.0) {
+        value = this / ( 60.0 * 60.0 * 24.0 * 30.0)
+        unit = "month ago"
+    }
+    else {
+        value = this / ( 60.0 * 60.0 * 24.0 * 365.0)
+        unit = "year ago"
+    }
+    return String.format ("%.0f",  value ) + unit
 }
 fun Boolean.toggle() : Boolean {
     val prev = this

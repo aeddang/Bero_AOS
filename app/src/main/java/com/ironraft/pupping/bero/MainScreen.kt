@@ -30,10 +30,12 @@ import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
+import com.ironraft.pupping.bero.scene.page.chat.PageChat
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.history.PageWalkHistory
 import com.ironraft.pupping.bero.scene.page.history.PageWalkInfo
 import com.ironraft.pupping.bero.scene.page.history.PageWalkList
+import com.ironraft.pupping.bero.scene.page.history.PageWalkReport
 import com.ironraft.pupping.bero.scene.page.my.PageBlockUser
 import com.ironraft.pupping.bero.scene.page.my.PageManageDogs
 import com.ironraft.pupping.bero.scene.page.my.PageMy
@@ -182,7 +184,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
             PageID.Walk.value -> PageTest(Modifier.fillMaxSize())
             PageID.Explore.value -> PageExplore(Modifier.fillMaxSize())
-            PageID.Chat.value -> PageTest(Modifier.fillMaxSize())
+            PageID.Chat.value -> PageChat(Modifier.fillMaxSize())
             PageID.My.value -> PageMy(Modifier.fillMaxSize())
             PageID.Dog.value -> PageDog(Modifier.fillMaxSize())
             PageID.User.value -> PageUser(Modifier.fillMaxSize())
@@ -209,6 +211,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.WalkList.value -> PageWalkList(Modifier.fillMaxSize())
             PageID.WalkHistory.value -> PageWalkHistory(Modifier.fillMaxSize())
             PageID.WalkInfo.value -> PageWalkInfo(Modifier.fillMaxSize())
+            PageID.WalkReport.value -> PageWalkReport(Modifier.fillMaxSize())
         }
     }
 }

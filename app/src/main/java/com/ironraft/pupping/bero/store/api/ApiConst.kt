@@ -1,6 +1,7 @@
 package com.ironraft.pupping.bero.store.api
 
 import com.ironraft.pupping.bero.store.api.rest.CodeCategory
+import retrofit2.http.Query
 
 
 object Api {
@@ -92,6 +93,24 @@ object Api {
         const val walkSummary = "${walks}/summary"
         const val route = "${walks}/directions"
     }
+
+    object Chat {
+        private const val PATH = "chats"
+        const val chats = "$VERSION_V1/${PATH}"
+        const val chat = "${chats}/{${CONTENT_ID}}"
+        const val chatSend = "${chats}/send"
+        const val chatRooms = "${chats}/rooms"
+        const val chatRoom = "${chatRooms}/{${CONTENT_ID}}"
+        const val chatRoomList = "${chatRooms}/list/{${CONTENT_ID}}"
+        const val chatRoomRead = "${chatRooms}/read/{${CONTENT_ID}}"
+    }
+    object Recommendation {
+        private const val PATH = "recommendation"
+        private const val recommendation = "$VERSION_V1/${PATH}"
+        const val friends = "${recommendation}/friends"
+    }
+
+
 }
 
 
@@ -152,6 +171,10 @@ object ApiField {
     const val destLat = "destLat"
     const val destLng = "destLng"
     const val month = "month"
+    const val otherUser = "otherUser"
+    const val receiver = "receiver"
+    const val title = "title"
+    const val contents = "contents"
 }
 
 
@@ -172,8 +195,13 @@ enum class ApiType{
     GetWalk,GetWalks, GetUserWalks,
     SearchWalk, SearchWalkFriends,
     RegistWalk, UpdateWalk, CompleteWalk,
-    GetWalkSummary, GetMonthlyWalk
+    GetWalkSummary, GetMonthlyWalk,
+    GetChats, GetRoomChats, DeleteChat, DeleteAllChat, SendChat,
+    GetChatRooms, ReadChatRoom, DeleteChatRoom,
+    GetRecommandationFriends
     ;
+
+
 
     fun coreDataKey(requestData:Any?) : String? {
         return when (this) {

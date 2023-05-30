@@ -15,6 +15,7 @@ import com.ironraft.pupping.bero.activityui.ActivitAlertType
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.api.rest.AlarmData
+import com.ironraft.pupping.bero.store.api.rest.ChatData
 import com.ironraft.pupping.bero.store.api.rest.CodeData
 import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
@@ -62,10 +63,11 @@ class PageRepository (
     private val appTag = "Repository"
     val status = MutableLiveData<RepositoryStatus>(RepositoryStatus.Initate)
     val event = SingleLiveData<RepositoryEvent?>(null)
-    private val accountManager = AccountManager(dataProvider.user)
+    private val accountManager = AccountManager(ctx, dataProvider.user)
     private val scope = PageCoroutineScope()
 
     val hasNewAlarm = MutableLiveData<Boolean>(false)
+    val hasNewChat = MutableLiveData<Boolean>(false)
     fun clearEvent(){
         dataProvider.clearEvent()
     }
@@ -216,10 +218,8 @@ class PageRepository (
                 val token = res.requestData as? String?
                 token?.let { registedPushToken(it) }
             }
-            //ApiType.getChatRooms(let page, _) -> if page == 0 { self.onMassageUpdated(res) }
+            ApiType.GetChatRooms -> if (res.page == 0) onMassageUpdated(res)
             ApiType.GetAlarms -> if (res.page == 0) onAlarmUpdated(res)
-            //ApiType.sendReport(let reportType, _, _) -> self.appSceneObserver?.event = .toast(reportType.completeMessage)
-            //case .blockUser(_, let isBlock) : self.appSceneObserver?.event = .toast(isBlock ? String.alert.blockUserCompleted : String.alert.unblockUserCompleted)
             //self.walkManager.resetMapStatus(userFilter: .all)
             else -> {}
         }
@@ -232,7 +232,7 @@ class PageRepository (
     }
 
     private fun errorApi(err:ApiError<ApiType>){
-        //self.accountManager.errorApi(err, appSceneObserver: self.appSceneObserver)
+        accountManager.errorApi(err, appSceneObserver)
         //self.walkManager.errorApi(err, appSceneObserver: self.appSceneObserver)
         when (err.type) {
             ApiType.RegistPush -> {
@@ -296,7 +296,7 @@ class PageRepository (
             apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, contentID = it.snsID))
             apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, contentID = it.snsID))
             apiManager.load(ApiQ(appTag, ApiType.GetAlarms, isOptional = true, contentID = it.snsID))
-            //self.dataProvider.requestData(q: .init(id: self.tag, type: .getChatRooms(page: 0), isOptional: true))
+            apiManager.load(ApiQ(appTag, ApiType.GetChatRooms, isOptional = true, contentID = it.snsID))
         }
         retryRegisterPushToken()
 
@@ -309,9 +309,10 @@ class PageRepository (
         return token.isNotEmpty()
     }
 
-    @Suppress("UNCHECKED_CAST")
+
     private fun onAlarmUpdated(res:ApiSuccess<ApiType>){
-        val datas = res.data as? List<AlarmData> ?: return
+        val lists = res.data as? List<*> ?: return
+        val datas = lists.filterIsInstance<AlarmData>()
         datas.firstOrNull()?.let { data ->
             if (res.id == appTag) {
                 hasNewAlarm.value = storage.alarmDate != data.createdAt
@@ -323,14 +324,12 @@ class PageRepository (
             }
         }
     }
-    @Suppress("UNCHECKED_CAST")
+
     private fun onMassageUpdated(res:ApiSuccess<ApiType>){
         if (res.id != appTag)  return
-        /*
-        val datas = res.data as? List<ChatData> ?: return
-        let find = datas.first(where: {$0.isRead == false})
-        self.event = .messageUpdate(find != nil)
-         */
+        val lists = res.data as? List<*> ?: return
+        val datas = lists.filterIsInstance<ChatData>()
+        datas.find { it.isRead == true }?.let { hasNewChat.value = true }
     }
 
     fun setupPush(isOn:Boolean){

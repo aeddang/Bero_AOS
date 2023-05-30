@@ -25,6 +25,7 @@ import com.ironraft.pupping.bero.scene.component.item.RewardInfoType
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageEvent
@@ -48,6 +49,7 @@ data class PageSelecterble (
 fun BottomTab(
 
 ) {
+    val pageRepository:PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
     val pageAppViewModel:PageAppViewModel = get()
     val pages:ArrayList<PageSelecterble> = arrayListOf(
@@ -57,28 +59,39 @@ fun BottomTab(
         PageSelecterble(PageID.My, PageID.My.position, R.drawable.my, text = stringResource(R.string.gnb_my))
     )
     val currentTopPage:PageObject? by pageAppViewModel.currentTopPage.observeAsState(pagePresenter.currentPage)
-
+    val newChat by pageRepository.hasNewChat.observeAsState()
     AppTheme {
         Column(
-            Modifier.fillMaxWidth().background(ColorApp.white).height(DimenApp.bottom.dp),
+            Modifier
+                .fillMaxWidth()
+                .background(ColorApp.white)
+                .height(DimenApp.bottom.dp),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Spacer(
-                modifier = Modifier.fillMaxWidth().height(DimenLine.light.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(DimenLine.light.dp)
                     .background(ColorApp.grey50)
             )
             Row(
-                modifier = Modifier.fillMaxWidth().weight(1.0f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.0f),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 pages.forEach { page ->
                     ImageButton(
-                        modifier = Modifier.weight(1.0f).fillMaxHeight(),
+                        modifier = Modifier
+                            .weight(1.0f)
+                            .fillMaxHeight(),
                         isSelected = page.idx == currentTopPage?.pageIDX,
                         defaultImage = page.icon,
                         text = page.text,
-                        iconText = if (page.id == PageID.Chat) "N" else null,
+                        iconText = if (page.id == PageID.Chat)
+                            if(newChat == true) "N" else null
+                            else null,
                         defaultColor = ColorApp.grey200,
                         activeColor = ColorBrand.primary
                     ) {
@@ -94,7 +107,10 @@ fun BottomTab(
 @Composable
 fun BottomTabComposePreview() {
     Column(
-        modifier = Modifier.padding(16.dp).width(320.dp).background(ColorApp.white),
+        modifier = Modifier
+            .padding(16.dp)
+            .width(320.dp)
+            .background(ColorApp.white),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         BottomTab(

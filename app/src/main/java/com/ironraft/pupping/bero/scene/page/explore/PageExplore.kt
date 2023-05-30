@@ -98,7 +98,7 @@ fun PageExplore(
         modifier = modifier
             .fillMaxSize()
             .background(ColorBrand.bg)
-            .padding(bottom = DimenMargin.regular.dp),
+            .padding(bottom = DimenApp.bottom.dp),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
         TitleTab(
@@ -123,8 +123,7 @@ fun PageExplore(
             userAlbumListViewModel = viewModel,
             scrollState = scrollState,
             type = searchType,
-            listSize = screenWidth.toFloat(),
-            marginBottom = DimenApp.bottom
+            listSize = screenWidth.toFloat()
         )
 
     }

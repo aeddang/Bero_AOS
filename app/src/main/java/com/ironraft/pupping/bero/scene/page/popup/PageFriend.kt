@@ -27,6 +27,7 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiValue
 import com.ironraft.pupping.bero.store.api.rest.AlbumCategory
+import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.*
@@ -44,6 +45,7 @@ fun PageFriend(
 ){
     val owner = LocalLifecycleOwner.current
     val repository:PageRepository = get()
+    val dataProvider:DataProvider = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel:PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Friend, repository).initSetup(owner)) }
     val friendListViewModel: FriendListViewModel by remember { mutableStateOf(
@@ -65,8 +67,8 @@ fun PageFriend(
         if(!friendListViewModel.isInit){
             friendListViewModel.isInit = true
             val sortData =  page.getParamValue(PageParam.type) as? FriendListType ?: FriendListType.Friend
-            val userData = page.getParamValue(PageParam.data) as? User
-            friendListViewModel.lazySetup(userData?.userId, sortType)
+            val userData = page.getParamValue(PageParam.data) as? User ?: dataProvider.user
+            friendListViewModel.lazySetup(userData.userId, sortType)
             if( friendListViewModel.isMe ){
                 isEdit = page.getParamValue(PageParam.isEdit) as? Boolean ?: false
             } else {

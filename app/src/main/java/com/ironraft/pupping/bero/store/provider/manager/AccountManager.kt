@@ -1,6 +1,12 @@
 package com.ironraft.pupping.bero.store.provider.manager
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.LifecycleOwner
+import com.ironraft.pupping.bero.AppSceneObserver
+import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
+import com.ironraft.pupping.bero.activityui.ActivitAlertType
+import com.ironraft.pupping.bero.store.api.ApiError
 import com.lib.page.PageLifecycleUser
 import com.ironraft.pupping.bero.store.api.ApiSuccess
 import com.ironraft.pupping.bero.store.api.ApiType
@@ -12,7 +18,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.skeleton.sns.SnsUser
 
-class AccountManager(private val user: User) : PageLifecycleUser {
+class AccountManager(private val ctx: Context, private val user: User) : PageLifecycleUser {
 
     private val appTag = javaClass.simpleName
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {}
@@ -59,7 +65,18 @@ class AccountManager(private val user: User) : PageLifecycleUser {
             }
             else ->  return false
         }
+    }
 
-
+    fun errorApi(err: ApiError<ApiType>, appSceneObserver:AppSceneObserver?){
+        if (err.contentID != user.snsUser?.snsID) return
+        when (err.type) {
+            ApiType.GetUser -> {
+                appSceneObserver?.alert?.value = ActivitAlertEvent(
+                    type = ActivitAlertType.Alert,
+                    text = ctx.getString(R.string.alert_getUserProfileError)
+                )
+            }
+            else -> {}
+        }
     }
 }

@@ -24,7 +24,7 @@ open class UserAlbumListViewModel(val repo: PageRepository)
 
 
     fun initSetup(owner: LifecycleOwner): UserAlbumListViewModel {
-        this.pageSize = 5//ApiValue.PAGE_SIZE
+        this.pageSize = ApiValue.PAGE_SIZE
         setDefaultLifecycleOwner(owner)
         return this
     }

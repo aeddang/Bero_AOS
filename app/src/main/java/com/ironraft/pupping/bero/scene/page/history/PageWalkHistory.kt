@@ -48,6 +48,7 @@ import com.ironraft.pupping.bero.store.api.rest.AlbumCategory
 import com.ironraft.pupping.bero.store.api.rest.PetData
 import com.ironraft.pupping.bero.store.api.rest.UserData
 import com.ironraft.pupping.bero.store.api.rest.WalkData
+import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.walk.WalkManager
@@ -154,6 +155,7 @@ fun PageWalkHistory(
     val owner = LocalLifecycleOwner.current
     val walkManager:WalkManager = get()
     val repository:PageRepository = get()
+    val dataProvider:DataProvider = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel:PageWalkHistoryViewModel by remember { mutableStateOf(
         PageWalkHistoryViewModel(repository).initSetup(owner) as PageWalkHistoryViewModel
@@ -197,6 +199,13 @@ fun PageWalkHistory(
                 .addParam(PageParam.data, mission)
         )
     }
+    fun onMoveReport(){
+        pagePresenter.openPopup(
+            PageProvider.getPageObject(PageID.WalkReport)
+                .addParam(PageParam.data, dataProvider.user)
+        )
+    }
+
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -248,7 +257,7 @@ fun PageWalkHistory(
                                 text = stringResource(id = R.string.pageTitle_walkReport),
                                 isSelected = false
                             ){
-
+                                onMoveReport()
                             }
                             Spacer(modifier = Modifier
                                 .padding(top = DimenMargin.medium.dp)
@@ -313,9 +322,7 @@ fun PageWalkHistory(
                     }
                 }
             }
-
         }
-
     }
 }
 
