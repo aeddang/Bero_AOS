@@ -9,7 +9,7 @@ import retrofit2.http.*
 
 
 interface ChatApi {
-    @GET(Api.Chat.chat)
+    @GET(Api.Chat.chats)
     suspend fun get(
         @Query(ApiField.otherUser) otherUser: String?,
         @Query(ApiField.page) page: Int? = 0,

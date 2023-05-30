@@ -15,54 +15,73 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.store.provider.model.Lv
-import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.skeleton.theme.*
 
 enum class EmptyItemType {
-    MyList;
+    MyList, Chat;
     @get:DrawableRes
     val image: Int?
         get() = when (this) {
             MyList -> R.drawable.paw
+            Chat -> R.drawable.add_dog
         }
-    val height: Float
+
+    val imageMode: ColorFilter?
         get() = when (this) {
-            MyList -> 92.0f
+            MyList -> ColorFilter.tint(ColorApp.grey200)
+            Chat -> null
+        }
+    val imageHeight: Float
+        get() = when (this) {
+            MyList -> DimenIcon.medium
+            Chat -> 104f
+        }
+    val spacing: Float
+        get() = when (this) {
+            MyList -> DimenMargin.tinyExtra
+            Chat -> DimenMargin.medium
         }
 
     val text: String?
         get() = when (this) {
             MyList -> "It’s empty!"
+            Chat -> "Looks like you haven't started any conversations yet! Add friends to your list and start new chats."
         }
+    val bgColor: Color
+        get() = when (this) {
+            MyList -> ColorApp.grey50
+            Chat -> ColorTransparent.clear
+        }
+
     val radius: Float
         get() = when (this) {
             MyList -> DimenRadius.light
+            Chat -> 0f
         }
 }
 
 @Composable
 fun EmptyItem(
-    type:EmptyItemType =EmptyItemType.MyList,
+    type:EmptyItemType = EmptyItemType.MyList,
     modifier: Modifier = Modifier
 ) {
     AppTheme {
         Box(
             modifier = modifier
                 .clip(RoundedCornerShape(CornerSize(type.radius.dp)))
-                .background(ColorApp.grey50)
                 .fillMaxWidth()
-                .height(type.height.dp)
+                .background(type.bgColor)
+                .padding(all = DimenMargin.regular.dp)
             ,
             contentAlignment = Alignment.Center
         ){
             Column(
-                verticalArrangement = Arrangement.spacedBy(DimenMargin.tinyExtra.dp),
+                verticalArrangement = Arrangement.spacedBy(type.spacing.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 type.image?.let {
@@ -70,15 +89,16 @@ fun EmptyItem(
                         painterResource(it),
                         contentDescription = "",
                         contentScale = ContentScale.Fit,
-                        colorFilter = ColorFilter.tint(ColorApp.grey200),
-                        modifier = Modifier.size(DimenIcon.medium.dp)
+                        colorFilter = type.imageMode,
+                        modifier = Modifier.fillMaxWidth().height(type.imageHeight.dp)
                     )
                 }
                 type.text?.let {
                     Text(
                         text = it,
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey300
+                        color = ColorApp.grey300,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -123,10 +143,10 @@ fun EmptyItemComposePreview() {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         EmptyItem(
-
+            type = EmptyItemType.Chat
         )
         EmptyData(
-            text = "testssss"
+
         )
     }
 }

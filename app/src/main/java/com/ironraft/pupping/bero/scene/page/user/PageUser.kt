@@ -23,6 +23,7 @@ import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
 import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
 import com.ironraft.pupping.bero.scene.component.viewmodel.ReportFunctionViewModel
+import com.ironraft.pupping.bero.scene.page.chat.component.ChatRoomListItemData
 import com.ironraft.pupping.bero.scene.page.component.AlbumSection
 import com.ironraft.pupping.bero.scene.page.component.FriendFunctionBox
 import com.ironraft.pupping.bero.scene.page.component.FriendSection
@@ -52,7 +53,7 @@ import dev.burnoo.cokoin.get
 
 internal class PageUserViewModel(repo:PageRepository): PageViewModel(PageID.User, repo){
     var fromChatRoom:Boolean = false
-    //var roomData:ChatRoomListItemData? = nil
+    var roomData:ChatRoomListItemData? = null
     var currentUserId:String = ""
     var user = MutableLiveData<User?>(null)
     var currentUser:User? = null
@@ -61,7 +62,8 @@ internal class PageUserViewModel(repo:PageRepository): PageViewModel(PageID.User
         super.onCurrentPageEvent(type, pageObj)
         when (type) {
             PageEventType.ChangedPage -> {
-
+                roomData = pageObj.getParamValue(PageParam.subData) as? ChatRoomListItemData
+                fromChatRoom = roomData != null
                 val user = pageObj.getParamValue(PageParam.data) as? User
                 val userId = user?.userId ?: pageObj.getParamValue(PageParam.id) as? String ?: ""
                 currentUser = user

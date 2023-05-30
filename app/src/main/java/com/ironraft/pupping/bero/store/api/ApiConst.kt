@@ -101,8 +101,8 @@ object Api {
         const val chatSend = "${chats}/send"
         const val chatRooms = "${chats}/rooms"
         const val chatRoom = "${chatRooms}/{${CONTENT_ID}}"
-        const val chatRoomList = "${chatRooms}/list/{${CONTENT_ID}}"
-        const val chatRoomRead = "${chatRooms}/read/{${CONTENT_ID}}"
+        const val chatRoomList = "${chatRooms}/{${CONTENT_ID}}/list"
+        const val chatRoomRead = "${chatRooms}/{${CONTENT_ID}}/read"
     }
     object Recommendation {
         private const val PATH = "recommendation"

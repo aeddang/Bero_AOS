@@ -13,6 +13,7 @@ import com.lib.page.PagePresenter
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
 import com.ironraft.pupping.bero.activityui.ActivitAlertType
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.api.rest.AlarmData
 import com.ironraft.pupping.bero.store.api.rest.ChatData
@@ -132,9 +133,25 @@ class PageRepository (
             }
         })
         AppObserver.pageApns.observe(owner, Observer{ apns ->
-            apns?.let {
+            apns?.let { pageApns ->
+                val pageId = pageApns.page.pageID
+                val current = pagePresenter.currentTopPage?.pageID
+                when(pageId){
+                    PageID.Chat.value -> {
+                        if(current == PageID.Chat.value || current == PageID.ChatRoom.value) return@Observer
+                    }
+                    PageID.Alarm.value -> {
+                        if (current == PageID.Alarm.value) return@Observer
+                        if (current == PageID.Explore.value) {
+                            apiManager.load(ApiQ(appTag, ApiType.GetAlarms, isOptional = true,
+                                contentID = dataProvider.user.userId ?: ""))
+                            return@Observer
+                        }
+                    }
+                    else ->{}
+                }
                 appSceneObserver.alert.value = ActivitAlertEvent(
-                    ActivitAlertType.RecivedApns, apns = apns
+                    ActivitAlertType.RecivedApns, apns = pageApns
                 )
                 AppObserver.pageApns.value = null
             }
@@ -168,10 +185,6 @@ class PageRepository (
         SystemEnvironment.isTablet = AppUtil.isBigsizeDevice(ctx)
         if (storage.deviceModel.isEmpty()) {
             DeviceName.with(ctx).request { info, _ ->
-                //val manufacturer = info.manufacturer // "Samsung"
-                //val name = info.marketName // "Galaxy S8+"
-                //val model = info.model // "SM-G955W"
-                //val codename = info.codename // "dream2qltecan"
                 val deviceName = info.name // "Galaxy S8+"
                 storage.deviceModel = deviceName
                 SystemEnvironment.model = deviceName

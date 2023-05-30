@@ -31,6 +31,7 @@ import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.chat.PageChat
+import com.ironraft.pupping.bero.scene.page.chat.PageChatRoom
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
 import com.ironraft.pupping.bero.scene.page.history.PageWalkHistory
 import com.ironraft.pupping.bero.scene.page.history.PageWalkInfo
@@ -212,6 +213,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
             PageID.WalkHistory.value -> PageWalkHistory(Modifier.fillMaxSize())
             PageID.WalkInfo.value -> PageWalkInfo(Modifier.fillMaxSize())
             PageID.WalkReport.value -> PageWalkReport(Modifier.fillMaxSize())
+            PageID.ChatRoom.value -> PageChatRoom(Modifier.fillMaxSize())
         }
     }
 }

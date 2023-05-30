@@ -48,7 +48,8 @@ open class ChatRoomListViewModel(val repo: PageRepository)
     fun read(roomId:Int){
         val q = ApiQ(tag,
             ApiType.ReadChatRoom,
-            contentID = roomId.toString()
+            contentID = roomId.toString(),
+            isOptional = true
         )
         repo.dataProvider.requestData(q)
     }
@@ -57,7 +58,7 @@ open class ChatRoomListViewModel(val repo: PageRepository)
             type = ActivitSheetType.Select,
             title = repo.pagePresenter.activity.getString(R.string.alert_chatRoomDeleteConfirm),
             text = repo.pagePresenter.activity.getString(R.string.alert_chatRoomDeleteConfirmText),
-            isNegative = false,
+            isNegative = true,
             buttons = arrayListOf(
                 repo.pagePresenter.activity.getString(R.string.cancel),
                 repo.pagePresenter.activity.getString(R.string.button_delete)
@@ -65,7 +66,7 @@ open class ChatRoomListViewModel(val repo: PageRepository)
         ){
             if(it != 1) return@ActivitSheetEvent
             val q = ApiQ(tag,
-                ApiType.GetChatRooms,
+                ApiType.DeleteChatRoom,
                 contentID = roomId.toString()
             )
             repo.dataProvider.requestData(q)

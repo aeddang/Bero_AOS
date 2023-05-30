@@ -55,6 +55,8 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
         listDatas.value = resultList.toList()
         isBusy = false
         isLoading.value = false
+        onLoadedEnd(added)
     }
     abstract fun onLoaded(prevDatas:List<T>?, addDatas:V?):List<T>
+    open fun onLoadedEnd(addDatas:List<T>?){}
 }

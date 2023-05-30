@@ -244,7 +244,8 @@ fun HorizontalProfile(
                             horizontalArrangement = Arrangement.spacedBy(
                                 space = DimenMargin.thin.dp,
                                 alignment = Alignment.CenterHorizontally
-                            )
+                            ),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             name?.let {
                                 Text(
@@ -364,21 +365,24 @@ fun HorizontalProfile(
                             action?.let { it(funcType) }
                         }
                     HorizontalProfileFuncType.View ->
-                        WrapTransparentButton(
-                            action = { action?.let { it(funcType) } }
+                        Box(modifier = Modifier
+                            .clip(CircleShape)
+                            .background(funcViewColor)
+                            .padding(
+                                all = DimenMargin.micro.dp
+                            )
                         ) {
                             Text(
                                 funcValue ?: "" ,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.white ,
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(funcViewColor)
-                                    .padding(
-                                        all = DimenMargin.micro.dp
-                                    )
+                                color = ColorApp.white
                             )
+                            action?.let {
+                                TransparentButton(modifier = Modifier.matchParentSize()) {
+                                    it(funcType)
+                                }
+                            }
                         }
                 }
             }
@@ -404,8 +408,8 @@ fun HorizontalProfileComposePreview(){
         ) {
             HorizontalProfile(
                 type = HorizontalProfileType.Pet,
-                funcType = HorizontalProfileFuncType.SortButton,
-                funcValue = "button",
+                funcType = HorizontalProfileFuncType.View,
+                funcValue = " N ",
                 color = ColorBrand.primary,
                 image = null,
                 imagePath = null,

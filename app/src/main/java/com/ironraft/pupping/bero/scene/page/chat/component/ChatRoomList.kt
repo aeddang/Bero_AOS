@@ -20,9 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.component.item.UserAlbumListItem
 import com.ironraft.pupping.bero.scene.component.viewmodel.UserAlbumListViewModel
 import com.ironraft.pupping.bero.scene.page.chat.viewmodel.ChatRoomListViewModel
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiValue
 import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
+import com.lib.page.PageComposePresenter
 import com.lib.util.isScrolledToEnd
 import com.skeleton.component.item.EmptyItem
 import com.skeleton.component.item.EmptyItemType
@@ -42,6 +46,7 @@ fun ChatRoomList(
     marginBottom:Float = DimenMargin.medium
 ) {
     val owner = LocalLifecycleOwner.current
+    val pagePresenter: PageComposePresenter = get()
     val repository: PageRepository = get()
     val viewModel: ChatRoomListViewModel by remember { mutableStateOf(
         chatRoomListViewModel ?: ChatRoomListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE)
@@ -73,10 +78,10 @@ fun ChatRoomList(
             modifier = modifier
                 .fillMaxSize()
                 .pullRefresh(refreshState),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             if (isEmpty == true)
-                EmptyItem(type = EmptyItemType.MyList)
+                EmptyItem(type = EmptyItemType.Chat)
 
             else if(rooms != null)
                 rooms?.let { datas->
@@ -94,7 +99,12 @@ fun ChatRoomList(
                             ChatRoomListItem(
                                 data = data,
                                 isEdit = isEdit,
-                                onRead = { viewModel.read(data.roomId) },
+                                onRead = {
+                                    if (data.isRead.value == false) viewModel.read(data.roomId)
+                                    pagePresenter.openPopup(
+                                        PageProvider.getPageObject(PageID.ChatRoom)
+                                            .addParam(PageParam.data, data)
+                                    )},
                                 onExit = { viewModel.exit(data.roomId) }
                             )
                         }

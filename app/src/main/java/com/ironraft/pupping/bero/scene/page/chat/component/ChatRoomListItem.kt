@@ -10,12 +10,18 @@ import androidx.lifecycle.MutableLiveData
 import com.skeleton.component.item.profile.*
 import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.rest.ChatRoomData
+import com.lib.page.PageComposePresenter
 import com.lib.util.sinceNowDate
 import com.lib.util.toDate
 import com.lib.util.toDateUtc
 import com.skeleton.view.button.CircleButton
 import com.skeleton.view.button.CircleButtonType
+import com.skeleton.view.button.WrapTransparentButton
+import dev.burnoo.cokoin.get
 import java.time.LocalDate
 
 class ChatRoomListItemData{
@@ -57,50 +63,56 @@ fun ChatRoomListItem(
     onRead:() -> Unit,
     onExit:() -> Unit
 ){
+    val pagePresenter: PageComposePresenter = get()
     val isRead by data.isRead.observeAsState()
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(
-            space = DimenMargin.thin.dp,
-            alignment = Alignment.CenterHorizontally
-        )
-    ) {
-        HorizontalProfile(
-            type = HorizontalProfileType.Pet,
-            sizeType = HorizontalProfileSizeType.Small,
-            funcType = if(isRead == true) null else HorizontalProfileFuncType.View,
-            funcValue = if(isRead == true) null else "N",
-            imagePath = data.profileImagePath,
-            lv = data.lv,
-            name = data.title,
-            date = data.viewDate,
-            description = data.contents,
-            isSelected = false,
-            useBg = false
-        ){
-            when (it){
-                HorizontalProfileFuncType.View -> onRead()
-                else -> {
-                    /*
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.user)
-                        .addParam(key: .id, value:self.data.userId)
-                    )
-                    */
+    WrapTransparentButton(action = {
+        onRead()
+    }) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(
+                space = DimenMargin.thin.dp,
+                alignment = Alignment.CenterHorizontally
+            )
+        ) {
+            HorizontalProfile(
+                modifier = Modifier.weight(1.0f),
+                type = HorizontalProfileType.Pet,
+                sizeType = HorizontalProfileSizeType.Small,
+                funcType = if(isRead == true) null else HorizontalProfileFuncType.View,
+                funcValue = if(isRead == true) null else " N ",
+                imagePath = data.profileImagePath,
+                lv = data.lv,
+                name = data.title,
+                date = data.viewDate,
+                description = data.contents,
+                isSelected = false,
+                useBg = false
+            ){
+                when (it){
+                    HorizontalProfileFuncType.View -> onRead()
+                    else -> {
+                        pagePresenter.openPopup(
+                            PageProvider.getPageObject(PageID.User)
+                                .addParam(PageParam.id, data.userId)
+                        )
+                    }
+                }
+            }
+            if (isEdit){
+                CircleButton(
+                    modifier = Modifier.padding(all = DimenMargin.thin.dp),
+                    type = CircleButtonType.Icon,
+                    icon = R.drawable.exit,
+                    isSelected = false,
+                    activeColor = ColorBrand.primary
+                ){
+                    onExit()
                 }
             }
         }
-        if (isEdit){
-            CircleButton(
-                modifier = Modifier.padding(all = DimenMargin.thin.dp),
-                type = CircleButtonType.Icon,
-                icon = R.drawable.exit,
-                isSelected = false,
-                activeColor = ColorBrand.primary
-            ){
-                onExit()
-            }
-        }
     }
+
 }
 
 

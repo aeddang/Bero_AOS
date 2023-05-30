@@ -52,7 +52,7 @@ fun PageChat(
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
-    val viewModel: PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Album, repository).initSetup(owner)) }
+    val viewModel: PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Chat, repository).initSetup(owner)) }
     val chatRoomListViewModel: ChatRoomListViewModel by remember { mutableStateOf(
         ChatRoomListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE)
     )}
