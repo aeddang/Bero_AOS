@@ -57,12 +57,12 @@ object AppUtil {
         val diagonalInches = sqrt((dpHeight*dpHeight + dpWidth*dpWidth).toDouble())
         return diagonalInches >= check
     }
-
+    /*
     fun networkTimeDate(): LocalDateTime {
         return LocalDateTime.now()
-    }
-    fun networkDate(): LocalDate {
-        return LocalDate.now()
+    }*/
+    fun networkDate(): Date {
+        return Date()
     }
     fun clearAppData(ctx: Context) {
         // clearing appTag data

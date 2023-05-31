@@ -9,6 +9,7 @@ import com.lib.util.PageLog
 import com.ironraft.pupping.bero.store.api.rest.UserData
 import com.lib.util.replace
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
 import com.skeleton.sns.SnsUser
@@ -20,7 +21,7 @@ data class ModifyUserProfileData (
     var image:Bitmap? = null,
     var nickName:String? = null,
     var gender:Gender? = null,
-    var birth:LocalDate? = null,
+    var birth:Date? = null,
     var email:String? = null,
     var introduction:String? = null
 )
@@ -33,7 +34,7 @@ class UserProfile(val isMine:Boolean = false){
     val nickName:MutableLiveData<String?> = MutableLiveData<String?>()
     val introduction:MutableLiveData<String?> = MutableLiveData<String?>()
     val gender:MutableLiveData<Gender?> = MutableLiveData<Gender?>()
-    val birth:MutableLiveData<LocalDate?> = MutableLiveData<LocalDate?>()
+    val birth:MutableLiveData<Date?> = MutableLiveData<Date?>()
     val email:MutableLiveData<String?> = MutableLiveData<String?>()
     val lv:MutableLiveData<Int> = MutableLiveData<Int>(1)
     val status:MutableLiveData<FriendStatus> = MutableLiveData<FriendStatus>(FriendStatus.Norelation)
@@ -66,7 +67,7 @@ class UserProfile(val isMine:Boolean = false){
         introduction.value = data.introduce
         image.value = null
         status.value = if (data.isFriend == true) FriendStatus.Friend else FriendStatus.Norelation
-        date = data.createdAt?.toDate()?.toFormatString("EEEE, MMMM d, yyyy")
+        date = data.createdAt?.toDate()?.toDateFormatter("EEEE, MMMM d, yyyy")
         return this
     }
     fun setLv(value:Int){

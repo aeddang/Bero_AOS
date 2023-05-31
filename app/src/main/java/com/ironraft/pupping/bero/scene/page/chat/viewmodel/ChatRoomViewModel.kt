@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.scene.page.chat.viewmodel
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.R
@@ -16,16 +17,21 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.AppObserver
 import com.lib.page.ListViewModel
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+enum class ChatEvent {
+    Update
+}
 data class ChatListDataSet(
+    var id:Int = UUID.randomUUID().hashCode(),
     var index:Int = -1,
-    var date:LocalDate? = null,
-    var originDate:LocalDate?= null,
+    var date:Date? = null,
+    var originDate:Date?= null,
     var isMe:Boolean = false,
     var datas:ArrayList<ChatItemData> = arrayListOf()
 )
@@ -34,11 +40,12 @@ open class ChatRoomViewModel(val repo: PageRepository)
     :ListViewModel<ChatItemData,List<ChatData>>() {
     var currentRoomId:String = ""
     var currentUserId:String = ""
+    var scrollState: LazyListState? = null
     var me = repo.dataProvider.user.userId ?: ""
     val chats:MutableLiveData<List<ChatListDataSet>> = MutableLiveData(listOf())
     val user:MutableLiveData<User?> = MutableLiveData(null)
     val pet:MutableLiveData<PetProfile?> = MutableLiveData(null)
-
+    val event:MutableLiveData<ChatEvent?> = MutableLiveData(null)
     fun initSetup(owner: LifecycleOwner, pageSize:Int): ChatRoomViewModel {
         this.pageSize = pageSize
         setDefaultLifecycleOwner(owner)
@@ -85,8 +92,8 @@ open class ChatRoomViewModel(val repo: PageRepository)
         var isFirst:Boolean = chats.isEmpty()
         var currentDataSet = chats.firstOrNull() ?: ChatListDataSet()
         currentAdded.forEach{ add ->
-            val ymd = currentDataSet.originDate?.toFormatString("yyyyMMdd")
-            val chatYmd = add.date?.toFormatString("yyyyMMdd")
+            val ymd = currentDataSet.originDate?.toDateFormatter("yyyyMMdd")
+            val chatYmd = add.date?.toDateFormatter("yyyyMMdd")
             val isMe = currentDataSet.isMe
             if (isFirst) {
                 isFirst = false
@@ -115,11 +122,8 @@ open class ChatRoomViewModel(val repo: PageRepository)
         }
         chats.addAll (0, addedChat.reversed())
         this.chats.value = chats
-        /*
-        self.infinityScrollModel.onComplete(itemCount: added.count)
-        if self.infinityScrollModel.page == 1 , let last = self.chats.last {
-            self.infinityScrollModel.uiEvent = .scrollTo(last.hashId, .center)
-        }*/
+        event.value = ChatEvent.Update
+
     }
 
     fun insertChat(data:ChatData){
@@ -129,8 +133,9 @@ open class ChatRoomViewModel(val repo: PageRepository)
 
         var isFirst:Boolean = chats.isEmpty()
         var currentDataSet = chats.lastOrNull() ?: ChatListDataSet()
-        val ymd = currentDataSet.originDate?.toFormatString("yyyyMMdd")
-        val chatYmd = add.date?.toFormatString("yyyyMMdd")
+        currentDataSet.id =UUID.randomUUID().hashCode()
+        val ymd = currentDataSet.originDate?.toDateFormatter("yyyyMMdd")
+        val chatYmd = add.date?.toDateFormatter("yyyyMMdd")
         val isMe = currentDataSet.isMe
         if (isFirst) {
             isFirst = false
@@ -158,9 +163,7 @@ open class ChatRoomViewModel(val repo: PageRepository)
             chats.add(currentDataSet)
         }
         this.chats.value = chats
-
-        //self.infinityScrollModel.uiEvent = .scrollTo(currentDataSet.hashId)
-
+        event.value = ChatEvent.Update
     }
 
     fun delete(chatId:Int){
@@ -231,7 +234,7 @@ open class ChatRoomViewModel(val repo: PageRepository)
                     if(currentUserId != res.contentID) return@observe
                     val data = res.data as? ChatData ?: ChatData(
                         contents = res.requestData as? String,
-                        createdAt = LocalDate.now().toFormatString(),
+                        createdAt = Date().toDateFormatter(),
                         receiver = currentUserId
                     )
                     insertChat(data)

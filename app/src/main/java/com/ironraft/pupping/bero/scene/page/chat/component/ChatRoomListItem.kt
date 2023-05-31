@@ -23,6 +23,7 @@ import com.skeleton.view.button.CircleButtonType
 import com.skeleton.view.button.WrapTransparentButton
 import dev.burnoo.cokoin.get
 import java.time.LocalDate
+import java.util.Date
 
 class ChatRoomListItemData{
     var index:Int = -1; private set
@@ -30,7 +31,7 @@ class ChatRoomListItemData{
     var profileImagePath:String? = null; private set
     var title:String? = null; private set
     var contents:String? = null; private set
-    var date:LocalDate? = null; private set
+    var date:Date? = null; private set
     var viewDate:String? = null; private set
     var unreadCount:Int = 0; private set
     var userId:String? = null; private set

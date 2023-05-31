@@ -11,7 +11,7 @@ open class ComponentViewModel:ViewModel(),PageLifecycleUser{
     var isBusy = false
     var apiResult: ApiSuccess<ApiType>? = null; private set
     var apiError: ApiError<ApiType>? = null; private set
-
+    val scope = PageCoroutineScope()
 
     fun isValidResult(result: ApiSuccess<ApiType>):Boolean{
         if(result.hashId == apiResult?.hashId) return false

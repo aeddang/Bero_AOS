@@ -19,7 +19,7 @@ data class ModifyPetProfileData (
     var gender:Gender? =null,
     var isNeutralized:Boolean? = null,
     var isRepresentative:Boolean? = null,
-    var birth:LocalDate? = null,
+    var birth:Date? = null,
     var microchip:String? = null,
     var animalId:String? = null,
     var immunStatus:String? = null,
@@ -78,7 +78,7 @@ class PetProfile {
     val name:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val breed:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val gender:MutableLiveData<Gender?> = MutableLiveData<Gender?>(null)
-    val birth:MutableLiveData<LocalDate?> = MutableLiveData<LocalDate?>(null)
+    val birth:MutableLiveData<Date?> = MutableLiveData<Date?>(null)
     val isNeutralized:MutableLiveData<Boolean?> = MutableLiveData<Boolean?>(null)
     val immunStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
     val hashStatus:MutableLiveData<String?> = MutableLiveData<String?>(null)
@@ -113,7 +113,7 @@ class PetProfile {
         }
         return super.equals(other)
     }
-    fun init(nickName:String?,breed:String?, gender:Gender?, birth:LocalDate?) : PetProfile{
+    fun init(nickName:String?,breed:String?, gender:Gender?, birth:Date?) : PetProfile{
         this.name.value = nickName
         this.breed.value = breed
         this.gender.value = gender

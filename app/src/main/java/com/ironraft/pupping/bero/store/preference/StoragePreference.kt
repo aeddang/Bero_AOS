@@ -6,6 +6,7 @@ import com.ironraft.pupping.bero.BuildConfig
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.store.TopicCategory
 import com.lib.util.AppUtil
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 
 class StoragePreference(context: Context) : CachedPreference(context, PreferenceName.SETTING + BuildConfig.BUILD_TYPE) {
@@ -83,7 +84,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         set(value:Boolean){ put(StoragePreference.isFirstWalk, value) }
 
     fun isDailyBannerCheck(id:PageID):Boolean{
-        val now = AppUtil.networkDate().toFormatString("yyyyMMdd")
+        val now = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
         val prev =  getPageBannerCheckDate(id)
         return now == prev
     }
@@ -99,7 +100,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         return get(StoragePreference.bannerDate + id, null) as? String
     }
     fun updatedPageBannerValue(id:PageID, value:String){
-        val now = AppUtil.networkDate().toFormatString("yyyyMMdd")
+        val now = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
         put(StoragePreference.bannerValue + id, value)
         put(StoragePreference.bannerDate + id, now)
     }

@@ -24,10 +24,14 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.page.profile.PageAddDogStep
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
 import com.lib.util.toAge
+import com.lib.util.toDate
+import com.lib.util.toDateFormatter
+import com.lib.util.toLocalDate
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
 import java.time.LocalDate
 import java.util.Calendar
+import java.util.Date
 
 @Composable
 fun SelectDateStep(
@@ -37,13 +41,13 @@ fun SelectDateStep(
     next: (ModifyPetProfileData) -> Unit
 ) {
     val appTag = "SelectDateStep"
-    fun getPrevData() : LocalDate?{
+    fun getPrevData() : Date?{
         return when (step){
             PageAddDogStep.Birth -> profile?.birth
             else -> null
         }
     }
-    var selectDate:LocalDate  by remember { mutableStateOf(getPrevData() ?: LocalDate.now()) }
+    var selectDate:Date  by remember { mutableStateOf(getPrevData() ?: Date()) }
     val calendar:Calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
     fun onAction(){
@@ -61,7 +65,7 @@ fun SelectDateStep(
         ) {
             WheelDatePicker(
                 modifier = Modifier.fillMaxWidth(),
-                startDate = selectDate,
+                startDate = selectDate.toLocalDate() ?: LocalDate.now(),
                 maxDate = LocalDate.now(),
                 yearsRange = IntRange(currentYear-100, currentYear),
                 size = DpSize(256.dp, 256.dp),
@@ -74,7 +78,7 @@ fun SelectDateStep(
                     border = null
                 )
             ){ date ->
-                selectDate = date
+                selectDate = date.toDateFormatter("yyyyMMdd")?.toDate("yyyyMMdd") ?: Date()
 
             }
             SortButton(

@@ -28,7 +28,7 @@ interface ChatApi {
         @Query(ApiField.receiver) receiver: String?,
         @Query(ApiField.title) title: String?,
         @Query(ApiField.contents) contents: String?
-    ): ApiResponse<ChatsData>?
+    ): ApiResponse<ChatData>?
 
     @DELETE(Api.Chat.chat)
     suspend fun delete(

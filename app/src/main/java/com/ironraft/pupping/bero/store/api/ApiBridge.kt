@@ -20,6 +20,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.time.LocalDate
+import java.util.Date
 import java.util.HashMap
 
 class ApiBridge(
@@ -110,7 +111,7 @@ class ApiBridge(
 
             ApiType.GetWalk -> walk.get(apiQ.contentID)
             ApiType.GetWalks -> walk.getWalks(null,
-                (apiQ.requestData as? LocalDate)?.toFormatString("yyyy-MM-dd"),apiQ.page, apiQ.pageSize)
+                (apiQ.requestData as? Date)?.toDateFormatter("yyyy-MM-dd"),apiQ.page, apiQ.pageSize)
             ApiType.GetUserWalks -> walk.getWalks(
                 apiQ.contentID, null,apiQ.page, apiQ.pageSize)
             ApiType.SearchWalk -> walk.search(
@@ -121,7 +122,7 @@ class ApiBridge(
             ApiType.UpdateWalk -> getUpdateWalk(apiQ.contentID, apiQ.requestData as? WalkadditionalData)
             ApiType.CompleteWalk -> getUpdateWalk(apiQ.contentID, apiQ.requestData as? WalkadditionalData)
             ApiType.GetWalkSummary -> walk.getWalkSummary(apiQ.contentID)
-            ApiType.GetMonthlyWalk -> walk.getMonthlyWalks(apiQ.contentID, (apiQ.requestData as? LocalDate)?.toFormatString("yyyy-MM"))
+            ApiType.GetMonthlyWalk -> walk.getMonthlyWalks(apiQ.contentID, (apiQ.requestData as? Date)?.toDateFormatter("yyyy-MM"))
             ApiType.GetChats -> chat.get(apiQ.contentID, apiQ.page, apiQ.pageSize)
             ApiType.GetRoomChats -> chat.getRoomList(apiQ.contentID, apiQ.page, apiQ.pageSize)
             ApiType.SendChat -> chat.post(apiQ.contentID, "", apiQ.requestData as? String)
@@ -141,7 +142,7 @@ class ApiBridge(
             image = MultipartBody.Part.createFormData("contents", file.name, imgBody)
         }
         val name: RequestBody? = getRequestBody(model?.nickName)
-        val birthdate: RequestBody? = getRequestBody(model?.birth?.toFormatString()?.substring(0, 19))
+        val birthdate: RequestBody? = getRequestBody(model?.birth?.toDateFormatter()?.substring(0, 19))
         val sex: RequestBody? = getRequestBody(model?.gender?.apiDataKey)
         val introduce: RequestBody? = getRequestBody(model?.introduction)
         user.put(userId ?: "", name, birthdate, sex, introduce, image)
@@ -164,7 +165,7 @@ class ApiBridge(
     private fun getUpdatePetProfile(petId:String, profile: ModifyPetProfileData?) = runBlocking {
         val name: RequestBody? = getRequestBody(profile?.name)
         val breed: RequestBody? = getRequestBody(profile?.breed)
-        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString()?.substring(0, 19))
+        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toDateFormatter()?.substring(0, 19))
         val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey)
         val regNumber: RequestBody? = getRequestBody(profile?.microchip)
         val animalId: RequestBody? = getRequestBody(profile?.animalId)
@@ -184,7 +185,7 @@ class ApiBridge(
     private fun getRegistPetProfile(userId:String?, profile: ModifyPetProfileData?) = runBlocking {
         val name: RequestBody? = getRequestBody(profile?.name)
         val breed: RequestBody? = getRequestBody(profile?.breed)
-        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toFormatString())
+        val birthdate: RequestBody? = getRequestBody(profile?.birth?.toDateFormatter())
         val sex: RequestBody? = getRequestBody(profile?.gender?.apiDataKey)
         val regNumber: RequestBody? = getRequestBody(profile?.microchip)
         val animalId: RequestBody? = getRequestBody(profile?.animalId)

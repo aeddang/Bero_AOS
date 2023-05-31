@@ -1,6 +1,5 @@
 package com.ironraft.pupping.bero.scene.page.chat.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -15,33 +14,21 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.scene.component.item.UserAlbumListItem
-import com.ironraft.pupping.bero.scene.component.viewmodel.UserAlbumListViewModel
-import com.ironraft.pupping.bero.scene.page.chat.viewmodel.ChatRoomListViewModel
 import com.ironraft.pupping.bero.scene.page.chat.viewmodel.ChatRoomViewModel
-import com.ironraft.pupping.bero.store.PageRepository
-import com.ironraft.pupping.bero.store.api.ApiValue
-import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.util.AppUtil
 import com.lib.util.isScrolledToEnd
-import com.lib.util.toFormatString
-import com.skeleton.component.item.EmptyItem
-import com.skeleton.component.item.EmptyItemType
+import com.lib.util.toDateFormatter
 import com.skeleton.component.item.profile.HorizontalProfile
 import com.skeleton.component.item.profile.HorizontalProfileSizeType
 import com.skeleton.component.item.profile.HorizontalProfileType
 import com.skeleton.theme.*
-import dev.burnoo.cokoin.get
 import kotlinx.coroutines.launch
 
 
@@ -73,7 +60,7 @@ fun ChatList(
         derivedStateOf { scrollState.isScrolledToEnd() }
     }
     if(endOfListReached) {
-        viewModel.continueLoad()
+        //viewModel.continueLoad()
     }
 
     AppTheme {
@@ -85,7 +72,7 @@ fun ChatList(
         ) {
             if (isEmpty == true) {
                 Text(
-                    AppUtil.networkDate().toFormatString("EEEE, MMMM d, yyyy") ?: "",
+                    AppUtil.networkDate().toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                     fontSize = FontSize.thin.sp,
                     color = ColorApp.grey400,
                     textAlign = TextAlign.Center,
@@ -114,7 +101,7 @@ fun ChatList(
                             datas.firstOrNull()?.originDate?.let {
                                 item {
                                     Text(
-                                        it.toFormatString("EEEE, MMMM d, yyyy") ?: "",
+                                        it.toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                                         fontSize = FontSize.thin.sp,
                                         color = ColorApp.grey400,
                                         textAlign = TextAlign.Center,
@@ -123,17 +110,17 @@ fun ChatList(
                                 }
                             }
                         }
-                        items(datas, key = { it.index }) { data ->
+                        items(datas, key = { it.id }) { data ->
                             Column (
                                 verticalArrangement = Arrangement.spacedBy(0.dp)
                             ) {
                                 data.date?.let {
                                     Text(
-                                        it.toFormatString("EEEE, MMMM d, yyyy") ?: "",
+                                        it.toDateFormatter() ?: "",
                                         fontSize = FontSize.thin.sp,
                                         color = ColorApp.grey400,
                                         textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxSize().padding(bottom = DimenMargin.regular.dp)
                                     )
                                 }
                                 if (!data.isMe) {

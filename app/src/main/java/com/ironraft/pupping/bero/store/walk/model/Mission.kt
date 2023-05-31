@@ -15,7 +15,10 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.util.AppUtil
-import com.lib.util.toDateTime
+import com.lib.util.toDate
+import com.lib.util.toFormatString
+import com.lib.util.toLocalDate
+import com.lib.util.toLocalDateTime
 import com.skeleton.component.map.MapUserData
 import com.skeleton.theme.ColorApp
 import java.time.LocalDateTime
@@ -68,7 +71,7 @@ class Mission:MapUserData(){
     var duration:Double = 0.0; private set
     var isStart:Boolean = false; private set
     var isCompleted:Boolean = false; private set
-    var playStartDate:LocalDateTime? = null; private set
+    var playStartDate:Date? = null; private set
     var playTime:Double = 0.0; private set
     var playStartDistance:Double = 0.0; private set
     var playDistance:Double = 0.0; private set
@@ -77,8 +80,8 @@ class Mission:MapUserData(){
     var userId:String? = null; private set
     var isFriend:Boolean = false; private set
     var user: User? = null; private set
-    var startDate:LocalDateTime? = null; private set
-    var endDate:LocalDateTime? = null; private set
+    var startDate:Date? = null; private set
+    var endDate:Date? = null; private set
     var completedMissions:ArrayList<Int> = arrayListOf()
     var distanceFromMe:Double? = null; private set
 
@@ -104,7 +107,7 @@ class Mission:MapUserData(){
 
     fun start(location:Location, walkDistance:Double) {
         departure = location
-        playStartDate = AppUtil.networkTimeDate()
+        playStartDate = AppUtil.networkDate()
         playStartDistance = walkDistance
         playDistance = 0.0
         playTime = 0.0
@@ -125,8 +128,8 @@ class Mission:MapUserData(){
     }
     fun completed(walkDistance:Double) {
         playDistance = walkDistance - playStartDistance
-        val start = playStartDate ?: LocalDateTime.now()
-        playTime = start.until(AppUtil.networkTimeDate(), ChronoUnit.SECONDS).toDouble()
+        val start = playStartDate ?: Date()
+        playTime = start.toLocalDate()?.until(AppUtil.networkDate().toLocalDate(), ChronoUnit.SECONDS)?.toDouble() ?: 0.0
         isCompleted = true
     }
 
@@ -147,9 +150,11 @@ class Mission:MapUserData(){
         point = data.point ?: 0
         exp = data.exp ?: 0.0
         data.createdAt?.let { date->
-            val start = date.toDateTime()
+            val start = date.toDate()
             this.startDate = start
-            this.endDate = start?.plusSeconds (data.duration?.toLong() ?: 0)
+            start.toLocalDateTime()?.let {
+                this.endDate = it.plusSeconds(data.duration?.toLong() ?: 0).toFormatString()?.toDate()
+            }
         }
         data.geos?.lastOrNull()?.let { loc->
             this.location = LatLng(loc.lat ?: 0.0, loc.lng ?: 0.0)
@@ -175,7 +180,7 @@ class Mission:MapUserData(){
         title = petProfile?.name?.value
         pictureUrl = petProfile?.imagePath?.value
         data.createdAt?.let { date->
-            date.toDateTime()?.let { endDate = it }
+            date.toDate()?.let { endDate = it }
         }
         data.location?.let {loc->
             location = LatLng(loc.lat ?: 0.0, loc.lng ?: 0.0)
@@ -193,10 +198,10 @@ class Mission:MapUserData(){
         point = data.point ?: 0
         exp = data.exp ?: 0.0
         data.createdAt?.let { date->
-            date.toDateTime()?.let {
+            date.toDate()?.let {
                 endDate = it
                 val d:Long = data.duration?.toLong() ?: 0
-                startDate = it.minusSeconds(d)
+                startDate = it.toLocalDateTime()?.minusSeconds(d)?.toFormatString()?.toDate()
             }
         }
         data.place?.let {place ->

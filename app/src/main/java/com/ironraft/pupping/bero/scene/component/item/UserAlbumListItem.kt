@@ -64,7 +64,7 @@ class UserAlbumListItemData{
         data.pets?.find { it.isRepresentative == true }?.let {
             petProfile = PetProfile().init(data = it, userId = userProfile?.userId)
         }
-        date = data.createdAt?.toDate()?.toFormatString("MMMM d, yyyy")
+        date = data.createdAt?.toDate()?.toDateFormatter("MMMM d, yyyy")
         postId = albumData?.pictureId.toString()
         return this
     }

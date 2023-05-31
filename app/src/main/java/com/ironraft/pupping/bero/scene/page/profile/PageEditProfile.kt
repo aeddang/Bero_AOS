@@ -40,6 +40,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import java.util.Date
 
 enum class ProfileEditType {
     Name, Gender, Birth, Introduction, Weight, Height, Immun, Hash, AnimalId, Microchip;
@@ -129,7 +130,7 @@ data class ProfileEditData (
     var name:String? = null,
     var gender:Gender? = null,
     var isNeutralized:Boolean? = null,
-    var birth:LocalDate? = null,
+    var birth:Date? = null,
     var introduction:String? = null,
     var microchip:String? = null,
     var animalId:String? = null,
@@ -161,7 +162,7 @@ fun PageEditProfile(
     var name:String by remember { mutableStateOf( "" ) }
     var weight:String by remember { mutableStateOf( "" ) }
     var height:String by remember { mutableStateOf( "" ) }
-    var birth:LocalDate by remember { mutableStateOf( LocalDate.now() ) }
+    var birth:Date by remember { mutableStateOf( Date() ) }
     var gender:Gender? by remember { mutableStateOf( null ) }
     var isNeutralized:Boolean by remember { mutableStateOf( false ) }
     var introduction:String by remember { mutableStateOf( "" ) }
@@ -179,7 +180,7 @@ fun PageEditProfile(
 
             profile?.let { profile->
                 name = profile.name.value ?: ""
-                birth = profile.birth.value ?: LocalDate.now()
+                birth = profile.birth.value ?: Date()
                 gender = profile.gender.value
                 introduction = profile.getIntroduction(LocalContext.current)
                 weight = profile.weight.value?.toString() ?: ""
@@ -193,7 +194,7 @@ fun PageEditProfile(
             }
             user?.let {user->
                 name = user.currentProfile.nickName.value ?: ""
-                birth = user.currentProfile.birth.value ?: LocalDate.now()
+                birth = user.currentProfile.birth.value ?: Date()
                 gender = user.currentProfile.gender.value
                 introduction = user.currentProfile.getIntroduction(LocalContext.current)
                 needAgree = true

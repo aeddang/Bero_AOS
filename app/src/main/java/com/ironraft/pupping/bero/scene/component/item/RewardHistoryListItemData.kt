@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.ironraft.pupping.bero.store.api.rest.RewardHistoryData
 import com.ironraft.pupping.bero.store.api.rest.RewardType
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.skeleton.component.item.HistoryItem
 import com.skeleton.component.item.HistoryType
@@ -21,7 +22,7 @@ class RewardHistoryListItemData{
         index = idx
         rewardType = RewardType.getType(data.expType)
         title = rewardType?.text
-        date = data.createdAt?.toDate()?.toFormatString("MMMM d, yyyy")
+        date = data.createdAt?.toDate()?.toDateFormatter("MMMM d, yyyy")
         valueType = type
         value = when (valueType) {
             HistoryType.Exp -> data.exp?.toInt() ?: 0

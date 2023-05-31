@@ -59,6 +59,7 @@ import com.lib.util.AppUtil
 import com.lib.util.rememberForeverLazyListState
 import com.lib.util.rememberForeverScrollState
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.skeleton.component.calendar.CPCalendar
 import com.skeleton.component.calendar.CalenderEventType
@@ -78,6 +79,7 @@ import com.skeleton.view.button.SelectButton
 import com.skeleton.view.button.SelectButtonType
 import dev.burnoo.cokoin.get
 import java.time.LocalDate
+import java.util.Date
 
 class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHistory, repo){
     var currentUserId:String = ""; private set
@@ -97,11 +99,11 @@ class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHi
             else ->{}
         }
     }
-    fun getMonthlyWalk(date:LocalDate ){
+    fun getMonthlyWalk(date:Date ){
         val q = ApiQ(appTag, ApiType.GetMonthlyWalk, contentID = currentUserId, requestData = date)
         repo.dataProvider.requestData(q)
     }
-    fun getWalks(date:LocalDate){
+    fun getWalks(date:Date){
 
         val q = ApiQ(appTag, ApiType.GetWalks, contentID = currentUserId, requestData = date, pageSize = 999 )
         repo.dataProvider.requestData(q)
@@ -116,7 +118,7 @@ class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHi
                 ApiType.GetMonthlyWalk -> {
                     (res.data as? List<String>)?.let{ datas->
                         selectAbleDate.value = datas.map {
-                            it.toDate("yyyy-MM-dd")?.toFormatString("yyyyMMdd") ?: ""  }
+                            it.toDate("yyyy-MM-dd").toDateFormatter("yyyyMMdd")}
                         if(walkDatas.value?.isEmpty() == true) {
                             getWalks(AppUtil.networkDate())
                         }
@@ -128,9 +130,9 @@ class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHi
                         val items = datas.mapIndexed{ idx, data ->
                             WalkListItemData().setData(data, idx, ac)
                         }
-                        (res.requestData as? LocalDate)?.let {
-                            val dateStr = it.toFormatString("EEEE, MMMM d") ?: ""
-                            if(it.isEqual(AppUtil.networkDate())){
+                        (res.requestData as? Date)?.let {
+                            val dateStr = it.toDateFormatter("EEEE, MMMM d") ?: ""
+                            if(it.toDateFormatter("yyyyMMdd") == AppUtil.networkDate().toDateFormatter("yyyyMMdd")){
                                 currentDate.value = dateStr + "(" + repo.pagePresenter.activity.getString(R.string.today) + ")"
                             } else {
                                 currentDate.value = dateStr

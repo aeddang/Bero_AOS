@@ -11,7 +11,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Patterns
 import android.util.Size
-import java.sql.Timestamp
+import com.ironraft.pupping.bero.store.SystemEnvironment
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.*
@@ -21,16 +21,50 @@ import java.util.regex.Pattern
 import kotlin.math.floor
 import kotlin.math.round
 
-
+fun Date.toLocalDateTime(): LocalDateTime? {
+    return this.toInstant()
+        .atOffset(ZoneOffset.UTC)
+        .toLocalDateTime()
+}
+fun Date.toLocalDate(): LocalDate? {
+    return this.toInstant()
+        .atOffset(SystemEnvironment.zoneOffset)
+        //.atZone(ZoneId.systemDefault())
+        .toLocalDate()
+}
 fun String.isEmailType():Boolean {
     val pattern: Pattern = Patterns.EMAIL_ADDRESS
     return pattern.matcher(this).matches()
 }
 
+fun String.toDate(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone("UTC")): Date {
+    val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
+    parser.timeZone = timeZone
+    return parser.parse(this)
+}
+
+fun Date.toDateFormatter(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss", timeZone: TimeZone = TimeZone.getDefault()): String {
+    val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
+    formatter.timeZone = timeZone
+    return formatter.format(this)
+}
+fun Date.isEqualDay(date:Date): Boolean{
+    return this.toDateFormatter("yyyyMMdd") == date.toDateFormatter("yyyyMMdd")
+}
+fun LocalDate.toDateFormatter(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"): String? {
+    //val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
+    //return formatter.format(this)
+    val date = LocalDateTime.of(this, LocalTime.MIN)
+    return date.toFormatString(dateFormat.replace("Z", ""))
+}
+/*
 fun String.toDate(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): LocalDate? {
     return try {
+        //val str = this.replace("Z", "")
+        //val utc = str.toDateUtc(dateFormat) ?: return null
+        //return utc.toLocalDate()
         val pattern = DateTimeFormatter.ofPattern(dateFormat)
         return LocalDate.parse(this.replace("Z", ""), pattern)
     } catch (e: Exception) {
@@ -41,24 +75,27 @@ fun String.toDateTime(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): LocalDateTime? {
     return try {
-        val pattern = DateTimeFormatter.ofPattern(dateFormat)
-        return LocalDateTime.parse(this.replace("Z", ""), pattern)
+        val str = this.replace("Z", "")
+        val utc = this.toDateUtc(dateFormat) ?: return null
+        return utc.toLocalDateTime()
+        //val pattern = DateTimeFormatter.ofPattern(dateFormat)
+        //return LocalDateTime.parse(this.replace("Z", ""), pattern)
     } catch (e: Exception) {
         null
     }
 }
-
+fun LocalDate.toFormatString(
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
+): String? {
+    val date  = LocalDateTime.of(this, LocalTime.MIN)
+    return date.toFormatString(dateFormat.replace("Z", ""))
+}
+*/
 fun String.onlyNumric() : String {
     return this.filter { it.isDigit() }.reduce { acc, c -> acc.plus(c.digitToInt()) }.toString()
 }
 
-fun LocalDate.toFormatString(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
-): String? {
 
-    val date  = LocalDateTime.of(this, LocalTime.MIN)
-    return date.toFormatString(dateFormat.replace("Z", ""))
-}
 
 @SuppressLint("SimpleDateFormat")
 fun String.toDateUtc(
@@ -67,13 +104,14 @@ fun String.toDateUtc(
     val simpleDateFormat = SimpleDateFormat(dateFormat)
     return simpleDateFormat.parse(this)
 }
-
+/*
 @SuppressLint("SimpleDateFormat")
 fun Date.toFormatString(
     dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): String? {
     return SimpleDateFormat(dateFormat).format(this)
 }
+ */
 fun Date.sinceNow():String {
     val diff = -(this.time/1000.0)
     return diff.since()
@@ -93,7 +131,7 @@ fun Date.sinceNowDate(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
         return "Yesterday"
     }
     if (!isLocale) return SimpleDateFormat(dateFormat).format(this)
-    return this.toFormatString(dateFormat)?.toDate(dateFormat)?.toFormatString(returnFormat) ?: ""
+    return this.toDateFormatter() //toFormatString(dateFormat)?.toDate(dateFormat)?.toFormatString(returnFormat) ?: ""
 }
 
 
@@ -110,12 +148,12 @@ fun LocalDateTime.toFormatString(
 
 
 
-fun LocalDate.toAge(trailing:String = "Y", subTrailing:String = "M", isKr:Boolean = false) : String {
-    val now = LocalDate.now()
-    val yy = now.toFormatString("yyyy") ?: "0"
-    val birthYY = toFormatString("yyyy") ?: "0"
-    val mm = now.toFormatString("MM") ?: "0"
-    val birthMM = toFormatString("MM") ?: "0"
+fun Date.toAge(trailing:String = "Y", subTrailing:String = "M", isKr:Boolean = false) : String {
+    val now = Date()
+    val yy = now.toDateFormatter("yyyy") ?: "0"
+    val birthYY = toDateFormatter("yyyy") ?: "0"
+    val mm = now.toDateFormatter("MM") ?: "0"
+    val birthMM = toDateFormatter("MM") ?: "0"
 
     val yearDiff = yy.toInt() - birthYY.toInt()
     val monthDiff = mm.toInt() - birthMM.toInt()

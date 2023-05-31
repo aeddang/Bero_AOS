@@ -73,15 +73,16 @@ open class ChatRoomListViewModel(val repo: PageRepository)
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.setDefaultLifecycleOwner(owner)
         repo.dataProvider.result.observe(owner) {
             val res = it ?: return@observe
             when ( res.type ){
                 ApiType.GetChatRooms -> {
+                    val lists = res.data as? List<*> ?: return@observe
+                    val datas = lists.filterIsInstance<ChatRoomData>()
                     if(res.page == 0) { reset() }
-                    loaded(res.data as? List<ChatRoomData> ?: listOf())
+                    loaded(datas)
                 }
                 ApiType.DeleteChatRoom ->{
                     reset()

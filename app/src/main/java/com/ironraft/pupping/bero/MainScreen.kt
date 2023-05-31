@@ -6,8 +6,9 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -15,21 +16,19 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ironraft.pupping.bero.activityui.*
 import com.ironraft.pupping.bero.scene.component.tab.BottomTab
 import com.ironraft.pupping.bero.scene.page.intro.PageIntro
 import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
 import com.ironraft.pupping.bero.scene.page.PageTest
-import com.ironraft.pupping.bero.scene.page.PageTest1
 import com.ironraft.pupping.bero.scene.page.chat.PageChat
 import com.ironraft.pupping.bero.scene.page.chat.PageChatRoom
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
@@ -63,14 +62,11 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
-import com.ironraft.pupping.bero.store.RepositoryEvent
-import com.ironraft.pupping.bero.store.RepositoryStatus
-import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.lib.page.*
 import com.lib.util.PageLog
 import com.skeleton.theme.*
 import com.skeleton.view.progress.LoadingIndicator
-import org.koin.compose.koinInject
+import dev.burnoo.cokoin.get
 
 enum class SceneEventType {
     Initate, Check,
@@ -104,8 +100,14 @@ fun PageApp(
     sheetState: ModalBottomSheetState,
     modifier: Modifier = Modifier
 ) {
-    val activityModel = koinInject<ActivityModel>()
-    val pageAppViewModel = koinInject<PageAppViewModel>()
+    val activityModel:ActivityModel = get()
+    val pageAppViewModel:PageAppViewModel = get()
+    val repository: PageRepository = get()
+    val owner = LocalLifecycleOwner.current
+    val chatFunctionViewModel: ChatFunctionViewModel by remember { mutableStateOf(
+        ChatFunctionViewModel(repository).initSetup(owner)
+    ) }
+
     val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
 
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
@@ -117,9 +119,18 @@ fun PageApp(
         .background(ColorApp.black)){
         Scaffold(
             bottomBar = {
-                currentTopPage?.let {
-                    if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
+                Column(
+                    verticalArrangement =  Arrangement.spacedBy(0.dp)
+                ) {
+                    ChatBox(
+                        modifier = Modifier.weight(1.0f),
+                        chatFunctionViewModel = chatFunctionViewModel
+                    )
+                    currentTopPage?.let {
+                        if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
+                    }
                 }
+
             }
         ) {
             AppTheme {
@@ -140,9 +151,6 @@ fun PageApp(
                         )
                     }
                 }
-
-
-
             }
         }
         ActivitySelectController(modalSheetState = selectState)

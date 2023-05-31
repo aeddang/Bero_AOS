@@ -35,32 +35,37 @@ import com.ironraft.pupping.bero.scene.page.profile.ProfileEditData
 import com.ironraft.pupping.bero.scene.page.profile.ProfileEditType
 import com.ironraft.pupping.bero.store.provider.model.Gender
 import com.ironraft.pupping.bero.store.provider.model.ModifyPetProfileData
+import com.lib.util.isEqualDay
 import com.lib.util.toAge
+import com.lib.util.toDate
+import com.lib.util.toDateFormatter
+import com.lib.util.toLocalDate
+import com.lib.util.toLocalDateTime
 import com.lib.util.toggle
 import com.skeleton.theme.*
 import com.skeleton.view.button.*
 import dev.burnoo.cokoin.Koin
 import java.time.LocalDate
 import java.util.Calendar
+import java.util.Date
 
 @Composable
 fun SelectDateEdit(
-    prevData: LocalDate = LocalDate.now(),
+    prevData: Date = Date(),
     type: ProfileEditType,
     needAgree:Boolean = false,
     edit: (ProfileEditData) -> Unit
 ) {
     val appTag = "SelectDateEdit"
-    var selectDate:LocalDate by remember { mutableStateOf(prevData) }
-    var isAgree:Boolean by remember { mutableStateOf(!prevData.isEqual(LocalDate.now())) }
+    var selectDate:Date by remember { mutableStateOf(prevData) }
+    var isAgree:Boolean by remember { mutableStateOf(prevData.time != Date().time) }
 
     val calendar:Calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
 
     fun onAction(){
-
         if (!isAgree && needAgree) return
-        if (prevData.isEqual(selectDate)) return
+        if (prevData.isEqualDay(selectDate)) return
         when (type){
             ProfileEditType.Birth -> edit(
                 ProfileEditData(birth = selectDate)
@@ -82,7 +87,7 @@ fun SelectDateEdit(
             ) {
                 WheelDatePicker(
                     modifier = Modifier.fillMaxWidth(),
-                    startDate = selectDate,
+                    startDate = selectDate.toLocalDate() ?: LocalDate.now(),
                     maxDate = LocalDate.now(),
                     yearsRange = IntRange(currentYear - 100, currentYear),
                     size = DpSize(256.dp, 256.dp),
@@ -95,8 +100,7 @@ fun SelectDateEdit(
                         border = null
                     )
                 ) { date ->
-                    selectDate = date
-
+                    selectDate = date.toDateFormatter("yyyyMMdd")?.toDate("yyyyMMdd") ?: Date()
                 }
                 SortButton(
                     type = SortButtonType.StrokeFill,
@@ -125,7 +129,7 @@ fun SelectDateEdit(
                     color = ColorBrand.primary,
                     isActive =
                     if( !isAgree && needAgree ) false
-                    else (!prevData.isEqual(selectDate))
+                    else (!prevData.isEqualDay(selectDate))
                 ) {
                     onAction()
                 }

@@ -55,6 +55,7 @@ import com.lib.page.*
 import com.lib.util.AppUtil
 import com.lib.util.rememberForeverScrollState
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.skeleton.component.tab.MenuTab
 import com.skeleton.theme.ColorApp
@@ -68,6 +69,7 @@ import com.skeleton.theme.FontSize
 import dev.burnoo.cokoin.get
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Date
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -138,15 +140,15 @@ class ReportData(val ctx:Context) {
         data.times?.let { missionTimes->
             val count = missionTimes.count()
             daysWalkData = ArcGraphData(value = myCount, max = count.toFloat())
-            val today = AppUtil.networkDate().toFormatString("yyyyMMdd")
+            val today = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
             val values:List<Float> = missionTimes.map{ time ->
                 min(50.0, time.v ?: 0.0).toFloat() / 50f
             }
             val lines:List<String> = missionTimes.mapIndexed{idx, time ->
                 if (time.d == today) { todayIdx = idx }
-                val date = time.d?.toDate("yyyyMMdd") ?: LocalDate.now()
-                val mm = date.toFormatString("MM")?.toInt().toString()
-                val dd = date.toFormatString("dd")?.toInt().toString()
+                val date = time.d?.toDate("yyyyMMdd") ?: Date()
+                val mm = date.toDateFormatter("MM").toInt().toString()
+                val dd = date.toDateFormatter("dd").toInt().toString()
                 "$mm/$dd"
             }
             daysWalkTimeData = LineGraphData(values=values, lines=lines)

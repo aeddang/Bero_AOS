@@ -35,6 +35,7 @@ import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.lib.page.ComponentViewModel
 import com.lib.page.PagePresenter
 import com.lib.util.showCustomToast
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.lib.util.toggle
 import com.skeleton.component.calendar.CPCalendar
@@ -68,13 +69,13 @@ fun WalkTopInfo(
     fun onInit():Boolean{
         val start = mission.startDate ?: return true
         val end = mission.endDate ?: return true
-        val ymdStart = start.toFormatString("yyyyMM")
-        val ymdEnd = end.toFormatString("yyyyMM")
+        val ymdStart = start.toDateFormatter("yyyyMM")
+        val ymdEnd = end.toDateFormatter("yyyyMM")
         if (ymdStart == ymdEnd) {
-            day = end.toFormatString("MMMM d, yyyy")
-            time = start.toFormatString("HH:mm") + " - " + end.toFormatString("HH:mm")
+            day = end.toDateFormatter("MMMM d, yyyy")
+            time = start.toDateFormatter("HH:mm") + " - " + end.toDateFormatter("HH:mm")
         } else {
-            time = start.toFormatString("MMMM d, yyyy HH:mm") + " - " + end.toFormatString("d, HH:mm")
+            time = start.toDateFormatter("MMMM d, yyyy HH:mm") + " - " + end.toDateFormatter("d, HH:mm")
         }
         return true
     }

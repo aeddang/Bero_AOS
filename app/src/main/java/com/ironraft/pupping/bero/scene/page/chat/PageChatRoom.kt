@@ -9,7 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.SceneEvent
+import com.ironraft.pupping.bero.SceneEventType
 import com.ironraft.pupping.bero.activityui.ActivitRadioEvent
 import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.koin.pageModelModule
@@ -33,6 +36,7 @@ import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
+import kotlinx.coroutines.launch
 
 @Composable
 fun PageChatRoom(
@@ -41,6 +45,7 @@ fun PageChatRoom(
     val appTag = PageID.ChatRoom.value
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
+    val appSceneObserver:AppSceneObserver = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel: PageViewModel by remember { mutableStateOf(PageViewModel(PageID.ChatRoom, repository).initSetup(owner)) }
     val chatRoomViewModel: ChatRoomViewModel by remember { mutableStateOf(
@@ -50,9 +55,9 @@ fun PageChatRoom(
         ReportFunctionViewModel(repository).initSetup(owner)
 
     )}
-
     val scrollState: LazyListState = rememberForeverLazyListState(key = appTag)
     val currentPage = viewModel.currentPage.observeAsState()
+    val onClose = viewModel.onClose.observeAsState()
 
     var roomData:ChatRoomListItemData? by remember { mutableStateOf( null ) }
     val user by chatRoomViewModel.user.observeAsState()
@@ -62,10 +67,17 @@ fun PageChatRoom(
         if(!viewModel.isInit){
             viewModel.isInit = true
             roomData = page.getParamValue(PageParam.data) as? ChatRoomListItemData
+            val userId = roomData?.userId ?: ""
+            chatRoomViewModel.scrollState = scrollState
             chatRoomViewModel.currentRoomId = roomData?.roomId.toString()
-            chatRoomViewModel.currentUserId = roomData?.userId ?: ""
+            chatRoomViewModel.currentUserId = userId
             chatRoomViewModel.load()
+            appSceneObserver.event.value = SceneEvent(SceneEventType.SetupChat, value = userId)
         }
+    }
+    onClose.value?.let {
+        viewModel.onClose.value = null
+        appSceneObserver.event.value = SceneEvent(SceneEventType.CloseChat)
     }
 
     fun onMore(){
@@ -100,6 +112,18 @@ fun PageChatRoom(
                 else -> {}
             }
         }
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+    fun onResetScroll(){
+        coroutineScope.launch {
+            scrollState.animateScrollToItem(chatRoomViewModel.chats.value?.count() ?: 0 )
+        }
+    }
+    val chetEvent = chatRoomViewModel.event.observeAsState()
+    chetEvent.value?.let {
+        chatRoomViewModel.event.value = null
+        onResetScroll()
     }
 
     Column (

@@ -13,6 +13,7 @@ import com.ironraft.pupping.bero.store.api.rest.*
 import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.ironraft.pupping.bero.store.walk.model.MissionType
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
 import com.skeleton.sns.SnsType
 import com.skeleton.sns.SnsUser
@@ -272,7 +273,7 @@ class History{
         duration = data.duration
         distance = data.distance
         point = data.point ?: 0
-        date = data.createdAt?.toDate("yyyy-MM-dd'T'HH:mm:ss")?.toFormatString("yy-MM-dd HH:mm")
+        date = data.createdAt?.toDate("yyyy-MM-dd'T'HH:mm:ss")?.toDateFormatter("yy-MM-dd HH:mm")
         return this
     }
 }

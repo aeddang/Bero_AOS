@@ -22,15 +22,16 @@ import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.api.rest.ChatData
 import com.lib.util.toDate
-import com.lib.util.toFormatString
-import java.time.LocalDate
+import com.lib.util.toDateFormatter
+
+import java.util.Date
 
 class ChatItemData{
     var index:Int = -1; private set
     var chatId:Int = -1; private set
     var isMe:Boolean = false; private set
     var contents:String = ""; private set
-    var date:LocalDate? = null; private set
+    var date:Date? = null; private set
     val isDelete:MutableLiveData<Boolean> = MutableLiveData(false)
     fun setData(data:ChatData, me:String, idx:Int) : ChatItemData {
         chatId = data.chatId ?: -1
@@ -75,7 +76,7 @@ fun ChatItem(
             if (data.isMe) {
                 data.date?.let {
                     Text(
-                        it.toFormatString("hh:mm a") ?: "",
+                        it.toDateFormatter("hh:mm a"),
                         fontWeight = FontWeight.Light,
                         fontSize = FontSize.tiny.sp,
                         color = ColorApp.grey300
@@ -101,7 +102,7 @@ fun ChatItem(
             if (!data.isMe) {
                 data.date?.let {
                     Text(
-                        it.toFormatString("hh:mm a") ?: "",
+                        it.toDateFormatter("hh:mm a"),
                         fontWeight = FontWeight.Light,
                         fontSize = FontSize.tiny.sp,
                         color = ColorApp.grey300

@@ -4,6 +4,8 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.SceneEvent
+import com.ironraft.pupping.bero.SceneEventType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.store.PageRepository
@@ -80,7 +82,7 @@ open class FriendFunctionViewModel(val repo: PageRepository, id:String = "", ini
         repo.dataProvider.requestData(q)
     }
     fun sendChat(){
-
+        repo.appSceneObserver.event.value = SceneEvent(SceneEventType.SendChat, value = currentId)
     }
     fun removeFriend(userName:String? = null, friendId:String? = null){
         val ac = repo.pagePresenter.activity

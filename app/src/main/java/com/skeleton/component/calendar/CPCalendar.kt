@@ -46,8 +46,9 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.lib.page.ComponentViewModel
 import com.lib.util.AppUtil
 import com.lib.util.toDate
+import com.lib.util.toDateFormatter
 import com.lib.util.toFixLength
-import com.lib.util.toFormatString
+import com.lib.util.toDateFormatter
 import com.skeleton.component.dialog.RadioBtnData
 import com.skeleton.theme.AppTheme
 import com.skeleton.theme.ColorApp
@@ -77,11 +78,11 @@ enum class CalenderEventType {
 
 data class CalenderRequest(
     val type:CalenderRequestType,
-    var date:LocalDate? = null
+    var date:Date? = null
 )
 data class CalenderEvent(
     val type:CalenderEventType,
-    var date:LocalDate? = null
+    var date:Date? = null
 )
 
 enum class DayStatus {
@@ -90,14 +91,14 @@ enum class DayStatus {
 
 data class DayData (
     val yyyyMMdd:String,
-    val date: LocalDate?,
+    val date: Date?,
     val status:DayStatus,
 )
 
 open class CalenderModel: ComponentViewModel() {
     val event: MutableLiveData<CalenderEvent?> = MutableLiveData(null)
     val request: MutableLiveData<CalenderRequest?> = MutableLiveData(null)
-    var select:String = AppUtil.networkDate().toFormatString("yyyyMMdd") ?: ""
+    var select:String = AppUtil.networkDate().toDateFormatter("yyyyMMdd") ?: ""
     val weekString = listOf("S", "M", "T", "W", "T", "F", "S")
 }
 
@@ -111,7 +112,7 @@ fun CPCalendar(
 ) {
     val appTag = "CPCalendar"
     val viewModel: CalenderModel by remember { mutableStateOf(calenderModel ?: CalenderModel()) }
-    val today:String by remember { mutableStateOf(AppUtil.networkDate().toFormatString("yyyyMMdd") ?: "") }
+    val today:String by remember { mutableStateOf(AppUtil.networkDate().toDateFormatter("yyyyMMdd") ?: "") }
     var yyyy:Int by remember { mutableStateOf(0) }
     var mm:Int by remember { mutableStateOf(0) }
     var currentMonth:String by remember { mutableStateOf("") }
@@ -188,7 +189,7 @@ fun CPCalendar(
             )
         }
         val firstDay = curentDays.first()
-        currentMonth = firstDay.date?.toFormatString("MMMM, yyyy") ?: ""
+        currentMonth = firstDay.date?.toDateFormatter("MMMM, yyyy") ?: ""
         val newDays:ArrayList<DayData> = arrayListOf()
         newDays.addAll(prevDays)
         newDays.addAll(curentDays)
@@ -196,25 +197,25 @@ fun CPCalendar(
         if(days.isNotEmpty()) viewModel.event.value = CalenderEvent(CalenderEventType.ChangedMonth, date = firstDay.date)
         days = newDays
         val nowValue = if (today.length >= 6 ) today.substring(0, 6).toInt() else 999
-        val currentValue = firstDay.date?.toFormatString("yyyyMM")?.toInt() ?: 0
+        val currentValue = firstDay.date?.toDateFormatter("yyyyMM")?.toInt() ?: 0
         hasNext = nowValue > currentValue
 
     }
     fun onInit():Boolean{
-        yyyy = viewModel.select.toDate("yyyyMMdd")?.toFormatString("yyyy")?.toInt() ?: 2022
-        mm = viewModel.select.toDate("yyyyMMdd")?.toFormatString("MM")?.toInt() ?: 1
+        yyyy = viewModel.select.toDate("yyyyMMdd").toDateFormatter("yyyy").toInt() ?: 2022
+        mm = viewModel.select.toDate("yyyyMMdd").toDateFormatter("MM").toInt() ?: 1
         onUpdate()
         return true
     }
 
     val isInit:Boolean by remember { mutableStateOf( onInit() ) }
-    fun selected(date:LocalDate){
-        val yyyyMMdd = date.toFormatString("yyyyMMdd")
+    fun selected(date:Date){
+        val yyyyMMdd = date.toDateFormatter("yyyyMMdd")
         select = yyyyMMdd
         viewModel.event.value = CalenderEvent(type = CalenderEventType.SelectdDate, date = date)
     }
-    fun reset(date:LocalDate? = null){
-        date?.toFormatString("yyyyMM")?.let {yyyyMM->
+    fun reset(date:Date? = null){
+        date?.toDateFormatter("yyyyMM")?.let {yyyyMM->
             if (yyyyMM.length != 6) return
             yyyy = yyyyMM.substring(0, 4).toInt()
             mm = yyyyMM.substring(4, 6).toInt()
@@ -335,7 +336,7 @@ fun CPCalendar(
                                                     contentAlignment = Alignment.Center
                                                 ) {
                                                     Text(
-                                                        day.date?.toFormatString("dd")?.toInt()
+                                                        day.date?.toDateFormatter("dd")?.toInt()
                                                             .toString(),
                                                         fontSize = FontSize.thin.sp,
                                                         color = if (select == day.yyyyMMdd) ColorApp.white else ColorBrand.primary
@@ -354,7 +355,7 @@ fun CPCalendar(
                                                 contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
-                                                    day.date?.toFormatString("dd")?.toInt().toString(),
+                                                    day.date?.toDateFormatter("dd")?.toInt().toString(),
                                                     fontSize = FontSize.thin.sp,
                                                     color = ColorApp.grey300
                                                 )
@@ -376,7 +377,7 @@ fun CPCalendar(
                                                 contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
-                                                    day.date?.toFormatString("dd")?.toInt()
+                                                    day.date?.toDateFormatter("dd")?.toInt()
                                                         .toString(),
                                                     fontSize = FontSize.thin.sp,
                                                     color = ColorApp.white
@@ -395,7 +396,7 @@ fun CPCalendar(
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(
-                                                day.date?.toFormatString("dd")?.toInt().toString(),
+                                                day.date?.toDateFormatter("dd")?.toInt().toString(),
                                                 fontSize = FontSize.thin.sp,
                                                 color = ColorApp.grey200
                                             )

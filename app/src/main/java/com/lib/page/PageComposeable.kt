@@ -298,7 +298,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     Page Transaction
     */
     @CallSuper
-    protected open fun onWillChangePage(prevPage: PageObject?, nextPage: PageObject?){
+    protected open fun onWillChangePage(nextPage: PageObject?){
         nextPage ?: return
         nextPage.isInit = false
         isFullScreen = activityModel.isFullScreenPage(nextPage)
@@ -368,7 +368,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         val prev = currentPageObject
         pageObject.isPopup = false
         currentPageObject = pageObject
-        onWillChangePage(prev, pageObject)
+        onWillChangePage(pageObject)
         if (isBack) {
             navController?.popBackStack()
         } else {
@@ -410,7 +410,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         pageObject.isPopup = true
         resetScrollState(pageObject.pageID)
         popups.add(pageObject)
-        onWillChangePage(null, pageObject)
+        onWillChangePage(pageObject)
         navController?.navigate(pageObject.pageID) {
             top?.let { top->
                 val isHistory = activityModel.isHistoryPage(top)
@@ -425,7 +425,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     private fun onCloseAllPopup() {
         val allPopups = popups.map { it }
         popups.clear()
-        onWillChangePage(null, currentPageObject)
+        onWillChangePage(currentPageObject)
         allPopups.forEach { p ->
             navController?.popBackStack()
         }
@@ -448,7 +448,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         popups.remove(pageObject)
         val newPopups = popups
         val nextPage = if(newPopups.isNotEmpty()) newPopups.last() else currentPageObject
-        onWillChangePage(null, nextPage)
+        onWillChangePage(nextPage)
         navController?.popBackStack() //route = pageObject.pageID, inclusive = true
         onChangedPage()
     }

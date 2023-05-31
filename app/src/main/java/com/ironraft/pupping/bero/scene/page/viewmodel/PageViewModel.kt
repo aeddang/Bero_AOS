@@ -10,12 +10,18 @@ open class PageViewModel(val pageID:PageID, val repo: PageRepository) : Componen
     var appTag:String = pageID.value; private set
     val currentPage = MutableLiveData<PageObject?>()
     val goBack = MutableLiveData<PageObject?>()
+    val onClose = MutableLiveData<PageObject?>()
     fun goBackCompleted(){ goBack.value = null }
     fun initSetup(owner: LifecycleOwner): PageViewModel {
         setDefaultLifecycleOwner(owner)
         repo.pageAppViewModel.currentTopPage.observe(owner) {
             val page = it ?: return@observe
-            if(currentPage.value != null) {return@observe}
+            if(currentPage.value != null) {
+                currentPage.value?.let { current->
+                    if (current.key != page.key) onClose.value = current
+                }
+                return@observe
+            }
             currentPage.value = page
             PageLog.d("currentPage key " + it, appTag)
             PageLog.d(page, appTag)
