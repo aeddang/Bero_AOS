@@ -2,6 +2,7 @@ package com.ironraft.pupping.bero.store.api.rest
 
 import android.graphics.Bitmap
 import android.location.Location
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 import com.ironraft.pupping.bero.store.api.Api
 import com.ironraft.pupping.bero.store.api.ApiField
@@ -16,7 +17,7 @@ enum class WalkStatus {
     Walking, Finish
 }
 data class WalkadditionalData(
-    val loc:Location,
+    val loc:LatLng,
     val status:WalkStatus,
     var img:Bitmap? = null,
     var walkTime:Double? = null,

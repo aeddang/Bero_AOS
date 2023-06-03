@@ -11,6 +11,7 @@ import com.ironraft.pupping.bero.store.Topic
 import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.DeepLinkManager
 import com.lib.page.*
+import com.lib.observer.LocationObserver
 import com.skeleton.sns.SnsManager
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.skeleton.module.network.NetworkFactory
@@ -30,10 +31,11 @@ val pageModelModule = module {
     singleOf(::ApiInterceptor)
     singleOf(::AppSceneObserver)
     singleOf(::ApiManager)
-    singleOf(::WalkManager)
     singleOf(::Topic)
     singleOf(::PageComposePresenter) { bind<PagePresenter>() } //인터페이스 지정 필요시
     singleOf(::SnsManager)
+    singleOf(::LocationObserver)
+    singleOf(::WalkManager)
     singleOf(::PageRepository)
     singleOf(::DeepLinkManager)
     //

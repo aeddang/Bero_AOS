@@ -4,6 +4,7 @@ import android.provider.Settings
 import com.ironraft.pupping.bero.store.api.ApiResponse
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 class SystemEnvironment {
     companion object {
@@ -13,12 +14,13 @@ class SystemEnvironment {
         var isTablet = false
         var isTestMode = false
         var breedCode = HashMap<String,String>()
-        val zoneOffset = ZoneId
+        val zoneOffset: ZoneOffset = ZoneId
             .systemDefault()
             .rules
             .getOffset(
                 Instant.now()
             )
         const val platform = "AOS"
+
     }
 }

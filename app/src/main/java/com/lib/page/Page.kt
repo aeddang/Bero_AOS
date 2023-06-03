@@ -1,10 +1,12 @@
 package com.lib.page
 import android.content.Intent
+import android.location.Location
 import androidx.annotation.StringRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.gms.tasks.Task
 import com.skeleton.module.Repository
 import kotlinx.coroutines.*
 import java.util.*
@@ -96,7 +98,7 @@ interface PagePresenter {
     fun pageStart(pageObject:PageObject): PagePresenter
     fun changePage(pageObject:PageObject): PagePresenter
     fun hasPermissions( permissions: Array<out String> ): Pair< Boolean, List<Boolean>>?
-    fun requestPermission( permissions: Array<out String>, requester:PageRequestPermission )
+    fun requestPermission(permissions: Array<out String>, requester: PageRequestPermission)
     fun loading(isRock:Boolean = false): PagePresenter
     fun loaded(): PagePresenter
     fun finishApp()

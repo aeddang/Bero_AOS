@@ -3,6 +3,7 @@ package com.ironraft.pupping.bero.store.api
 import androidx.compose.foundation.pager.PageSize
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.annotations.SerializedName
+import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.skeleton.module.network.ErrorType
 import okhttp3.Interceptor
 import java.io.IOException
@@ -10,6 +11,7 @@ import java.util.ArrayList
 import java.util.Locale
 import java.util.UUID
 import kotlin.jvm.Throws
+import kotlin.math.floor
 
 data class ApiResponse<T> (
     @SerializedName("contents") val contents: T? = null,
@@ -42,8 +44,10 @@ class ApiInterceptor : Interceptor {
         } else {
             request.header("Authorization", "")
         }
+        val offset = floor(SystemEnvironment.zoneOffset.totalSeconds/60f).toInt()
         request.header("Accept-Language", lang)
         request.header("User-Agent", "AOS")
+        request.header("X-Timezone-Offset", offset.toString())
         return chain.proceed(request.build())
     }
 }
@@ -58,7 +62,9 @@ data class ApiQ(val id:String,  val type: ApiType,
     var page:Int = 0,
     var pageSize:Int = ApiValue.PAGE_SIZE,
     var useCoreData:Boolean = true
-)
+){
+    var prevData:Any? = null
+}
 
 data class ApiSuccess<T>(
     val type:T, var data:Any?,

@@ -61,6 +61,7 @@ import com.ironraft.pupping.bero.scene.page.user.PageUser
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.scene.page.walk.PageWalk
 import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.*
 import com.lib.util.PageLog
@@ -191,7 +192,7 @@ fun getPageComposable(nav:NavGraphBuilder,page:PageID, routePage:PageObject?){
         when (page.value) {
             PageID.Intro.value -> PageIntro(Modifier.fillMaxSize())
             PageID.Login.value -> PageLogin(Modifier.fillMaxSize())
-            PageID.Walk.value -> PageTest(Modifier.fillMaxSize())
+            PageID.Walk.value -> PageWalk(Modifier.fillMaxSize())
             PageID.Explore.value -> PageExplore(Modifier.fillMaxSize())
             PageID.Chat.value -> PageChat(Modifier.fillMaxSize())
             PageID.My.value -> PageMy(Modifier.fillMaxSize())

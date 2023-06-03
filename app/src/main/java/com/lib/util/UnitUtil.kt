@@ -6,11 +6,13 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.graphics.RectF
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Patterns
 import android.util.Size
+import com.google.android.gms.maps.model.LatLng
 import com.ironraft.pupping.bero.store.SystemEnvironment
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -57,40 +59,7 @@ fun LocalDate.toDateFormatter(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"): Str
     val date = LocalDateTime.of(this, LocalTime.MIN)
     return date.toFormatString(dateFormat.replace("Z", ""))
 }
-/*
-fun String.toDate(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
-): LocalDate? {
-    return try {
-        //val str = this.replace("Z", "")
-        //val utc = str.toDateUtc(dateFormat) ?: return null
-        //return utc.toLocalDate()
-        val pattern = DateTimeFormatter.ofPattern(dateFormat)
-        return LocalDate.parse(this.replace("Z", ""), pattern)
-    } catch (e: Exception) {
-        null
-    }
-}
-fun String.toDateTime(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
-): LocalDateTime? {
-    return try {
-        val str = this.replace("Z", "")
-        val utc = this.toDateUtc(dateFormat) ?: return null
-        return utc.toLocalDateTime()
-        //val pattern = DateTimeFormatter.ofPattern(dateFormat)
-        //return LocalDateTime.parse(this.replace("Z", ""), pattern)
-    } catch (e: Exception) {
-        null
-    }
-}
-fun LocalDate.toFormatString(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
-): String? {
-    val date  = LocalDateTime.of(this, LocalTime.MIN)
-    return date.toFormatString(dateFormat.replace("Z", ""))
-}
-*/
+
 fun String.onlyNumric() : String {
     return this.filter { it.isDigit() }.reduce { acc, c -> acc.plus(c.digitToInt()) }.toString()
 }
@@ -104,14 +73,7 @@ fun String.toDateUtc(
     val simpleDateFormat = SimpleDateFormat(dateFormat)
     return simpleDateFormat.parse(this)
 }
-/*
-@SuppressLint("SimpleDateFormat")
-fun Date.toFormatString(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
-): String? {
-    return SimpleDateFormat(dateFormat).format(this)
-}
- */
+
 fun Date.sinceNow():String {
     val diff = -(this.time/1000.0)
     return diff.since()
@@ -295,4 +257,13 @@ fun Uri.getBitmap(context: Context): Bitmap? {
         return null
     }
 
+}
+fun LatLng.distance(from:LatLng): Double {
+    val results = FloatArray(1)
+    try {
+        Location.distanceBetween(latitude, longitude, from.latitude, from.longitude, results)
+    } catch (e:IllegalArgumentException){
+        return 0.0
+    }
+    return results[0].toDouble()
 }

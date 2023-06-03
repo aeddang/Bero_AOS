@@ -1,15 +1,10 @@
 package com.ironraft.pupping.bero.scene.component.viewmodel
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Environment
-import android.os.Environment.getExternalStoragePublicDirectory
 import androidx.activity.result.ActivityResult
-import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSelectEvent
@@ -26,9 +21,6 @@ import com.lib.page.PageEventType
 import com.lib.page.PageRequestPermission
 import com.lib.util.AppUtil
 import com.lib.util.getBitmap
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 

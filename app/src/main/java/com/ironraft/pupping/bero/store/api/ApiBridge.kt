@@ -102,11 +102,11 @@ class ApiBridge(
             ApiType.Report-> getReport(apiQ.contentID, apiQ.requestData as? ReportType ?: ReportType.User)
             ApiType.GetAlarms -> misc.getAlarms(apiQ.page, apiQ.pageSize)
             ApiType.GetRewardHistory -> reward.getHistorys(apiQ.contentID, apiQ.page, apiQ.pageSize, (apiQ.requestData as? RewardValueType)?.name)
-            ApiType.SearchPlace -> place.getSearch(
+            ApiType.GetPlace -> place.getSearch(
                 apiQ.query?.get(ApiField.lat),  apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
                 apiQ.query?.get(ApiField.searchType), apiQ.query?.get(ApiField.placeType),apiQ.query?.get(ApiField.zipCode)
             )
-            ApiType.GetVisitors -> place.getVisitors(apiQ.contentID, apiQ.page, apiQ.pageSize)
+            ApiType.GetPlaceVisitors -> place.getVisitors(apiQ.contentID, apiQ.page, apiQ.pageSize)
             ApiType.RegistVisitor -> place.postVisitor(apiQ.body as Map<String, Any>)
 
             ApiType.GetWalk -> walk.get(apiQ.contentID)
@@ -114,7 +114,7 @@ class ApiBridge(
                 (apiQ.requestData as? Date)?.toDateFormatter("yyyy-MM-dd"),apiQ.page, apiQ.pageSize)
             ApiType.GetUserWalks -> walk.getWalks(
                 apiQ.contentID, null,apiQ.page, apiQ.pageSize)
-            ApiType.SearchWalk -> walk.search(
+            ApiType.SearchWalk, ApiType.SearchLatestWalk -> walk.search(
                 apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
                 apiQ.query?.get(ApiField.latestWalkMin),apiQ.page, apiQ.pageSize)
             ApiType.SearchWalkFriends -> walk.searchFriends(apiQ.page, apiQ.pageSize)

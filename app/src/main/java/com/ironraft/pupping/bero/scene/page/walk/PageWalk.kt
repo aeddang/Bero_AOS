@@ -1,52 +1,45 @@
 package com.ironraft.pupping.bero.scene.page.walk
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import com.lib.page.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.google.maps.android.compose.GoogleMap
 import com.ironraft.pupping.bero.R
-import com.ironraft.pupping.bero.databinding.*
-import com.ironraft.pupping.bero.store.PageRepository
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.store.provider.DataProvider
-import com.skeleton.sns.*
+import com.lib.page.PageComposePresenter
+import com.skeleton.component.map.googlemap.CPGoogleMap
+import com.skeleton.theme.ColorBrand
+import dev.burnoo.cokoin.get
 
-import javax.inject.Inject
-/*
-@AndroidEntryPoint
-class PageWalk : PageFragment(), PageRequestPermission{
-    private val appTag = javaClass.simpleName
-    @Inject lateinit var repository: PageRepository
-    @Inject lateinit var snsManager: SnsManager
-    @Inject lateinit var pagePresenter: PagePresenter
-    @Inject lateinit var dataProvider: DataProvider
-    private lateinit var binding: PageWalkBinding
-    override fun onViewBinding(): View {
-        binding = PageWalkBinding.inflate(LayoutInflater.from(context))
-        return binding.root
-    }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.playMap.initializaMap(view, savedInstanceState)
-    }
-    override fun onTransactionCompleted() {
-        super.onTransactionCompleted()
-        pagePresenter.requestPermission(arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION), this)
-    }
-    @SuppressLint("MissingPermission")
-    override fun onRequestPermissionResult(resultAll: Boolean, permissions: List<Boolean>?) {
-        super.onRequestPermissionResult(resultAll, permissions)
-        binding.playMap.onRequestPermissionResult(resultAll, permissions)
-        binding.playMap.moveMe(17.0f)
-    }
-    override fun onCoroutineScope() {
-        super.onCoroutineScope()
-        val ctx = context
-        ctx ?: return
+@Composable
+fun PageWalk(
+    modifier: Modifier = Modifier
+){
+    val appTag = PageID.Walk.value
+    val dataProvider: DataProvider = get()
+    val pagePresenter: PageComposePresenter = get()
+    Box (
+        modifier = modifier
+            .fillMaxSize()
+            .background(ColorBrand.bg),
+        contentAlignment = Alignment.Center
+    ){
+        CPGoogleMap()
     }
 }
 
- */
+@Preview
+@Composable
+fun PageSplashPreview(){
+    PageWalk(
+    )
+}

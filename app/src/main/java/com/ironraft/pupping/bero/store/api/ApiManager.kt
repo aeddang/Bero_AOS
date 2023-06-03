@@ -82,7 +82,27 @@ class ApiManager(
             .onSuccess(
                 { res->
                     val data = res?.contents
-                    val datas = res?.items
+                    var datas = res?.items
+                    when(apiQ.type){
+                        ApiType.SearchLatestWalk -> {
+                            if (apiQ.prevData == null) {
+                                val q = ApiQ(appTag, ApiType.SearchWalkFriends)
+                                q.prevData = datas
+                                load(q)
+                                return@onSuccess
+                            }
+                            (apiQ.prevData as? List<*>)?.let { prevData ->
+                                datas?.let { currentData ->
+                                    val concatDatas = arrayListOf<Any?>()
+                                    concatDatas.addAll(prevData)
+                                    concatDatas.addAll(currentData)
+                                    datas = concatDatas
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+
                     val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional,
                         apiQ.contentID, apiQ.requestData, apiQ.page, apiQ.useCoreData)
                     if ( accountManager?.respondApi(success) != true ){

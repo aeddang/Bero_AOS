@@ -79,6 +79,7 @@ class PageRepository (
         deviceID =  Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID)
         snsManager.setDefaultLifecycleOwner(owner)
         accountManager.setDefaultLifecycleOwner(owner)
+        walkManager.setDefaultLifecycleOwner(owner)
         apiManager.setAccountManager(accountManager)
         dataProvider.request.observe(owner, Observer{apiQ: ApiQ?->
             apiQ?.let {
@@ -161,8 +162,9 @@ class PageRepository (
 
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         scope.destoryJob()
-        snsManager.disposeDefaultLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
+        snsManager.disposeDefaultLifecycleOwner(owner)
+        walkManager.disposeDefaultLifecycleOwner(owner)
         accountManager.disposeDefaultLifecycleOwner(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
         AppObserver.disposeDefaultLifecycleOwner(owner)

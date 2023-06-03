@@ -1,5 +1,6 @@
 package com.ironraft.pupping.bero.store.walk.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.location.Location
 import androidx.annotation.DrawableRes
@@ -65,8 +66,8 @@ class Mission:MapUserData(){
     var pictureUrl:String? = null; private set
     var point:Int = 0; private set
     var exp:Double = 0.0; private set
-    var departure:Location? = null; private set
-    var waypoints:List<Location> = listOf(); private set
+    var departure:LatLng? = null; private set
+    var waypoints:List<LatLng> = listOf(); private set
     var distance:Double = 0.0; private set
     var duration:Double = 0.0; private set
     var isStart:Boolean = false; private set
@@ -105,7 +106,7 @@ class Mission:MapUserData(){
             return WalkManager.viewSpeed(spd)
         }
 
-    fun start(location:Location, walkDistance:Double) {
+    fun start(location:LatLng, walkDistance:Double) {
         departure = location
         playStartDate = AppUtil.networkDate()
         playStartDistance = walkDistance
@@ -244,6 +245,20 @@ class Mission:MapUserData(){
         return this
     }
 
+    fun setData(data:WalkManager, ctx:Context):Mission{
+        type = MissionType.Walk
+        title = ctx.getString(R.string.walk)
+        missionId = data.walkId ?: -1
+        departure = data.startLocation
+        location = data.currentLocation.value
+        distance = data.walkDistance.value ?: 0.0
+        duration = data.walkTime.value?.toDouble() ?: 0.0
+        completedMissions = data.completedMissions
+        point = WalkManager.getPoint(data.walkDistance.value)
+        exp = WalkManager.getExp(data.walkDistance.value)
+        isCompleted = true
+        return this
+    }
 
     fun copySummry(origin:Mission, title:String?):Mission{
         color = ColorApp.yellow

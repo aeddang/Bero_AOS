@@ -3,8 +3,6 @@ package com.ironraft.pupping.bero.scene.page.profile.component.edit
 import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Picture
 import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +11,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -26,20 +23,15 @@ import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
-import com.ironraft.pupping.bero.store.api.rest.AlbumData
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.model.ModifyUserProfileData
 import com.ironraft.pupping.bero.store.provider.model.UserProfile
 import com.lib.page.*
 import com.lib.util.AppUtil
-import com.lib.util.ComponentLog
 import com.lib.util.getBitmap
-import com.lib.util.toAge
 import com.skeleton.component.item.profile.ProfileImage
 import com.skeleton.sns.SnsUser
 import com.skeleton.theme.*
-import com.skeleton.view.button.SelectButton
-import com.skeleton.view.button.SelectButtonType
 import dev.burnoo.cokoin.get
 import java.util.*
 

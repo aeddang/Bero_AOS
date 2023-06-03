@@ -1,8 +1,36 @@
 package com.skeleton.component.map
 
 import androidx.compose.ui.graphics.Color
+import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.skeleton.theme.ColorApp
+import java.util.UUID
+
+data class MapMarker (
+    var id:String = UUID.randomUUID().toString(),
+    val marker:Marker
+)
+/*
+enum class MapUiEventType {
+    case me(MapMarker , follow:CLLocation? = nil),
+    addMarker(MapMarker), addMarkers([MapMarker]),
+    addCircle(MapCircle), addCircles([MapCircle]),
+    addRoute(MapRoute), addRoutes([MapRoute]), clearAllRoute,
+    clearAll([String]? = nil, exception:[String]? = nil), clear(String),
+    move(CLLocation, rotate:Double? = nil, zoom:Float? = nil, angle:Double? = nil, duration:Double? = nil)
+
+}
+data class MapUiEvent (
+    val type:MapUiEventType,
+    var marker:MapMarker? = null,
+    val loc: LatLng? = null,
+)
+
+enum MapViewEvent {
+    case tabMarker(GMSMarker), tabOffMarker(GMSMarker), move(isUser:Bool), tab(CLLocation)
+}
+*/
 
 interface MapUserDataInterface {
     var isSelected:Boolean
@@ -72,3 +100,5 @@ open class MapUserData: MapUserDataInterface, Comparable<MapUserData>{
         return -1
     }
 }
+
+
