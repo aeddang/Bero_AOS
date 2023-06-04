@@ -94,7 +94,7 @@ class WalkPath {
         return this
     }
 
-    fun setData(datas:ArrayList<LatLng>) : WalkPath{
+    fun setLocations(datas:ArrayList<LatLng>) : WalkPath{
         var minX:Double = 180.0
         var maxX:Double = -180.0
         var minY:Double = 90.0

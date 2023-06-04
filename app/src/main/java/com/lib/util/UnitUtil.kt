@@ -93,7 +93,7 @@ fun Date.sinceNowDate(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
         return "Yesterday"
     }
     if (!isLocale) return SimpleDateFormat(dateFormat).format(this)
-    return this.toDateFormatter() //toFormatString(dateFormat)?.toDate(dateFormat)?.toFormatString(returnFormat) ?: ""
+    return this.toDateFormatter(returnFormat) //toFormatString(dateFormat)?.toDate(dateFormat)?.toFormatString(returnFormat) ?: ""
 }
 
 
@@ -148,6 +148,9 @@ fun String.toFixLength(l:Int, prefix:String = "000000"): String {
     if (length >= l) { return this }
     val fix:String = prefix + this
     return fix.takeLast(l)
+}
+fun String.toTruncateDecimal (n:Int = 0) : String {
+    return String.format("%." + n.toString() + "f",this.toFloatOrNull() ?: 0f)
 }
 
 fun String.replace(newString:String): String {

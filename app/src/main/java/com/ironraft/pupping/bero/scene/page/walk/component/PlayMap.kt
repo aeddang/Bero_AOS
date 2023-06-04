@@ -1,4 +1,9 @@
-package com.ironraft.pupping.bero.scene.page.walk
+package com.ironraft.pupping.bero.scene.page.walk.component
+
+import androidx.lifecycle.MutableLiveData
+import com.lib.page.ComponentViewModel
+
+
 
 /*
 class PlayMap : PageComponent {

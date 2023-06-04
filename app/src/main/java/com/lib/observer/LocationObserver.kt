@@ -2,7 +2,10 @@ package com.lib.observer
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.LocationAvailability
@@ -15,7 +18,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.lib.page.PagePresenter
 import com.lib.page.PageRequestPermission
-import java.util.Date
+import kotlinx.coroutines.withContext
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 data class LocationAddress (
@@ -81,6 +85,52 @@ class LocationObserver(val pagePresenter:PagePresenter) {
             isSearch = false
             requestId = null
             fusedLocationClient.removeLocationUpdates( locationCallback )
+        }
+    }
+
+
+    fun convertLocationToAddress(location:LatLng, result:(LocationAddress) -> Unit) {
+        val geocoder:Geocoder = Geocoder(pagePresenter.activity, Locale.getDefault())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocation(location.latitude, location.longitude, 1){addresses ->
+                val street = addresses[0].thoroughfare
+                val city = addresses[0].locality
+                val state = addresses[0].adminArea
+                val zip = addresses[0].postalCode
+                val country = addresses[0].countryName
+
+                result(
+                    LocationAddress(
+                        street = street,
+                        city = city,
+                        state = state,
+                        zipCode = zip,
+                        country = country
+                    )
+                )
+            }
+        } else {
+            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            addresses?.get(0)?.let {
+                val street = it.thoroughfare
+                val city = it.locality
+                val state = it.adminArea
+                val zip = it.postalCode
+                val country = it.countryName
+                result(
+                    LocationAddress(
+                        street = street,
+                        city = city,
+                        state = state,
+                        zipCode = zip,
+                        country = country
+                    )
+                )
+                return
+            }
+            result(
+                LocationAddress()
+            )
         }
     }
 }

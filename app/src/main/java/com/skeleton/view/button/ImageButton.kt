@@ -34,6 +34,7 @@ fun ImageButton(
     text:String? = null,
     defaultColor:Color = ColorApp.black,
     activeColor:Color = ColorBrand.primary,
+    isOrigin:Boolean = false,
     padding:Float = 0.0f,
     index:Int = 0,
     isSelected:Boolean = false,
@@ -68,7 +69,11 @@ fun ImageButton(
                             ),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(if (isSelected) activeColor else defaultColor),
+                            colorFilter =
+                                if(isOrigin) null
+                                else {
+                                    ColorFilter.tint(if (isSelected) activeColor else defaultColor)
+                                },
                             modifier = Modifier.size(size.dp, sizeHeight?.dp ?: size.dp)
                         )
                         text?.let {

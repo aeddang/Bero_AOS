@@ -79,16 +79,17 @@ class WalkManager(
             }
             return v
         }
-        fun viewDistance(value:Double, unit:String? = "km") : String {
-            val v = String.format("%.2f",(value / 1000.0))
+        fun viewDistance(value:Double?, unit:String? = "km") : String {
+            val v = String.format("%.2f",((value ?: 0.0) / 1000.0))
             unit?.let {
                 return "$v $it"
             }
             return v
 
         }
-        fun viewDuration(value:Double) : String {
-            return value.secToMinString()
+        fun viewDuration(value:Double?) : String {
+            val v = value ?: 0.0
+            return v.secToMinString()
         }
         fun getPoint(value:Double?) : Int {
             val v = value ?: 0.0
@@ -117,7 +118,7 @@ class WalkManager(
     val event:MutableLiveData<WalkEvent?> = MutableLiveData(null)
     val error:MutableLiveData<WalkError?> = MutableLiveData(null)
     val status:MutableLiveData<WalkStatus> = MutableLiveData<WalkStatus>(WalkStatus.Ready)
-    val walkTime:MutableLiveData<Long> = MutableLiveData(0)
+    val walkTime:MutableLiveData<Double> = MutableLiveData(0.0)
     val walkDistance:MutableLiveData<Double> = MutableLiveData(0.0)
     val viewMission:MutableLiveData<Mission?> = MutableLiveData(null)
     val viewPlace:MutableLiveData<Place?> = MutableLiveData(null)
@@ -147,7 +148,6 @@ class WalkManager(
             }
         }
         locationObserver.requestMe(true, appTag)
-        startTimer()
     }
     override fun disposeDefaultLifecycleOwner(owner: LifecycleOwner) {
         locationObserver.requestMe(false, appTag)
@@ -293,7 +293,7 @@ class WalkManager(
         //endLockScreen()
         completedWalk = null
         walkPath = null
-        walkTime.value = 0
+        walkTime.value = 0.0
         walkDistance.value = 0.0
         playExp.value = 0.0
         playPoint.value = 0
@@ -329,7 +329,7 @@ class WalkManager(
         }
         return true
     }
-    fun updateStatus(img:Bitmap? = null, thumbImage:Bitmap? = null){
+    fun updateStatus(img:Bitmap? = null){
         val loc = currentLocation.value ?: return
         val id = walkId ?: return
         val data = WalkadditionalData(
@@ -383,9 +383,9 @@ class WalkManager(
         var n = 0
         this.timer = timer(name = appTag, period=1000, daemon = false ){
             val t = Date().time - startTime.time
-            walkTime.postValue(t)
+            walkTime.postValue(t.toDouble())
             n += 1
-            PageLog.d("time $n", appTag)
+            //PageLog.d("time $n", appTag)
             if( n == updateTime ){
                 //updateStatus()
             }
@@ -400,7 +400,7 @@ class WalkManager(
     private fun updatePath(){
         val loc = currentLocation.value ?: return
         updateImageLocations.add(loc)
-        walkPath?.setData(updateImageLocations)
+        walkPath?.setLocations(updateImageLocations)
         event.value = WalkEvent(WalkEvenType.UpdatedPath)
     }
 
