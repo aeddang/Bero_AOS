@@ -12,7 +12,7 @@ class SystemEnvironment {
         var systemVersion:String = ""
         var firstLaunch :Boolean = false
         var isTablet = false
-        var isTestMode = false
+        var isTestMode = true
         var breedCode = HashMap<String,String>()
         val zoneOffset: ZoneOffset = ZoneId
             .systemDefault()

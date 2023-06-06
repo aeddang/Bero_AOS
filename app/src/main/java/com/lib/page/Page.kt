@@ -18,25 +18,26 @@ enum class PageAnimationType {
     None, Vertical, Horizontal, Opacity, ReverseVertical, ReverseHorizontal;
     companion object {
         const val duration:Int  = 200
+        const val durationShort:Int  = 120
     }
 
     val enter : EnterTransition?
         get() = when(this) {
-            Vertical -> slideInVertically (tween(duration), initialOffsetY = {it/2})
-            Horizontal -> slideInHorizontally (tween(duration), initialOffsetX = {it/3})
+            Vertical -> slideInVertically (tween(durationShort), initialOffsetY = {it/3})
+            Horizontal -> slideInHorizontally (tween(durationShort), initialOffsetX = {it/4})
             Opacity -> fadeIn(animationSpec = tween(duration))
-            ReverseVertical -> slideInVertically (tween(duration), initialOffsetY = {-it/2})
-            ReverseHorizontal -> slideInHorizontally (tween(duration), initialOffsetX = {-it/3})
+            ReverseVertical -> slideInVertically (tween(durationShort), initialOffsetY = {-it/3})
+            ReverseHorizontal -> slideInHorizontally (tween(durationShort), initialOffsetX = {-it/4})
             None -> null
         }
 
     val exit : ExitTransition?
         get() = when(this) {
-            Vertical -> slideOutVertically (tween(duration), targetOffsetY  = {it/2})
-            Horizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {it/3})
+            Vertical -> slideOutVertically (tween(durationShort), targetOffsetY  = {it/3})
+            Horizontal -> slideOutHorizontally (tween(durationShort), targetOffsetX = {it/4})
             Opacity -> fadeOut(animationSpec = tween(duration))
-            ReverseVertical -> slideOutVertically (tween(duration), targetOffsetY = {-it/2})
-            ReverseHorizontal -> slideOutHorizontally (tween(duration), targetOffsetX = {-it/3})
+            ReverseVertical -> slideOutVertically (tween(durationShort), targetOffsetY = {-it/3})
+            ReverseHorizontal -> slideOutHorizontally (tween(durationShort), targetOffsetX = {-it/4})
             None -> null
         }
 }

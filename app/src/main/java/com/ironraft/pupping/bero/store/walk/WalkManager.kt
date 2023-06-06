@@ -7,9 +7,17 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.SceneEvent
+import com.ironraft.pupping.bero.SceneEventType
+import com.ironraft.pupping.bero.activityui.CheckData
+import com.ironraft.pupping.bero.store.api.ApiError
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiQ
+import com.ironraft.pupping.bero.store.api.ApiSuccess
 import com.ironraft.pupping.bero.store.api.ApiType
+import com.ironraft.pupping.bero.store.api.rest.AlarmData
+import com.ironraft.pupping.bero.store.api.rest.PlaceData
+import com.ironraft.pupping.bero.store.api.rest.WalkRegistData
 import com.ironraft.pupping.bero.store.api.rest.WalkUserData
 import com.ironraft.pupping.bero.store.api.rest.WalkadditionalData
 import com.ironraft.pupping.bero.store.provider.DataProvider
@@ -68,6 +76,7 @@ class WalkManager(
     private val dataProvider: DataProvider) : PageLifecycleUser {
     companion object{
         var todayWalkCount:Int = 0
+        var isFirstWalkStart:Boolean = false
         const val distanceUnit:Double = 5000.0
         const val nearDistance:Double = 20.0
         const val minDistance:Double = 100.0
@@ -199,11 +208,12 @@ class WalkManager(
         event.value = WalkEvent(WalkEvenType.UpdateViewLocation, value = location)
     }
 
-    fun replaceMapStatus(location:LatLng){
+    fun replaceMapStatus(location:LatLng? = null){
+        val loc = location ?: currentLocation.value ?: return
         clearAllMapStatus()
-        updateMapPlace(location)
-        updateMapUser(location)
-        event.value = WalkEvent(WalkEvenType.UpdateViewLocation, value = location)
+        updateMapPlace(loc)
+        updateMapUser(loc)
+        event.value = WalkEvent(WalkEvenType.UpdateViewLocation, value = loc)
     }
 
     fun updateMapPlace(location:LatLng){
@@ -211,11 +221,11 @@ class WalkManager(
         val params = HashMap<String, String>()
         params[ApiField.lat] = location.latitude.toString()
         params[ApiField.lng] = location.longitude.toString()
-        params[ApiField.radius] = WalkManager.distanceUnit.toString()
+        params[ApiField.radius] = WalkManager.distanceUnit.toInt().toString()
         params[ApiField.searchType] = ""
         params[ApiField.placeType] = "Manual"
         params[ApiField.zipCode] = ""
-        val q = ApiQ(appTag, ApiType.GetPlace, query = params )
+        val q = ApiQ(appTag, ApiType.GetPlace, query = params , isOptional = true)
         dataProvider.requestData(q)
     }
     fun updateMapUser(location:LatLng){
@@ -225,7 +235,7 @@ class WalkManager(
             params[ApiField.lng] = location.longitude.toString()
             params[ApiField.radius] = "1000"
             params[ApiField.latestWalkMin] = "60000"
-            val q = ApiQ(appTag, ApiType.SearchLatestWalk, query = params )
+            val q = ApiQ(appTag, ApiType.SearchLatestWalk, query = params ,isOptional = true)
             dataProvider.requestData(q)
         }
     }
@@ -266,6 +276,10 @@ class WalkManager(
     }
 
     private fun startWalk(){
+        if (WalkManager.isFirstWalkStart) {
+            firstWalkStart()
+            WalkManager.isFirstWalkStart = true
+        }
         startTime = Date()
         startLocation = currentLocation.value
         event.value = WalkEvent(WalkEvenType.Start)
@@ -348,7 +362,7 @@ class WalkManager(
     private fun updateLocation(loc:LatLng) {
         if (status.value == WalkStatus.Ready) {
             currentLocation.value = loc
-            //if (places.isEmpty()) filterPlace()
+            if (places.isEmpty()) filterPlace()
             return
         }
         currentLocation.value?.let { prev ->
@@ -381,8 +395,9 @@ class WalkManager(
     private var timer:Timer? = null
     private fun startTimer(){
         var n = 0
+        timer?.cancel()
         this.timer = timer(name = appTag, period=1000, daemon = false ){
-            val t = Date().time - startTime.time
+            val t = (Date().time - startTime.time)/1000
             walkTime.postValue(t.toDouble())
             n += 1
             //PageLog.d("time $n", appTag)
@@ -450,14 +465,6 @@ class WalkManager(
         summary.forEach{it.addCompleted()}
         missionUsersSummary = summary
         event.value = WalkEvent(WalkEvenType.UpdatedUsers)
-    }
-
-    private fun findWayPoint(loc:LatLng){
-        /*
-        guard let waypoints = self.currentRoute?.waypoints else {return}
-        guard let find = waypoints.firstIndex(where: {$0.distance(from: loc) < self.nearDistance}) else {return}
-        self.event = .findWaypoint(index: find, total:waypoints.count)
-        */
     }
 
     private var finalFind:Place? = null
@@ -554,4 +561,49 @@ class WalkManager(
         event.value = WalkEvent(WalkEvenType.UpdatedPlaces)
     }
 
+    fun respondApi(res: ApiSuccess<ApiType>){
+        if (res.id?.contains(appTag) != true) return
+        when (res.type) {
+            ApiType.SearchLatestWalk ->
+                (res.data as? List<*>)?.filterIsInstance<WalkUserData>()?.let{ datas->
+                    filterUser(datas)
+                }
+
+            ApiType.GetPlace ->
+                (res.data as? List<*>)?.filterIsInstance<PlaceData>()?.let{ datas->
+                    originPlaces = datas.map{Place().setData(it)}
+                    filterPlace()
+                }
+
+            ApiType.RegistWalk ->
+                (res.data as? WalkRegistData)?.let { data->
+                walkId = data.walkId
+                startWalk()
+            }
+            ApiType.UpdateWalk -> {
+                if(res.contentID != walkId.toString()) return
+                (res.requestData as? WalkadditionalData)?.img?.let {  img->
+                    updateImages.add(img)
+                    updatePath()
+                    val ac = pagePresenter.activity
+                    appSceneObserver.event.value = SceneEvent(
+                        type = SceneEventType.Check,
+                        value = CheckData(
+                            text = updateImages.count().toString() + "/" + WalkManager.limitedUpdateImageSize.toString(),
+                            icon = R.drawable.camera
+                        )
+                    )
+                }
+            }
+            else -> {}
+        }
+    }
+
+    fun errorApi(err: ApiError<ApiType>){
+        if (err.id?.contains(appTag) != true) return
+        when (err.type) {
+            ApiType.GetPlace -> filterPlace()
+            else -> {}
+        }
+    }
 }

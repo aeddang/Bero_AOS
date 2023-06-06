@@ -86,7 +86,7 @@ class ApiManager(
                     when(apiQ.type){
                         ApiType.SearchLatestWalk -> {
                             if (apiQ.prevData == null) {
-                                val q = ApiQ(appTag, ApiType.SearchWalkFriends)
+                                val q = ApiQ(apiQ.id, ApiType.SearchLatestWalk)
                                 q.prevData = datas
                                 load(q)
                                 return@onSuccess

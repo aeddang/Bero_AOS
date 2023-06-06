@@ -52,8 +52,9 @@ interface WalkApi {
         @Query(ApiField.page) page: Int? = 0,
         @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<WalkUserData>?
-
-    @POST(Api.Walk.walk)
+    @JvmSuppressWildcards
+    @Headers("Content-Type: application/json")
+    @POST(Api.Walk.walks)
     suspend fun post(
         @Body params: Map<String, Any>
     ): ApiResponse<WalkRegistData>?

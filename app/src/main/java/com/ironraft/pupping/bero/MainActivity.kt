@@ -202,6 +202,17 @@ class MainActivity : PageComposeable() {
         }
         return false
     }
+
+    override fun onWillChangePage(nextPage: PageObject?) {
+        super.onWillChangePage(nextPage)
+        val page = nextPage ?: return
+        val useBottom =  (activityModel as? ActivityModel)?.useBottomTabPage(page.pageID)
+        appSceneObserver.useBottom.value = useBottom
+        when(page.pageID){
+            PageID.Walk.value -> repository.walkManager.updateSimpleView(false)
+            else -> repository.walkManager.updateSimpleView(true)
+        }
+    }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (currentPage != null) {

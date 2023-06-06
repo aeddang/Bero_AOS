@@ -226,7 +226,7 @@ class PageRepository (
         }
     }
     private fun respondApi(res:ApiSuccess<ApiType>){
-        //self.walkManager.respondApi(res)
+        walkManager.respondApi(res)
         when (res.type) {
             ApiType.DeleteUser -> clearLogin()
             ApiType.RegistPush -> {
@@ -235,7 +235,7 @@ class PageRepository (
             }
             ApiType.GetChatRooms -> if (res.page == 0) onMassageUpdated(res)
             ApiType.GetAlarms -> if (res.page == 0) onAlarmUpdated(res)
-            //self.walkManager.resetMapStatus(userFilter: .all)
+            ApiType.RequestBlock -> walkManager.replaceMapStatus()
             else -> {}
         }
         val coreDatakey = if(res.useCoreData) res.type.coreDataKey(res.requestData) else null
@@ -248,7 +248,7 @@ class PageRepository (
 
     private fun errorApi(err:ApiError<ApiType>){
         accountManager.errorApi(err, appSceneObserver)
-        //self.walkManager.errorApi(err, appSceneObserver: self.appSceneObserver)
+        walkManager.errorApi(err)
         when (err.type) {
             ApiType.RegistPush -> {
                 val token = err.requestData as? String?

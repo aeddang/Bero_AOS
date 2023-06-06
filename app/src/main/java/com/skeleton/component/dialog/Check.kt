@@ -68,7 +68,6 @@ fun Check(
     AppTheme {
         Box(
             modifier = Modifier
-
                 .offset(y = offset)
                 .alpha(opacity)
             ,

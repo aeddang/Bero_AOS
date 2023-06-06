@@ -2,6 +2,8 @@ package com.ironraft.pupping.bero.scene.page.walk.component
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,9 +33,14 @@ import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEvent
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEventType
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
 import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapModel
 import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapUiEvent
 import com.ironraft.pupping.bero.scene.page.walk.model.WalkPickViewModel
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupData
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupType
 import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.walk.WalkManager
@@ -66,6 +73,7 @@ import dev.burnoo.cokoin.get
 @Composable
 fun PlayBox(
     modifier: Modifier = Modifier,
+    viewModel: PageWalkViewModel,
     playMapModel: PlayMapModel,
     walkPickViewModel: WalkPickViewModel,
     isInitable:Boolean = true
@@ -120,7 +128,10 @@ fun PlayBox(
             return
         }
         if (dataProvider.user.pets.count() >= 2) {
-            //self.pagePresenter.openPopup(PageProvider.getPageObject(.popupChooseDog))
+            viewModel.event.value = PageWalkEvent(
+                PageWalkEventType.OpenPopup,
+                WalkPopupData(WalkPopupType.ChooseDog)
+            )
             return
         }
         walkManager.requestWalk()
@@ -167,7 +178,7 @@ fun PlayBox(
 
 
     AppTheme {
-        AnimatedVisibility(visible = isHidden != true && isSimple == false ) {
+        AnimatedVisibility(visible = isHidden != true && isSimple == false, enter = fadeIn(), exit = fadeOut()) {
             Column(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp),

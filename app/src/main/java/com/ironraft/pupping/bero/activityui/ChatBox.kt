@@ -57,6 +57,7 @@ class ChatFunctionViewModel(val repo: PageRepository) : ComponentViewModel() {
     }
 
     private fun close(){
+        repo.appSceneObserver.isActiveChat.value = false
         sendUserId = ""
         currentStatus.value = ChatStatus.Hidden
         focusManager?.clearFocus()
@@ -68,6 +69,7 @@ class ChatFunctionViewModel(val repo: PageRepository) : ComponentViewModel() {
 
     }
     private fun setup(userId:String?, isOn:Boolean){
+        repo.appSceneObserver.isActiveChat.value = true
         checkFirstUser()
         userId?.let { sendUserId = it }
         currentStatus.value = ChatStatus.Static
@@ -102,7 +104,7 @@ class ChatFunctionViewModel(val repo: PageRepository) : ComponentViewModel() {
         super.setDefaultLifecycleOwner(owner)
         repo.appSceneObserver.event.observe(owner){
             val evt = it ?: return@observe
-            val value = evt.value
+            val value = evt.value as? String
             val isOn = evt.isOn
             when(evt.type){
                 SceneEventType.CloseChat -> close()

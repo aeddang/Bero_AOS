@@ -114,7 +114,16 @@ class ApiBridge(
                 (apiQ.requestData as? Date)?.toDateFormatter("yyyy-MM-dd"),apiQ.page, apiQ.pageSize)
             ApiType.GetUserWalks -> walk.getWalks(
                 apiQ.contentID, null,apiQ.page, apiQ.pageSize)
-            ApiType.SearchWalk, ApiType.SearchLatestWalk -> walk.search(
+            ApiType.SearchLatestWalk -> {
+                if(apiQ.prevData == null) {
+                    walk.search(
+                        apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
+                        apiQ.query?.get(ApiField.latestWalkMin),apiQ.page, apiQ.pageSize)
+                } else {
+                    walk.searchFriends(apiQ.page, apiQ.pageSize)
+                }
+            }
+            ApiType.SearchWalk -> walk.search(
                 apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng), apiQ.query?.get(ApiField.radius),
                 apiQ.query?.get(ApiField.latestWalkMin),apiQ.page, apiQ.pageSize)
             ApiType.SearchWalkFriends -> walk.searchFriends(apiQ.page, apiQ.pageSize)

@@ -51,7 +51,7 @@ import com.skeleton.theme.*
 import dev.burnoo.cokoin.Koin
 import dev.burnoo.cokoin.get
 
-internal class PageUserViewModel(repo:PageRepository): PageViewModel(PageID.User, repo){
+class PageUserViewModel(repo:PageRepository): PageViewModel(PageID.User, repo){
     var fromChatRoom:Boolean = false
     var roomData:ChatRoomListItemData? = null
     var currentUserId:String = ""

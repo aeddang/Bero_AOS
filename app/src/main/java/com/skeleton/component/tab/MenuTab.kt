@@ -38,6 +38,7 @@ enum class MenuTabType{
 
 @Composable
 fun MenuTab(
+    modifier:Modifier = Modifier,
     type:MenuTabType = MenuTabType.Box,
     buttons:List<String>,
     selectedIdx:Int = 0,
@@ -49,7 +50,7 @@ fun MenuTab(
 ) {
     AppTheme {
         Row(
-            modifier = (if (isDivision) Modifier.fillMaxWidth() else Modifier.wrapContentSize())
+            modifier = (if (isDivision) modifier.fillMaxWidth() else modifier.wrapContentSize())
                 .height(height.dp)
                 .clip(RoundedCornerShape(type.radius.dp))
                 .background(type.bgColor(bgColor)),

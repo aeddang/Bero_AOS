@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,14 +40,14 @@ fun Alert(
     action:(Int) -> Unit
 ) {
     AppTheme {
-        val titleCompose: @Composable (() -> Unit)? = if (title == null) null else {{
+        val titleCompose: @Composable (() -> Unit)? = {
             Text(
-                title,
+                title ?: "",
                 fontSize = FontSize.regular.sp,
                 fontWeight = FontWeight.Bold,
                 color = ColorApp.black
             )
-        }}
+        }
         val textCompose: @Composable (() -> Unit)? = if (text == null) null else {
             {
                 Column(
@@ -56,7 +57,8 @@ fun Alert(
                         text,
                         fontSize = FontSize.light.sp,
                         fontWeight = FontWeight.Medium,
-                        color = ColorApp.black
+                        color = ColorApp.black,
+                        textAlign = TextAlign.Center
                     )
                     subText?.let {
                         Text(
@@ -64,7 +66,8 @@ fun Alert(
                             fontSize = FontSize.thin.sp,
                             fontWeight = FontWeight.Medium,
                             color = ColorApp.grey50,
-                            modifier = Modifier.padding(top = DimenMargin.tiny.dp)
+                            modifier = Modifier.padding(top = DimenMargin.tiny.dp),
+                            textAlign = TextAlign.Center
                         )
                     }
                     tipText?.let {
@@ -73,7 +76,8 @@ fun Alert(
                             fontSize = FontSize.tiny.sp,
                             fontWeight = FontWeight.Medium,
                             color = ColorBrand.primary,
-                            modifier = Modifier.padding(top = DimenMargin.regular.dp)
+                            modifier = Modifier.padding(top = DimenMargin.regular.dp),
+                            textAlign = TextAlign.Center
                         )
                     }
                     referenceText?.let {
@@ -82,7 +86,8 @@ fun Alert(
                             fontSize = FontSize.tiny.sp,
                             fontWeight = FontWeight.Medium,
                             color = ColorApp.grey50,
-                            modifier = Modifier.padding(top = DimenMargin.tiny.dp)
+                            modifier = Modifier.padding(top = DimenMargin.tiny.dp),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }

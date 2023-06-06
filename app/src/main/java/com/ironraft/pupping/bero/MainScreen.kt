@@ -65,6 +65,7 @@ import com.ironraft.pupping.bero.scene.page.walk.PageWalk
 import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.*
 import com.lib.util.PageLog
+import com.skeleton.component.dialog.Check
 import com.skeleton.theme.*
 import com.skeleton.view.progress.LoadingIndicator
 import dev.burnoo.cokoin.get
@@ -74,7 +75,7 @@ enum class SceneEventType {
     SetupChat, CloseChat, SendChat
 }
 data class SceneEvent(val type: SceneEventType,
-                      val value:String? = null,
+                      val value:Any? = null,
                       @DrawableRes val imgRes:Int? = null,
                       var isOn:Boolean = true,
                       val handler: (() -> Unit)? = null)
@@ -86,7 +87,10 @@ class AppSceneObserver {
     val sheet = MutableLiveData<ActivitSheetEvent?>(null)
     val select = MutableLiveData<ActivitSelectEvent?>(null)
     val radio = MutableLiveData<ActivitRadioEvent?>(null)
+    val useBottom = MutableLiveData<Boolean>(false)
+    var isActiveChat = MutableLiveData<Boolean>(false)
     var isAlertShow:Boolean = false
+
 }
 
 
@@ -102,6 +106,7 @@ fun PageApp(
     modifier: Modifier = Modifier
 ) {
     val activityModel:ActivityModel = get()
+    val appSceneObserver:AppSceneObserver = get()
     val pageAppViewModel:PageAppViewModel = get()
     val repository: PageRepository = get()
     val owner = LocalLifecycleOwner.current
@@ -110,11 +115,10 @@ fun PageApp(
     ) }
 
     val currentTopPage by pageAppViewModel.currentTopPage.observeAsState()
-
     var loadingInfo:ArrayList<String>? by remember { mutableStateOf(null) }
     val isLoading by pageAppViewModel.isLoading.observeAsState()
     val isLock by pageAppViewModel.isLock.observeAsState()
-
+    val useBottom by appSceneObserver.useBottom.observeAsState()
     Box(modifier = Modifier
         .fillMaxSize()
         .background(ColorApp.black)){
@@ -127,8 +131,12 @@ fun PageApp(
                         modifier = Modifier.weight(1.0f),
                         chatFunctionViewModel = chatFunctionViewModel
                     )
-                    currentTopPage?.let {
-                        if (activityModel.useBottomTabPage(it.pageID)) BottomTab()
+                    AnimatedVisibility(
+                        visible = useBottom == true,
+                        enter = slideInVertically (tween(PageAnimationType.duration), initialOffsetY = {DimenApp.bottom.toInt()}) + fadeIn(),
+                        exit = slideOutVertically (tween(PageAnimationType.duration), targetOffsetY = {DimenApp.bottom.toInt()}) + fadeOut()
+                    ){
+                        BottomTab()
                     }
                 }
 
@@ -158,7 +166,6 @@ fun PageApp(
         ActivityRadioController(modalSheetState = radioState)
         ActivitySheetController(modalSheetState = sheetState)
         ActivityAlertController()
-
         AnimatedVisibility(visible = isLoading == true, enter = fadeIn(), exit = fadeOut()) {
             Box(
                 modifier = Modifier
@@ -171,7 +178,7 @@ fun PageApp(
                 )
             }
         }
-
+        ActivityLayerController()
     }
 
 }

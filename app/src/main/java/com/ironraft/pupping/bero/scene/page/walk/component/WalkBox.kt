@@ -2,6 +2,8 @@ package com.ironraft.pupping.bero.scene.page.walk.component
 
 import android.graphics.PointF
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.graph.PolygonGraph
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEvent
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEventType
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
 import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapModel
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupData
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupType
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.walk.WalkEvenType
 import com.ironraft.pupping.bero.store.walk.WalkManager
@@ -57,12 +65,13 @@ import dev.burnoo.cokoin.get
 @Composable
 fun WalkBox(
     modifier: Modifier = Modifier,
+    viewModel: PageWalkViewModel,
     playMapModel:PlayMapModel
 ) {
     val pagePresenter: PagePresenter = get()
     val dataProvider: DataProvider = get()
     val walkManager: WalkManager = get()
-    val viewModel: ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
+    val componentModel: ComponentViewModel by remember { mutableStateOf(ComponentViewModel()) }
 
     fun updateTitle(status: WalkStatus?):String{
         var title = ""
@@ -89,11 +98,14 @@ fun WalkBox(
     val walkEvent = walkManager.event.observeAsState()
     val isHidden by playMapModel.componentHidden.observeAsState()
 
-    fun updatePath(paths:List<WalkPathItem>?){
+    fun updatePath(paths:List<WalkPathItem>?):Boolean{
         val path = paths ?: listOf()
         pathSelectIdx = path.map{it.idx}
         pathPoints = path.map { PointF(it.tx, it.ty) }
+        return true
     }
+    val isInit:Boolean by remember { mutableStateOf(updatePath(walkManager.walkPath?.paths)) }
+
     walkStatus.value.let { status ->
         val walk = status == WalkStatus.Walking
         if (walk == isWalk) return@let
@@ -106,7 +118,7 @@ fun WalkBox(
         val e = evt ?: return@let
         when (e.type){
             WalkEvenType.UpdateViewLocation -> {
-                if (!viewModel.isValidValue(e)) return@let
+                if (!componentModel.isValidValue(e)) return@let
                 updatePath(walkManager.walkPath?.paths)
             }
             else -> {}
@@ -114,92 +126,105 @@ fun WalkBox(
     }
 
     AppTheme {
-        AnimatedVisibility(visible = isHidden != true ) {
-            Column(
-                modifier = modifier
-                    .clip(RoundedCornerShape(DimenRadius.light.dp))
-                    .background(if (isSimple == false) ColorApp.white else ColorTransparent.clear)
-                    .border(
-                        width = DimenStroke.light.dp,
-                        color = if (isSimple == false) ColorApp.grey100 else ColorTransparent.clear,
-                        shape = RoundedCornerShape(DimenRadius.light.dp)
-                    )
-                    .padding(
-                        all = (if (isSimple == false) DimenMargin.regularExtra else 0f).dp
-                    )
-                ,
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(0.dp),
-                    verticalAlignment = Alignment.Top
+        if (isInit) {
+            AnimatedVisibility(visible = isHidden != true, enter = fadeIn(), exit = fadeOut()) {
+                Column(
+                    modifier = modifier
+                        .clip(RoundedCornerShape(DimenRadius.light.dp))
+                        .background(if (isSimple == false) ColorApp.white else ColorTransparent.clear)
+                        .border(
+                            width = DimenStroke.light.dp,
+                            color = if (isSimple == false) ColorApp.grey100 else ColorTransparent.clear,
+                            shape = RoundedCornerShape(DimenRadius.light.dp)
+                        )
+                        .padding(
+                            all = (if (isSimple == false) DimenMargin.regularExtra else 0f).dp
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    AnimatedVisibility(visible = isSimple == false ) {
-                        Text(
-                            title,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = FontSize.regular.sp,
-                            color = if (isWalk) ColorBrand.primary else ColorApp.grey500,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1.0f))
-                    ImageButton(
-                        isSelected = false,
-                        defaultImage = R.drawable.search_user,
-                        isOrigin = true,
-                        size = DimenIcon.heavyExtra
-                    ){
-                        //self.pagePresenter.openPopup(PageProvider.getPageObject(.popupWalkUsers))
-                    }
-                }
-                AnimatedVisibility(visible = isSimple == false ) {
-                    if(isWalk) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = DimenMargin.thin.dp),
-                            horizontalArrangement = Arrangement.spacedBy(
-                                space = DimenMargin.tiny.dp,
-                            )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(0.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        AnimatedVisibility(
+                            visible = isSimple == false,
+                            enter = fadeIn(),
+                            exit = fadeOut()
                         ) {
-                            PropertyInfo(
-                                modifier = Modifier.weight(1.0f),
-                                type = PropertyInfoType.Impect,
-                                value = WalkManager.viewDuration(walkTime),
-                                unit = stringResource(id = R.string.time)
+                            Text(
+                                title,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = FontSize.regular.sp,
+                                color = if (isWalk) ColorBrand.primary else ColorApp.grey500,
+                                textAlign = TextAlign.Start
                             )
-                            PropertyInfo(
-                                modifier = Modifier.weight(1.0f),
-                                type = PropertyInfoType.Impect,
-                                value = WalkManager.viewDistance(walkDistance),
-                                unit = stringResource(id = R.string.km)
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .weight(1.0f)
-                                    .height(70.dp)
-                                    .clip(RoundedCornerShape(DimenRadius.light.dp))
-                                    .background(ColorApp.grey50)
-                            ) {
-                                PolygonGraph(
-                                    modifier = Modifier.size(50.dp, 50.dp),
-                                    screenHeight = 50f,
-                                    screenWidth = 50f,
-                                    selectIdx = pathSelectIdx,
-                                    points = pathPoints
-                                )
-                            }
                         }
-                    } else {
-                        LocationInfo(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = DimenMargin.medium.dp)
-                        )
+                        Spacer(modifier = Modifier.weight(1.0f))
+                        ImageButton(
+                            isSelected = false,
+                            defaultImage = R.drawable.search_user,
+                            isOrigin = true,
+                            size = DimenIcon.heavyExtra
+                        ) {
+                            viewModel.event.value = PageWalkEvent(
+                                PageWalkEventType.OpenPopup,
+                                WalkPopupData(WalkPopupType.WalkUsers)
+                            )
+                        }
+                    }
+                    AnimatedVisibility(
+                        visible = isSimple == false,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        if (isWalk) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = DimenMargin.thin.dp),
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    space = DimenMargin.tiny.dp,
+                                )
+                            ) {
+                                PropertyInfo(
+                                    modifier = Modifier.weight(1.0f),
+                                    type = PropertyInfoType.Impect,
+                                    value = WalkManager.viewDuration(walkTime),
+                                    unit = stringResource(id = R.string.time)
+                                )
+                                PropertyInfo(
+                                    modifier = Modifier.weight(1.0f),
+                                    type = PropertyInfoType.Impect,
+                                    value = WalkManager.viewDistance(walkDistance),
+                                    unit = stringResource(id = R.string.km)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1.0f)
+                                        .height(70.dp)
+                                        .clip(RoundedCornerShape(DimenRadius.light.dp))
+                                        .background(ColorApp.grey50),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    PolygonGraph(
+                                        modifier = Modifier.size(46.dp, 46.dp),
+                                        screenHeight = 46f,
+                                        screenWidth = 46f,
+                                        selectIdx = pathSelectIdx,
+                                        points = pathPoints
+                                    )
+                                }
+                            }
+                        } else {
+                            LocationInfo(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = DimenMargin.medium.dp)
+                            )
+                        }
                     }
                 }
             }

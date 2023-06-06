@@ -16,6 +16,7 @@ import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.util.AppUtil
+import com.lib.util.distance
 import com.lib.util.toDate
 import com.lib.util.toFormatString
 import com.lib.util.toLocalDate
@@ -236,10 +237,10 @@ class Mission:MapUserData(){
         }
     }
 
-    fun setDistance(me:Location?):Mission{
+    fun setDistance(me:LatLng?):Mission{
         me?.let { me ->
             location?.let { loc ->
-                //distanceFromMe = me.distance(from: loc)
+                distanceFromMe = me.distance(loc)
             }
         }
         return this

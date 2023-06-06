@@ -28,7 +28,5 @@ class PlayMapModel: ComponentViewModel() {
         const val routeViewDuration:Double = 4.0
         const val zoomFarAwayView:Float = 14.5f
         const val zoomCloseView:Float = 18.0f
-
-
     }
 }
