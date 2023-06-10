@@ -95,7 +95,7 @@ fun SimpleWalkBox(
                     color = ColorApp.black,
                     isActive = true
                 ) {
-                    if (pagePresenter.currentPage?.pageID == PageID.Walk.value) {
+                    if (pagePresenter.currentTopPage?.pageID == PageID.Walk.value) {
                         walkManager.updateSimpleView(false)
                     } else {
                         pagePresenter.changePage(

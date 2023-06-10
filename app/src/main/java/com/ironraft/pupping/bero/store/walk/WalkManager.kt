@@ -15,7 +15,6 @@ import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiSuccess
 import com.ironraft.pupping.bero.store.api.ApiType
-import com.ironraft.pupping.bero.store.api.rest.AlarmData
 import com.ironraft.pupping.bero.store.api.rest.PlaceData
 import com.ironraft.pupping.bero.store.api.rest.WalkRegistData
 import com.ironraft.pupping.bero.store.api.rest.WalkUserData
@@ -29,7 +28,6 @@ import com.ironraft.pupping.bero.store.walk.model.WalkPath
 import com.lib.observer.LocationObserver
 import com.lib.page.PagePresenter
 import com.lib.util.DataLog
-import com.lib.util.PageLog
 import com.lib.util.distance
 import com.lib.util.replace
 import com.lib.util.secToMinString
@@ -44,7 +42,7 @@ data class WalkMapData(
     var loc:LatLng? = null,
     var zoom:Float? = null
 )
-enum class WalkEvenType {
+enum class WalkEventType {
     ViewTutorial,
     Start, End, Completed,
     ChangeMapStatus, UpdatedPlaces, UpdatedUsers,
@@ -52,7 +50,7 @@ enum class WalkEvenType {
     UpdateViewLocation, UpdatedPath
 }
 data class WalkEvent(
-    val type:WalkEvenType,
+    val type:WalkEventType,
     var value:Any? = null
 )
 enum class WalkUiEventType {
@@ -162,12 +160,29 @@ class WalkManager(
         locationObserver.requestMe(false, appTag)
         locationObserver.finalLocation.removeObservers(owner)
     }
+
+    override fun disposeLifecycleOwner(owner: LifecycleOwner) {
+        uiEvent.removeObservers(owner)
+        event.removeObservers(owner)
+        error.removeObservers(owner)
+        status.removeObservers(owner)
+        walkTime.removeObservers(owner)
+        walkDistance.removeObservers(owner)
+        viewMission.removeObservers(owner)
+        viewPlace.removeObservers(owner)
+        currentLocation.removeObservers(owner)
+        isMapLoading.removeObservers(owner)
+        currentDistanceFromMission.removeObservers(owner)
+        playPoint.removeObservers(owner)
+        playExp.removeObservers(owner)
+        isSimpleView.removeObservers(owner)
+    }
     fun firstWalk(){
-        event.value = WalkEvent(WalkEvenType.ViewTutorial, value = R.raw.tutorial_1)
+        event.value = WalkEvent(WalkEventType.ViewTutorial, value = R.raw.tutorial_1)
     }
     fun firstWalkStart(){
         if(todayWalkCount < 1){
-            event.value = WalkEvent(WalkEvenType.ViewTutorial, value = R.raw.tutorial_2)
+            event.value = WalkEvent(WalkEventType.ViewTutorial, value = R.raw.tutorial_2)
         }
     }
     private fun clearAllMapStatus(){
@@ -182,7 +197,7 @@ class WalkManager(
 
     fun resetMapStatus(location:LatLng? = null){
         clearAllMapStatus()
-        event.value = WalkEvent(WalkEvenType.ChangeMapStatus)
+        event.value = WalkEvent(WalkEventType.ChangeMapStatus)
         val loc = location ?: currentLocation.value ?: return
         updateMapStatus(loc, isCheckDistence = false)
     }
@@ -205,7 +220,7 @@ class WalkManager(
         }
         updateMapPlace(location)
         updateMapUser(location)
-        event.value = WalkEvent(WalkEvenType.UpdateViewLocation, value = location)
+        event.value = WalkEvent(WalkEventType.UpdateViewLocation, value = location)
     }
 
     fun replaceMapStatus(location:LatLng? = null){
@@ -213,7 +228,7 @@ class WalkManager(
         clearAllMapStatus()
         updateMapPlace(loc)
         updateMapUser(loc)
-        event.value = WalkEvent(WalkEvenType.UpdateViewLocation, value = loc)
+        event.value = WalkEvent(WalkEventType.UpdateViewLocation, value = loc)
     }
 
     fun updateMapPlace(location:LatLng){
@@ -282,7 +297,7 @@ class WalkManager(
         }
         startTime = Date()
         startLocation = currentLocation.value
-        event.value = WalkEvent(WalkEvenType.Start)
+        event.value = WalkEvent(WalkEventType.Start)
         status.value = WalkStatus.Walking
         startTimer()
         walkPath = WalkPath()
@@ -300,7 +315,7 @@ class WalkManager(
     fun completeWalk(){
         val mission = Mission().setData(this, pagePresenter.activity)
         completedWalk = mission
-        event.value = WalkEvent(WalkEvenType.Completed, value = mission)
+        event.value = WalkEvent(WalkEventType.Completed, value = mission)
     }
 
     fun endWalk(){
@@ -315,7 +330,7 @@ class WalkManager(
         updateImages = arrayListOf()
         updateImageLocations = arrayListOf()
         endTimer()
-        event.value = WalkEvent(WalkEvenType.End)
+        event.value = WalkEvent(WalkEventType.End)
         status.value = WalkStatus.Ready
         walkId = null
         isSimpleView.value = false
@@ -416,7 +431,7 @@ class WalkManager(
         val loc = currentLocation.value ?: return
         updateImageLocations.add(loc)
         walkPath?.setLocations(updateImageLocations)
-        event.value = WalkEvent(WalkEvenType.UpdatedPath)
+        event.value = WalkEvent(WalkEventType.UpdatedPath)
     }
 
     private fun filterUser(datas:List<WalkUserData>){
@@ -464,7 +479,7 @@ class WalkManager(
         }
         summary.forEach{it.addCompleted()}
         missionUsersSummary = summary
-        event.value = WalkEvent(WalkEvenType.UpdatedUsers)
+        event.value = WalkEvent(WalkEventType.UpdatedUsers)
     }
 
     private var finalFind:Place? = null
@@ -481,7 +496,7 @@ class WalkManager(
         }
         finalFind = find
         DataLog.d("findPlace find " + (find.title ?: ""), appTag)
-        event.value = WalkEvent(WalkEvenType.FindPlace, value = find)
+        event.value = WalkEvent(WalkEventType.FindPlace, value = find)
         return find
     }
 
@@ -558,7 +573,7 @@ class WalkManager(
         }
         summary.forEach{it.addCompleted()}
         placesSummary = summary
-        event.value = WalkEvent(WalkEvenType.UpdatedPlaces)
+        event.value = WalkEvent(WalkEventType.UpdatedPlaces)
     }
 
     fun respondApi(res: ApiSuccess<ApiType>){

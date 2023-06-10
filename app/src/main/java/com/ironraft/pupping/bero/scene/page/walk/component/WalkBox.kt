@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +40,7 @@ import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapModel
 import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupData
 import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupType
 import com.ironraft.pupping.bero.store.provider.DataProvider
-import com.ironraft.pupping.bero.store.walk.WalkEvenType
+import com.ironraft.pupping.bero.store.walk.WalkEventType
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.ironraft.pupping.bero.store.walk.WalkStatus
 import com.ironraft.pupping.bero.store.walk.model.WalkPathItem
@@ -117,7 +116,7 @@ fun WalkBox(
     walkEvent.value.let { evt ->
         val e = evt ?: return@let
         when (e.type){
-            WalkEvenType.UpdateViewLocation -> {
+            WalkEventType.UpdateViewLocation -> {
                 if (!componentModel.isValidValue(e)) return@let
                 updatePath(walkManager.walkPath?.paths)
             }

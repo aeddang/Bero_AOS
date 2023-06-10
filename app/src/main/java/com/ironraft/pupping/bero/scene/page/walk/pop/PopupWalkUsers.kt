@@ -21,6 +21,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.item.PetProfileUser
 import com.ironraft.pupping.bero.scene.component.list.FriendListType
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEvent
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEventType
 import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
@@ -31,6 +36,7 @@ import com.ironraft.pupping.bero.store.provider.model.FriendStatus
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.page.ListViewModel
+import com.lib.page.PagePresenter
 import com.lib.util.rememberForeverLazyListState
 import com.skeleton.component.item.EmptyData
 import com.skeleton.component.item.EmptyItem
@@ -115,6 +121,7 @@ fun PopupWalkUsers(
     val owner = LocalLifecycleOwner.current
     val walkManager: WalkManager = get()
     val repository: PageRepository = get()
+    val pagePresenter: PagePresenter = get()
     var isFriend by remember { mutableStateOf( false )}
     val walkUserListViewModel: WalkUserListViewModel by remember { mutableStateOf(
         WalkUserListViewModel(repo = repository).initSetup(owner)
@@ -133,7 +140,6 @@ fun PopupWalkUsers(
             walkUserListViewModel.reset()
         return true
     }
-
     val isInit by remember { mutableStateOf( onUpdate(isFriend) )}
 
     AppTheme {
@@ -190,11 +196,10 @@ fun PopupWalkUsers(
                                 distance = data.distanceFromMe
                             ) {
                                 close()
-                                /*
-                                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                     self.pagePresenter.openPopup(PageProvider.getPageObject(.popupWalkUser).addParam(key: .data, value: data))
-                                }
-                                */
+                                viewModel.event.value = PageWalkEvent(
+                                    PageWalkEventType.OpenPopup,
+                                    WalkPopupData(WalkPopupType.WalkUser, value = data)
+                                )
                             }
                         }
                     } else {
@@ -219,11 +224,10 @@ fun PopupWalkUsers(
                                     friendStatus = FriendStatus.Norelation
                                 ) {
                                     close()
-                                    /*
-                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                         self.pagePresenter.openPopup(PageProvider.getPageObject(.popupWalkUser).addParam(key: .data, value: data))
-                                    }
-                                    */
+                                    pagePresenter.openPopup(
+                                        PageProvider.getPageObject(PageID.User)
+                                            .addParam(PageParam.id, data.userId)
+                                    )
                                 }
                             }
                         }
@@ -248,11 +252,10 @@ fun PopupWalkUsers(
                                 distance = data.distanceFromMe
                             ) {
                                 close()
-                                /*
-                                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                                     self.pagePresenter.openPopup(PageProvider.getPageObject(.popupWalkUser).addParam(key: .data, value: data))
-                                }
-                                */
+                                viewModel.event.value = PageWalkEvent(
+                                    PageWalkEventType.OpenPopup,
+                                    WalkPopupData(WalkPopupType.WalkUser, value = data)
+                                )
                             }
                         }
                     }

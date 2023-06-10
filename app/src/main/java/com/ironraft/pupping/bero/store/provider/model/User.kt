@@ -119,6 +119,7 @@ class User(val isMe:Boolean = false){
         exerciseDuration = data.exerciseDuration ?: 0.0
         currentProfile.setData(data)
         currentProfile.setLv(lv)
+
         event.value = UserEvent(UserEventType.UpdatedProfile)
         return this
     }

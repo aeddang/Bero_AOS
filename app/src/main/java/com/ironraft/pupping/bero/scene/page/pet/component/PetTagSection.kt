@@ -131,7 +131,7 @@ fun PetTagSection(
                 val selects = PetProfile.exchangeStringToList(status)
                 Column(
                     modifier = Modifier.wrapContentSize(),
-                    verticalArrangement = Arrangement.spacedBy(DimenMargin.tiny.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp)
@@ -147,7 +147,7 @@ fun PetTagSection(
                                 text = btn.title,
                                 color = ColorBrand.primary,
                                 isSort = false,
-                                modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
+                                modifier = Modifier.padding(bottom = DimenMargin.tiny.dp)
                             ) {
                             }
                         }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.lib.util.DataLog
 import com.ironraft.pupping.bero.store.api.rest.ApiAdapter
 import com.ironraft.pupping.bero.store.api.rest.UserAuth
+import com.ironraft.pupping.bero.store.api.rest.WalkUserData
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
 import com.skeleton.module.network.ErrorType
 import com.skeleton.module.network.NetworkFactory
@@ -94,7 +95,7 @@ class ApiManager(
                             (apiQ.prevData as? List<*>)?.let { prevData ->
                                 datas?.let { currentData ->
                                     val concatDatas = arrayListOf<Any?>()
-                                    concatDatas.addAll(prevData)
+                                    concatDatas.addAll(prevData.filter { (it as? WalkUserData)?.isFriend == false })
                                     concatDatas.addAll(currentData)
                                     datas = concatDatas
                                 }

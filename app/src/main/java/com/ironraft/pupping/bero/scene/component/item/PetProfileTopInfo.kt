@@ -111,7 +111,6 @@ fun PetProfileTopInfo(
                         .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
                         .background(ColorApp.whiteDeepLight)
                         .padding(all = DimenMargin.light.dp)
-
                 )
         }
     }

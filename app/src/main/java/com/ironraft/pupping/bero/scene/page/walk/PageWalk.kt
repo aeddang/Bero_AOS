@@ -35,6 +35,7 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.scene.page.walk.component.PlayBox
+import com.ironraft.pupping.bero.scene.page.walk.component.PlayMap
 import com.ironraft.pupping.bero.scene.page.walk.component.WalkBox
 import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapModel
 import com.ironraft.pupping.bero.scene.page.walk.model.WalkPickViewModel
@@ -56,6 +57,7 @@ import com.lib.page.ComponentViewModel
 import com.lib.page.PageComposePresenter
 import com.lib.page.PageEventType
 import com.lib.page.PageObject
+import com.lib.page.PagePresenter
 import com.skeleton.component.map.googlemap.CPGoogleMap
 import com.skeleton.theme.ColorApp
 import com.skeleton.theme.ColorBrand
@@ -69,7 +71,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class PageWalkEventType{
-    OpenPopup, ClosePopup
+    OpenPopup, ClosePopup, CloseAllPopup
 }
 
 data class PageWalkEvent(
@@ -93,10 +95,17 @@ class PageWalkViewModel(repo:PageRepository): PageViewModel(PageID.Walk, repo){
                 repo.walkManager.currentLocation.value?.let {
                     repo.walkManager.updateMapStatus(it)
                 }
-
             }
             else ->{}
         }
+    }
+
+    override fun onClosePage() {
+        super.onClosePage()
+        event.value = PageWalkEvent(
+            PageWalkEventType.CloseAllPopup
+        )
+
     }
 }
 
@@ -107,29 +116,35 @@ fun PageWalk(
 ){
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
+    val walkManager: WalkManager = get()
     val appSceneObserver: AppSceneObserver = get()
+    val pagePresenter: PagePresenter = get()
 
     val coroutineScope = rememberCoroutineScope()
     val viewModel: PageWalkViewModel by remember { mutableStateOf(
         PageWalkViewModel(repository).initSetup(owner) as PageWalkViewModel
     )}
-    val playMapModel:PlayMapModel by remember { mutableStateOf(PlayMapModel()) }
-    val walkPickViewModel:WalkPickViewModel by remember {
-        mutableStateOf(WalkPickViewModel(repository).initSetup(owner))
-    }
+    val playMapModel:PlayMapModel by remember { mutableStateOf(
+        PlayMapModel(repository, walkManager).initSetup(owner) as PlayMapModel
+    )}
+    val walkPickViewModel:WalkPickViewModel by remember { mutableStateOf(
+        WalkPickViewModel(repository).initSetup(owner)
+    )}
 
     var popup:WalkPopupData? by remember { mutableStateOf(null) }
     val popupState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
+    var isOpenPopup:Boolean by remember { mutableStateOf(false) }
+
     var halfPopup:WalkPopupData? by remember { mutableStateOf(null) }
     val halfPopupState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
+    var isOpenHalfPopup:Boolean by remember { mutableStateOf(false) }
 
-    var isOpenPopup:Boolean by remember { mutableStateOf(false) }
     val event = viewModel.event.observeAsState()
     fun onOpenPopup(){
         isOpenPopup = true
@@ -147,14 +162,19 @@ fun PageWalk(
             coroutineScope.launch { popupState.hide() }
         }
     }
+
     LaunchedEffect( popupState.currentValue ){
         popupState.currentValue.let {
             when (it) {
                 ModalBottomSheetValue.Hidden -> {
                     if (isOpenPopup) return@let
+                    if (isOpenHalfPopup) return@let
                     if (halfPopupState.isVisible) return@let
+                    popup = null
+                    if (pagePresenter.currentTopPage?.pageID != PageID.Walk.value) return@let
                     appSceneObserver.useBottom.value = true
                     viewModel.currentPage.value?.isGoBackAble = true
+
                 }
                 else ->{
                     isOpenPopup = false
@@ -163,8 +183,6 @@ fun PageWalk(
         }
     }
 
-
-    var isOpenHalfPopup:Boolean by remember { mutableStateOf(false) }
     fun onOpenHalfPopup(){
         isOpenHalfPopup = true
         appSceneObserver.useBottom.value = false
@@ -185,10 +203,14 @@ fun PageWalk(
         halfPopupState.currentValue.let {
             when (it) {
                 ModalBottomSheetValue.Hidden -> {
-                    //if (isOpenHalfPopup) return@let
+                    if (isOpenPopup) return@let
+                    if (isOpenHalfPopup) return@let
                     if (popupState.isVisible) return@let
+                    halfPopup = null
+                    if (pagePresenter.currentTopPage?.pageID != PageID.Walk.value) return@let
                     appSceneObserver.useBottom.value = true
                     viewModel.currentPage.value?.isGoBackAble = true
+
                 }
 
                 else -> {
@@ -200,10 +222,10 @@ fun PageWalk(
 
     event.value?.let {
         val evt = it ?: return@let
-        when(evt.type){
+        when (evt.type) {
             PageWalkEventType.OpenPopup ->
-                (evt.value as? WalkPopupData)?.let { popData->
-                    if(popData.type.isHalf){
+                (evt.value as? WalkPopupData)?.let { popData ->
+                    if (popData.type.isHalf) {
                         halfPopup = popData
                         onOpenHalfPopup()
                     } else {
@@ -211,18 +233,29 @@ fun PageWalk(
                         onOpenPopup()
                     }
                 }
+
             PageWalkEventType.ClosePopup ->
-                (evt.value as? WalkPopupData)?.let { popData->
-                    if(popData.type.isHalf) onCloseHalfPopup() else onClosePopup()
+                (evt.value as? WalkPopupData)?.let { popData ->
+                    if (popData.type.isHalf) onCloseHalfPopup() else onClosePopup()
                 }
+
+            PageWalkEventType.CloseAllPopup -> {
+                onClosePopup()
+                onCloseHalfPopup()
+            }
         }
         viewModel.event.value = null
     }
 
+
     val goBackPage = viewModel.goBack.observeAsState()
     goBackPage.value?.let {
         viewModel.goBackCompleted()
-        onClosePopup()
+        if(popupState.isVisible) {
+            onClosePopup()
+            return@let
+        }
+        onCloseHalfPopup()
     }
 
     Box (
@@ -231,7 +264,10 @@ fun PageWalk(
             .background(ColorBrand.bg),
         contentAlignment = Alignment.Center
     ){
-        CPGoogleMap()
+        PlayMap(
+            viewModel = viewModel,
+            playMapModel = playMapModel
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()

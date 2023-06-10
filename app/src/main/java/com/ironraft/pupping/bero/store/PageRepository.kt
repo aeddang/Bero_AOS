@@ -62,13 +62,13 @@ class PageRepository (
         var deviceID:String = "" ; private set
     }
     private val appTag = "Repository"
-    val status = MutableLiveData<RepositoryStatus>(RepositoryStatus.Initate)
+    val status = MutableLiveData(RepositoryStatus.Initate)
     val event = SingleLiveData<RepositoryEvent?>(null)
     private val accountManager = AccountManager(ctx, dataProvider.user)
     private val scope = PageCoroutineScope()
 
-    val hasNewAlarm = MutableLiveData<Boolean>(false)
-    val hasNewChat = MutableLiveData<Boolean>(false)
+    val hasNewAlarm = MutableLiveData(false)
+    val hasNewChat = MutableLiveData(false)
     fun clearEvent(){
         dataProvider.clearEvent()
     }
@@ -173,6 +173,7 @@ class PageRepository (
     override fun disposeLifecycleOwner(owner: LifecycleOwner){
         snsManager.disposeLifecycleOwner(owner)
         accountManager.disposeLifecycleOwner(owner)
+        walkManager.disposeLifecycleOwner(owner)
         dataProvider.removeObserve(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
         pageAppViewModel.removeObserve(owner)
@@ -355,7 +356,7 @@ class PageRepository (
             val token = storage.registPushToken
             storage.registPushToken = ""
             storage.retryPushToken = token
-            registPushToken("")
+            requestRegistPushToken("")
         }
     }
 
@@ -385,6 +386,9 @@ class PageRepository (
     private fun registPushToken(token:String) {
         storage.retryPushToken = ""
         storage.registPushToken = token
+        requestRegistPushToken(token)
+    }
+    private fun requestRegistPushToken(token:String) {
         val params = HashMap<String, Any>()
         params["deviceId"] = deviceID
         params["token"] = token

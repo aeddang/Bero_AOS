@@ -12,23 +12,6 @@ import kotlin.math.round
 
 fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 
-fun String.decimalFormat(): String {
-    val decimal = round(this.toDouble()).toInt()
-    if (decimal > 999) {
-        val df = DecimalFormat("#,###")
-        return df.format(decimal)
-    }
-    return decimal.toString()
-}
-
-fun String.toColorCode(): String {
-    val code = this.uppercase(Locale.getDefault()).replace("0X", "#")
-    if (code.length == 7) return code
-    if (code.length == 6) return "#$code"
-    if (code.length != 4) return "#000000"
-    val hex = code.replace("#", "")
-    return "#$hex"
-}
 
 fun String.isPasswordType():Boolean {
     return this.length >= 6
@@ -50,10 +33,5 @@ fun String.isNickNameType():Boolean {
 
 
 
-fun Double.yyyymmdd():String{
-    val sdf = SimpleDateFormat("MM dd yyyy")
-    val netDate = Date(this.toLong())
-    return sdf.format(netDate)
-}
 
 

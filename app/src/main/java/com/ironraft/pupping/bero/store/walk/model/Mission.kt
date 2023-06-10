@@ -163,6 +163,7 @@ class Mission:MapUserData(){
         }
         isCompleted = true
         user = User().setWalkData(data, isMe = isMe)
+
         distance = data.distance ?: 0.0
         duration = data.duration ?: 0.0
         fixDestination()

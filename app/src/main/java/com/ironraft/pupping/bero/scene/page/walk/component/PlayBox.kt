@@ -214,7 +214,7 @@ fun PlayBox(
                         isSort = false,
                         isSelected = false
                     ) {
-                        val pos = playMapModel.position ?: return@SortButton
+                        val pos = playMapModel.position?: return@SortButton
                         walkManager.replaceMapStatus(pos)
                         walkManager.uiEvent.value = WalkUiEvent(
                             type = WalkUiEventType.MoveMap,

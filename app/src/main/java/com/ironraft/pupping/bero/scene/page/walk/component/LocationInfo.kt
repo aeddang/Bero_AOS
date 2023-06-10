@@ -29,7 +29,7 @@ import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.WeatherData
 import com.ironraft.pupping.bero.store.provider.DataProvider
-import com.ironraft.pupping.bero.store.walk.WalkEvenType
+import com.ironraft.pupping.bero.store.walk.WalkEventType
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.observer.LocationObserver
 import com.lib.page.ComponentViewModel
@@ -45,7 +45,6 @@ import dev.burnoo.cokoin.get
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.HashMap
 
 
@@ -125,7 +124,7 @@ fun LocationInfo(
     walkEvent.value.let { evt ->
         val e = evt ?: return@let
         when (e.type){
-            WalkEvenType.UpdateViewLocation -> {
+            WalkEventType.UpdateViewLocation -> {
                 if (!viewModel.isValidValue(e)) return@let
                 updatedLocation(e.value as? LatLng)
             }

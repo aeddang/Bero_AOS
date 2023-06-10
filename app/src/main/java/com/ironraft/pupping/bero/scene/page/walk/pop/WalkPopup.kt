@@ -17,7 +17,7 @@ import com.skeleton.theme.ColorApp
 import com.skeleton.theme.DimenRadius
 
 enum class WalkPopupType{
-    None, ChooseDog, WalkUsers;
+    None, ChooseDog, WalkUsers, WalkUser;
     val isHalf : Boolean
         get() = when(this) {
            WalkPopupType.WalkUsers -> false

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
+import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.skeleton.theme.AppTheme
 import com.skeleton.theme.ColorApp
 import com.skeleton.theme.DimenRadius
@@ -35,6 +36,8 @@ fun WalkHalfPopup(
             sheetContent = {
                 when (type) {
                     WalkPopupType.ChooseDog -> PopupChooseDog( viewModel = viewModel, close = close )
+                    WalkPopupType.WalkUser -> PopupWalkUser(
+                        viewModel = viewModel, selectMission = value as? Mission, close = close)
                     else -> Spacer(modifier = Modifier.fillMaxWidth())
                 }
             },

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.PointF
 import android.graphics.RectF
 import android.location.Location
 import android.net.Uri
@@ -20,6 +21,8 @@ import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.math.floor
 import kotlin.math.round
 
@@ -157,6 +160,24 @@ fun String.replace(newString:String): String {
     return replace("%s", newString)
 }
 
+fun String.decimalFormat(): String {
+    val decimal = round(this.toDouble()).toInt()
+    if (decimal > 999) {
+        val df = DecimalFormat("#,###")
+        return df.format(decimal)
+    }
+    return decimal.toString()
+}
+
+fun String.toColorCode(): String {
+    val code = this.uppercase(Locale.getDefault()).replace("0X", "#")
+    if (code.length == 7) return code
+    if (code.length == 6) return "#$code"
+    if (code.length != 4) return "#000000"
+    val hex = code.replace("#", "")
+    return "#$hex"
+}
+
 fun Double.secToMinString(div:String = ":", fix:Int=2) : String {
     val sec = this.toInt() % 60
     val min = floor( this / 60.0 ).toInt()
@@ -269,4 +290,17 @@ fun LatLng.distance(from:LatLng): Double {
         return 0.0
     }
     return results[0].toDouble()
+}
+
+fun Float.toRadians():Float{
+    return this * PI.toFloat() / 180f
+}
+fun PointF.getAngleBetweenPoints(target:PointF):Float{
+    return 270f - (atan2(this.x - target.x, this.y - target.y)) * 180f / PI.toFloat()
+}
+
+fun Double.yyyymmdd():String{
+    val sdf = SimpleDateFormat("MM dd yyyy")
+    val netDate = Date(this.toLong())
+    return sdf.format(netDate)
 }

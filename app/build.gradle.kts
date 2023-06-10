@@ -165,7 +165,7 @@ dependencies {
      * compose
      */
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.runtime:runtime:1.4.3")
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
     implementation("androidx.compose.material:material:1.4.3")
@@ -175,7 +175,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.25.0")
     implementation("androidx.compose.ui:ui:1.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
@@ -190,7 +190,7 @@ dependencies {
      * ui
      */
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-beta02")
     implementation("com.ms-square:expandableTextView:0.1.4")
 
     /**
@@ -234,12 +234,12 @@ dependencies {
     /**
      * Exo Player
      */
-    implementation("com.google.android.exoplayer:exoplayer:2.18.5")
-    implementation("com.google.android.exoplayer:exoplayer-core:2.18.5")
-    implementation("com.google.android.exoplayer:exoplayer-dash:2.18.5")
-    implementation("com.google.android.exoplayer:exoplayer-hls:2.18.5")
-    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.5")
-    implementation("com.google.android.exoplayer:extension-cast:2.18.5")
+    implementation("com.google.android.exoplayer:exoplayer:2.18.7")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.18.7")
+    implementation("com.google.android.exoplayer:exoplayer-dash:2.18.7")
+    implementation("com.google.android.exoplayer:exoplayer-hls:2.18.7")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.7")
+    implementation("com.google.android.exoplayer:extension-cast:2.18.7")
 
     /**
      * REMOTE DEBUG LIB
