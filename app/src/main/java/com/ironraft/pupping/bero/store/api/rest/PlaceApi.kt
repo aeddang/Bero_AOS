@@ -61,7 +61,7 @@ enum class PlaceCategory {
                 1 -> Cafe
                 2 -> Park
                 3 -> Vet
-                else -> null
+                else -> Park
             }
         }
     }
@@ -79,7 +79,7 @@ interface PlaceApi {
         @Query(ApiField.zipCode) zipCode: String?
     ): ApiResponse<PlaceData>?
 
-    @GET(Api.Place.place)
+    @GET(Api.Place.visitors)
     suspend fun getVisitors(
         @Path(Api.CONTENT_ID) contentID: String,
         @Query(ApiField.page) page: Int? = 0,

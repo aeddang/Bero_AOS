@@ -69,30 +69,27 @@ fun PopupWalkUser(
     val walkManager: WalkManager = get()
     val pagePresenter: PagePresenter = get()
 
-    //var current:Mission? by remember { mutableStateOf( null )}
+    var current:Mission? by remember { mutableStateOf( null )}
     fun onMove(idx:Int):Boolean{
-        selectMission?.let { current->
-            val pages = walkManager.missionUsers
-            if (idx < 0) return true
-            if (idx >= pages.count()) return true
-            val page = pages[idx]
-            if (current.missionId == page.missionId) return true
-            //current = page
-            walkManager.currentLocation.value?.let {
-                current.setDistance(it)
-            }
-            page.location?.let { loc->
-                val modifyLoc = LatLng(loc.latitude-0.0005, loc.longitude)
-                walkManager.uiEvent.value = WalkUiEvent(
-                    type = WalkUiEventType.MoveMap,
-                    value = WalkMapData(
-                        loc = modifyLoc,
-                        zoom = PlayMapModel.zoomCloseView
-                    )
-                )
-            }
+        val pages = walkManager.missionUsers
+        if (idx < 0) return true
+        if (idx >= pages.count()) return true
+        val page = pages[idx]
+        if (current?.missionId == page.missionId) return true
+        current = page
+        walkManager.currentLocation.value?.let {
+            page.setDistance(it)
         }
-
+        page.location?.let { loc->
+            val modifyLoc = LatLng(loc.latitude-0.0005, loc.longitude)
+            walkManager.uiEvent.value = WalkUiEvent(
+                type = WalkUiEventType.MoveMap,
+                value = WalkMapData(
+                    loc = modifyLoc,
+                    zoom = PlayMapModel.zoomCloseView
+                )
+            )
+        }
         return true
     }
     val isSimple by walkManager.isSimpleView.observeAsState()
@@ -144,10 +141,10 @@ fun PopupWalkUser(
                     verticalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    selectMission?.petProfile?.let {profile->
+                    current?.petProfile?.let {profile->
                         PetProfileTopInfo(
                             profile = profile,
-                            distance = selectMission.distanceFromMe,
+                            distance = current?.distanceFromMe,
                             isHorizontal = true,
                             viewProfile = {
                                 pagePresenter.openPopup(
@@ -162,7 +159,7 @@ fun PopupWalkUser(
                         )
                         FriendFunctionBox(
                             userId = profile.userId,
-                            userName = selectMission.user?.representativeName ?: profile.name.value,
+                            userName = current?.user?.representativeName ?: profile.name.value,
                             status = if(profile.isFriend) FriendStatus.MoveFriend else FriendStatus.Move
                         )
                     }

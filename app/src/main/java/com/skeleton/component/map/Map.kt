@@ -1,12 +1,18 @@
 package com.skeleton.component.map
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.PointF
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.LatLng
@@ -14,13 +20,13 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.PatternItem
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberMarkerState
 import com.lib.page.ComponentViewModel
 import com.lib.util.getAngleBetweenPoints
 import com.skeleton.theme.ColorApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.UUID
+
 
 data class MapMarker (
     var id:String = UUID.randomUUID().toString(),
@@ -174,56 +180,63 @@ open class MapUserData: MapUserDataInterface, Comparable<MapUserData>{
 open class MapModel: ComponentViewModel() {
     val uiEvent: MutableLiveData<MapUiEvent?> = MutableLiveData(null)
     val event: MutableLiveData<MapViewEvent?> = MutableLiveData(null)
-    var startLocation:LatLng = LatLng(0.0,0.0); protected set
-    var angle:Float = 0f; protected set
-    var rotate:Float = 0f; protected set
-    var zoom:Float = 0f; protected set
-    var isInitMap:Boolean = false
+    var startLocation: LatLng = LatLng(0.0, 0.0); protected set
+    var angle: Float = 0f; protected set
+    var rotate: Float = 0f; protected set
+    var zoom: Float = 0f; protected set
+    var isInitMap: Boolean = false
 
     val position: LatLng?
         get() {
             return cameraPositionState?.position?.target ?: startLocation
         }
 
-    private var markers:HashMap<String,MapMarker> = HashMap()
-    private var circles:HashMap<String,MapCircle> = HashMap()
+    private var markers: HashMap<String, MapMarker> = HashMap()
+    private var circles: HashMap<String, MapCircle> = HashMap()
+    private var me:MapMarker? = null
+    val mapMe:MutableLiveData<MarkerData?> = MutableLiveData(null)
     val mapMarkers: MutableLiveData<ArrayList<MarkerData>> = MutableLiveData(arrayListOf())
     val mapCircles: MutableLiveData<ArrayList<CircleData>> = MutableLiveData(arrayListOf())
-    var cameraPositionState:CameraPositionState? = null; private set
-    var scope:CoroutineScope? = null
+
+    var cameraPositionState: CameraPositionState? = null; private set
+    var scope: CoroutineScope? = null
     fun initSetup(owner: LifecycleOwner): MapModel {
         setDefaultLifecycleOwner(owner)
         return this
     }
-    fun lazySetup(state: CameraPositionState, coroutineScope:CoroutineScope): MapModel {
+
+    fun lazySetup(state: CameraPositionState, coroutineScope: CoroutineScope): MapModel {
         cameraPositionState = state
         scope = coroutineScope
+        cameraPositionState
         return this
     }
 
-    open fun onInitMap(){
+    open fun onInitMap() {
         isInitMap = true
     }
-
-
+    open fun onMoveMap() {}
+    open fun onMovePosition() {}
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.setDefaultLifecycleOwner(owner)
-        uiEvent.observe(owner) { uiEvent->
+        uiEvent.observe(owner) { uiEvent ->
             val evt = uiEvent ?: return@observe
-            when ( evt.type ){
+            when (evt.type) {
                 MapUiEventType.Me -> evt.marker?.let { me(it) }
                 MapUiEventType.AddMarker -> {
                     evt.marker?.let { addMarker(it) }
                     evt.markers?.let { addMarkers(it) }
                 }
+
                 MapUiEventType.AddCircle -> {
                     evt.circle?.let { addCircle(it) }
                     evt.circles?.let { addCircles(it) }
                 }
+
                 MapUiEventType.Clear -> evt.selectId?.let { clear(it) }
                 MapUiEventType.ClearAll -> clearAll(evt.selectIds)
                 MapUiEventType.Move ->
-                    evt.loc?.let { loc->
+                    evt.loc?.let { loc ->
                         evt.camera?.let { move(loc, it) }
                     }
             }
@@ -235,13 +248,33 @@ open class MapModel: ComponentViewModel() {
         uiEvent.removeObservers(owner)
     }
 
-    protected fun me(marker:MapMarker){
-        addMarker(marker)
+    protected fun me(marker: MapMarker) {
+        val prevMarker = me
+        mapMe.value = marker.marker
+        if (marker.isRotationMap) {
+            prevMarker?.marker?.position?.let { prev ->
+                marker.marker.position.let {
+                    val targetPoint = PointF(it.latitude.toFloat(), it.longitude.toFloat())
+                    val mePoint = PointF(prev.latitude.toFloat(), prev.longitude.toFloat())
+                    val rt = mePoint.getAngleBetweenPoints(targetPoint)
+                    this.rotate = rt
+                }
+            }
+        }
+        me = marker
     }
-    protected fun move(loc:LatLng, camera:CameraData){
+
+    protected fun move(loc: LatLng, camera: CameraData) {
         this.move(loc, camera.rotate, camera.zoom, camera.angle, camera.duration)
     }
-    protected fun move(loc:LatLng, rotate:Float? = null, zoom:Float? = null, angle:Float? = null, duration:Double? = null){
+
+    protected fun move(
+        loc: LatLng,
+        rotate: Float? = null,
+        zoom: Float? = null,
+        angle: Float? = null,
+        duration: Double? = null
+    ) {
         rotate?.let { this.rotate = it }
         angle?.let { this.angle = it }
         zoom?.let { this.zoom = it }
@@ -254,10 +287,10 @@ open class MapModel: ComponentViewModel() {
                     this.rotate
                 )
             )
-            scope?.let { cs->
+            scope?.let { cs ->
                 duration?.let {
                     cs.launch {
-                        state.animate(update, (it*1000).toInt())
+                        state.animate(update, (it * 1000).toInt())
                     }
                     return
                 }
@@ -267,19 +300,10 @@ open class MapModel: ComponentViewModel() {
         }
     }
 
-    protected fun addMarker(marker:MapMarker ){
-        markers[marker.id]?.let { prevMarker->
-            if (marker.isRotationMap) {
-                prevMarker.marker.position.let { me->
-                    marker.marker.position.let {
-                        val targetPoint = PointF(it.latitude.toFloat(), it.longitude.toFloat())
-                        val mePoint = PointF(me.latitude.toFloat(), me.longitude.toFloat())
-                        val rt = mePoint.getAngleBetweenPoints(targetPoint)
-                        this.rotate = rt
-                    }
-                }
-            }
-            if (prevMarker.marker != marker.marker) {
+    protected fun addMarker(marker: MapMarker) {
+
+        markers[marker.id]?.let { prevMarker ->
+            if (prevMarker.marker != marker.marker || prevMarker.marker.icon != marker.marker.icon) {
                 mapMarkers.value?.remove(prevMarker.marker)
                 mapMarkers.value?.add(marker.marker)
                 prevMarker.marker = marker.marker
@@ -289,12 +313,13 @@ open class MapModel: ComponentViewModel() {
         markers[marker.id] = marker
         mapMarkers.value?.add(marker.marker)
     }
-    protected fun addMarkers(markers:List<MapMarker>){
-        markers.forEach{ addMarker(it) }
+
+    protected fun addMarkers(markers: List<MapMarker>) {
+        markers.forEach { addMarker(it) }
     }
 
-    protected fun addCircle(circle:MapCircle ){
-        circles[circle.id]?.let {prevCircle->
+    protected fun addCircle(circle: MapCircle) {
+        circles[circle.id]?.let { prevCircle ->
             prevCircle.circle.radius = circle.circle.radius
             prevCircle.circle.fillColor = circle.circle.fillColor
             prevCircle.circle.tag = circle.circle.tag
@@ -303,32 +328,50 @@ open class MapModel: ComponentViewModel() {
         circles[circle.id] = circle
         mapCircles.value?.add(circle.circle)
     }
-    protected fun addCircles(circles:List<MapCircle> ){
-        circles.forEach{ addCircle(it) }
+
+    protected fun addCircles(circles: List<MapCircle>) {
+        circles.forEach { addCircle(it) }
     }
 
-    protected fun clear(id:String){
-        markers[id]?.let { marker->
+    protected fun clear(id: String) {
+        markers[id]?.let { marker ->
             markers.remove(id)
             mapMarkers.value?.remove(marker.marker)
         }
-        circles[id]?.let { circle->
+        circles[id]?.let { circle ->
             circles.remove(id)
             mapCircles.value?.remove(circle.circle)
         }
     }
-    protected fun clearAll(exception:List<String>? = null){
-        val newMarkers:HashMap<String,MapMarker> = HashMap()
-        val newCircles:HashMap<String,MapCircle> = HashMap()
-        markers.forEach{ marker ->
-            exception?.find {it == marker.key }?.let {
+
+    protected fun clearMarkers(ids: List<String>) {
+        ids.forEach { id->
+            markers[id]?.let { marker ->
+                markers.remove(id)
+                mapMarkers.value?.remove(marker.marker)
+            }
+        }
+    }
+    protected fun clearCircles(ids: List<String>) {
+        ids.forEach { id->
+            circles[id]?.let { marker ->
+                circles.remove(id)
+                mapCircles.value?.remove(marker.circle)
+            }
+        }
+    }
+    protected fun clearAll(exception: List<String>? = null) {
+        val newMarkers: HashMap<String, MapMarker> = HashMap()
+        val newCircles: HashMap<String, MapCircle> = HashMap()
+        markers.forEach { marker ->
+            exception?.find { it == marker.key }?.let {
                 newMarkers[marker.key] = marker.value
                 return@forEach
             }
             mapMarkers.value?.remove(marker.value.marker)
         }
-        circles.forEach{ marker ->
-            exception?.find {it == marker.key }?.let {
+        circles.forEach { marker ->
+            exception?.find { it == marker.key }?.let {
                 newCircles[marker.key] = marker.value
             }
             mapCircles.value?.remove(marker.value.circle)
@@ -336,4 +379,23 @@ open class MapModel: ComponentViewModel() {
         markers = newMarkers
         circles = newCircles
     }
+
+    protected fun bitMapFromVector(ctx: Context, @DrawableRes vectorResID: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(ctx, vectorResID)
+        vectorDrawable!!.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
 }

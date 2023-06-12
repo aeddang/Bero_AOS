@@ -1,20 +1,37 @@
 package com.ironraft.pupping.bero.scene.page.walk.model
 
+import android.graphics.drawable.Drawable
+import android.view.WindowManager
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.target.Target
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEvent
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkEventType
+import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupData
+import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupType
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.walk.WalkEventType
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.ironraft.pupping.bero.store.walk.WalkStatus
 import com.ironraft.pupping.bero.store.walk.WalkUiEventType
+import com.ironraft.pupping.bero.store.walk.model.Mission
+import com.ironraft.pupping.bero.store.walk.model.Place
+import com.lib.util.cropCircle
+import com.lib.util.toDp
 import com.skeleton.component.map.MapMarker
 import com.skeleton.component.map.MapModel
 import com.skeleton.component.map.MarkerData
+import com.skeleton.theme.DimenProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,13 +45,14 @@ enum class PlayZoomType {
 }
 class PlayMapModel(
     val repo:PageRepository,
-    val walkManager:WalkManager
+    val walkManager:WalkManager,
+    val viewModel: PageWalkViewModel
 ): MapModel() {
     companion object{
         const val uiHeight:Float = 130f
         const val zoomRatio:Float = 17.0f
         const val zoomCloseup:Float = 18.5f
-        const val zoomDefault:Float = 17.0f
+        const val zoomDefault:Float = 16.5f
         const val zoomOut:Float = 16.0f
         const val zoomFarAway:Float = 15f
         const val mapMoveDuration:Double = 0.5
@@ -52,32 +70,88 @@ class PlayMapModel(
     private var myLocationOff:BitmapDescriptor? = null
     private var myWalkingOn:BitmapDescriptor? = null
     private var myWalkingOff:BitmapDescriptor? = null
+    private var emptyUser:BitmapDescriptor? = null
+    private var pinPlace:BitmapDescriptor? = null
+    private var pinUsers:List<BitmapDescriptor> = listOf()
 
-
+    private var zoomType = PlayZoomType.Normal
     private var isForceMove = false
     override fun onInitMap() {
         super.onInitMap()
-        myLocationOn = BitmapDescriptorFactory.fromResource(R.drawable.pin_my_location_on)
-        myLocationOff = BitmapDescriptorFactory.fromResource(R.drawable.pin_my_location_off)
-        myWalkingOn = BitmapDescriptorFactory.fromResource(R.drawable.pin_my_walking_on)
-        myWalkingOff = BitmapDescriptorFactory.fromResource(R.drawable.pin_my_walking_off)
+        repo.ctx.let { ctx->
+            myLocationOn = bitMapFromVector(ctx, R.drawable.pin_my_location_off)
+            myLocationOff = bitMapFromVector(ctx, R.drawable.pin_my_location_off)
+            myWalkingOn = bitMapFromVector(ctx, R.drawable.pin_my_walking_on)
+            myWalkingOff = bitMapFromVector(ctx, R.drawable.pin_my_walking_off)
+            emptyUser = bitMapFromVector(ctx, R.drawable.pin_user)
+            pinPlace = bitMapFromVector(repo.ctx, R.drawable.pin_mission)
+            pinUsers = (1..7).map {
+                val res = ctx.resources.getIdentifier("pin_user_$it", "drawable",  ctx.packageName);
+                bitMapFromVector(repo.ctx, res)
+            }
+        }
         if (isInit) resetMap()
+    }
+
+    override fun onMoveMap() {
+        super.onMoveMap()
+        if (isFollowMe.value == true) {
+            isFollowMe.value = false
+            rotate = 0f
+        }
+    }
+
+    override fun onMovePosition() {
+        super.onMovePosition()
+        val pos = cameraPositionState?.position ?: return
+        val zoom = pos.zoom
+        var willType = zoomType
+        willType = if (zoom < zoomFarAwayView) {
+            PlayZoomType.FarAway
+        } else if (zoom > zoomCloseView) {
+            PlayZoomType.Close
+        } else {
+            PlayZoomType.Normal
+        }
+        if (willType != zoomType) {
+            zoomType = willType
+            onMarkerUpdate()
+        }
     }
     override fun setDefaultLifecycleOwner(owner: LifecycleOwner) {
         super.setDefaultLifecycleOwner(owner)
         walkManager.status.observe(owner) { status ->
             val stat = status ?: return@observe
             when (stat) {
-                WalkStatus.Walking -> isWalk.value = true
-                WalkStatus.Ready -> isWalk.value = false
+                WalkStatus.Walking -> {
+                    isWalk.value = true
+                    repo.pagePresenter.isKeepScreen = true
+                }
+                WalkStatus.Ready -> {
+                    isWalk.value = false
+                    repo.pagePresenter.isKeepScreen = false
+                }
             }
+            resetMap()
         }
+
+        walkManager.currentLocation.observe(owner) {
+            val loc = it ?: return@observe
+            move(loc)
+        }
+
         walkManager.event.observe(owner) { event ->
             val evt = event ?: return@observe
             when (evt.type) {
-                WalkEventType.ChangeMapStatus -> clearAll()
-                //WalkEventType.UpdatedPlaces -> onMarkerUpdate()
-               // WalkEventType.UpdatedUsers -> onMarkerUpdate()
+                WalkEventType.ChangeMapStatus -> {
+                    prevUsers = listOf()
+                    prevPlaces = listOf()
+                    clearAll()
+                }
+                WalkEventType.UpdatePlaces -> clearMarkers(prevPlaces)
+                WalkEventType.UpdateUsers -> clearMarkers(prevUsers)
+                WalkEventType.UpdatedPlaces -> if (isInitMap) addMarkers(getPlaces())
+                WalkEventType.UpdatedUsers -> if (isInitMap) updateUsers()
                 else -> {}
             }
         }
@@ -119,16 +193,31 @@ class PlayMapModel(
             return
         }
         if (isForceMove) return
+        clearAll()
         val location = walkManager.currentLocation.value
         val followMe = isFollowMe.value ?: false
         angle = if (followMe) mapMoveAngle else 0f
         zoom = if (followMe) zoomCloseup else zoomRatio
+        rotate = if (followMe) rotate else 0f
         location?.let { loc->
             isInit = true
-            move(loc = loc, zoom = zoom, duration = mapMoveDuration)
+            move(loc = loc, zoom = zoom, rotate = rotate, duration = mapMoveDuration)
             forceMoveLock{
                 moveMe(loc, isMove = true)
             }
+        }
+        updateUsers()
+        addMarkers(getPlaces())
+    }
+
+    private fun onMarkerUpdate(){
+        clearAll()
+        addMarkers(getPlaces())
+        if (zoomType != PlayZoomType.Close) {
+            updateUsers()
+        }
+        if (zoomType != PlayZoomType.FarAway) {
+            //addCircles(self.getSummarys()))
         }
     }
 
@@ -136,14 +225,6 @@ class PlayMapModel(
         if (!isInitMap) return
         if (isForceMove) return
         val move = isMove ?: isFollowMe.value ?: false
-        /*
-        var rotate:Double? = nil
-        if let target = self.walkManager.currentMission?.location?.coordinate {
-            let targetPoint = CGPoint(x: target.latitude, y: target.longitude)
-            let mePoint = CGPoint(x: loc.coordinate.latitude, y: loc.coordinate.longitude)
-            rotate = mePoint.getAngleBetweenPoints(target: targetPoint)
-        }
-        */
         me(getMyMarker(move))
         if (move) move(loc, zoom = null)
     }
@@ -154,7 +235,7 @@ class PlayMapModel(
         return MapMarker(
             id = "me",
             marker = marker,
-            isRotationMap = move
+            isRotationMap = isFollowMe.value ?: false
         )
     }
 
@@ -177,6 +258,137 @@ class PlayMapModel(
         )
     }
 
+    private var prevUsers:List<String> = listOf()
+    private fun updateUsers(){
+        val origin = if (zoomType == PlayZoomType.FarAway) walkManager.missionUsersSummary else walkManager.missionUsers
+        val datas = origin.filter{ it.location != null }
+        prevUsers = datas.map { it.missionId.toString() }
+        datas.forEach{ data ->
+            getUserMarker(data, data.missionId.toString())?.let {
+                addMarker(
+                    MapMarker(
+                        id = data.missionId.toString(),
+                        marker = it
+                    )
+                )
+            }
+        }
+    }
+    private fun getUserMarker(data:Mission, key:String) : MarkerData? {
+        val loc = data.location ?: return null
+        val icon = if (data.isGroup) pinUsers.randomOrNull() else emptyUser
+        val marker = MarkerData(
+            key = key,
+            position = loc
+        )
+        if (data.isGroup) {
+            marker.icon = icon
+            marker.title = data.count.toString() + " " + (data.title ?: "")
+            marker.zIndex = 900f
+            marker.anchor = Offset(0.5f, 0.5f)
+            marker.infoWindowAnchor = Offset( 0.5f, 0.1f)
+            marker.onClick = {
+                moveLocation(loc, zoomFarAway)
+                false
+            }
+            return marker
+        }
+
+        marker.anchor = Offset(0.5f,  0.3f)
+        marker.infoWindowAnchor = Offset(0.5f,0.16f)
+        marker.zIndex = 300f
+        marker.icon = icon
+        marker.onClick = {
+            viewModel.event.value = PageWalkEvent(
+                PageWalkEventType.OpenPopup,
+                WalkPopupData(WalkPopupType.WalkUser, value = data)
+            )
+            false
+        }
+        data.pictureUrl?.let {path->
+            marker.title = data.title ?: "User"
+            val size = DimenProfile.lightExtra.toInt().toDp
+            val request = ImageRequest.Builder(repo.ctx)
+                .data(path)
+                .target(
+                    object : Target {
+                        override fun onError(error: Drawable?) {
+                            super.onError(error)
+                            addMarker(
+                                MapMarker(
+                                    id = key,
+                                    marker = marker
+                                )
+                            )
+                        }
+                        override fun onSuccess(result: Drawable) {
+                            val bitmap = result.toBitmap(
+                                size, size
+                            ).cropCircle()
+                            marker.icon = BitmapDescriptorFactory.fromBitmap( bitmap )
+                            addMarker(
+                                MapMarker(
+                                    id = key,
+                                    marker = marker
+                                )
+                            )
+                        }
+                    }
+                )
+                .build()
+            ImageLoader.Builder(repo.ctx).build().enqueue(request)
+            return null
+        }
+        return marker
+    }
+
+    private var prevPlaces:List<String> = listOf()
+    private fun getPlaces():List<MapMarker>{
+        val origin = if (zoomType == PlayZoomType.FarAway) walkManager.placesSummary else walkManager.places
+        val datas = origin.filter{ it.location != null }
+
+        prevPlaces = datas.map { it.googlePlaceId.toString() }
+        return datas.map{ data ->
+            MapMarker(
+                id = data.googlePlaceId.toString(),
+                marker = getPlaceMarker(data, data.googlePlaceId.toString())
+            )
+        }
+    }
+
+    private fun getPlaceMarker(data:Place, key:String) : MarkerData{
+        val loc = data.location ?: return MarkerData(position = LatLng(0.0, 0.0))
+
+        val marker = MarkerData(
+            key = key,
+            position = loc
+        )
+        if(data.isGroup){
+            marker.icon = pinPlace
+            marker.title = data.count.toString() + " " + (data.title ?: "")
+            marker.zIndex = 900f
+            marker.onClick = {
+                moveLocation(loc, zoomFarAway)
+                false
+            }
+            return marker
+        }
+        val type = data.category ?: return MarkerData(position = LatLng(0.0, 0.0))
+        val iconRes = if(data.isMark) type.iconMark else type.icon
+        marker.icon = bitMapFromVector(repo.ctx, iconRes)
+        marker.title = data.title ?: "Place"
+        marker.anchor = Offset(0.5f,  0.5f)
+        marker.zIndex = if(data.isMark) 100f else 200f
+        marker.onClick = {
+            viewModel.event.value = PageWalkEvent(
+                PageWalkEventType.OpenPopup,
+                WalkPopupData(WalkPopupType.WalkPlace, value = data)
+            )
+            false
+        }
+        //marker.tracksInfoWindowChanges = true
+        return marker
+    }
 
     private fun forceMoveLock(delayTime:Double = 0.0, closer:(() -> Unit)? = null){
         isForceMove = true

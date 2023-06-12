@@ -84,18 +84,14 @@ fun PlayBox(
     val walkManager: WalkManager = get()
 
 
-    var isWalk:Boolean by remember { mutableStateOf(walkManager.status.value == WalkStatus.Walking) }
+
     val isSimple by walkManager.isSimpleView.observeAsState()
     val walkStatus = walkManager.status.observeAsState()
     val isHidden by playMapModel.componentHidden.observeAsState()
     val isFollowMe by playMapModel.isFollowMe.observeAsState()
+    val isWalk by playMapModel.isWalk.observeAsState()
     val pickImage = walkPickViewModel.pickImage.observeAsState()
 
-    walkStatus.value.let { status ->
-        val walk =  status == WalkStatus.Walking
-        if (walk == isWalk) return@let
-        isWalk = walk
-    }
     pickImage.value?.let { image->
         walkManager.updateStatus(image)
         walkPickViewModel.pickImage.value = null
@@ -190,7 +186,7 @@ fun PlayBox(
                     horizontalArrangement = Arrangement.spacedBy(0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(isWalk) {
+                    if(isWalk==true) {
                         CircleButton(
                             type = CircleButtonType.Icon,
                             icon = R.drawable.minimize,
@@ -235,7 +231,8 @@ fun PlayBox(
                     }
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clip(RoundedCornerShape(DimenRadius.light.dp))
                         .background(ColorApp.white)
                         .border(
@@ -249,7 +246,7 @@ fun PlayBox(
                     horizontalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(isWalk){
+                    if(isWalk==true){
                         CircleButton(
                             type = CircleButtonType.Icon,
                             icon = R.drawable.camera,
@@ -263,12 +260,12 @@ fun PlayBox(
                     }
                     FillButton(
                         type = FillButtonType.Fill,
-                        text = stringResource(id = if(isWalk) R.string.button_finishTheWalk else R.string.button_startWalking),
+                        text = stringResource(id = if(isWalk==true) R.string.button_finishTheWalk else R.string.button_startWalking),
                         size = DimenButton.regular,
-                        color = if(isWalk) ColorApp.black else ColorBrand.primary,
+                        color = if(isWalk==true) ColorApp.black else ColorBrand.primary,
                         isActive = true
                     ){
-                        if(isWalk){
+                        if(isWalk==true){
                             finishWalk()
                         } else {
                             if(isInitable) startWalk()

@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.SwipeableDefaults
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -105,6 +107,7 @@ class PageWalkViewModel(repo:PageRepository): PageViewModel(PageID.Walk, repo){
         event.value = PageWalkEvent(
             PageWalkEventType.CloseAllPopup
         )
+        repo.pagePresenter.isKeepScreen = false
 
     }
 }
@@ -125,7 +128,7 @@ fun PageWalk(
         PageWalkViewModel(repository).initSetup(owner) as PageWalkViewModel
     )}
     val playMapModel:PlayMapModel by remember { mutableStateOf(
-        PlayMapModel(repository, walkManager).initSetup(owner) as PlayMapModel
+        PlayMapModel(repository, walkManager, viewModel).initSetup(owner) as PlayMapModel
     )}
     val walkPickViewModel:WalkPickViewModel by remember { mutableStateOf(
         WalkPickViewModel(repository).initSetup(owner)
@@ -210,9 +213,7 @@ fun PageWalk(
                     if (pagePresenter.currentTopPage?.pageID != PageID.Walk.value) return@let
                     appSceneObserver.useBottom.value = true
                     viewModel.currentPage.value?.isGoBackAble = true
-
                 }
-
                 else -> {
                     isOpenHalfPopup = false
                 }
@@ -262,7 +263,7 @@ fun PageWalk(
         modifier = modifier
             .fillMaxSize()
             .background(ColorBrand.bg),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ){
         PlayMap(
             viewModel = viewModel,

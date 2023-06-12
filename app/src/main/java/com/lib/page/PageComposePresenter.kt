@@ -11,7 +11,11 @@ open class PageComposePresenter : PagePresenter{
         set(value) {
             activity.isFullScreen = value
         }
-
+    override var isKeepScreen: Boolean
+        get() = activity.isKeepScreen
+        set(value) {
+            activity.isKeepScreen = value
+        }
     override var systemBarColor:Int
         get() = activity.systemBarColor
         set(value) {

@@ -120,6 +120,18 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             }
         }
 
+    var isKeepScreen:Boolean = false
+        set(value) {
+            if( value == field ) return
+            field = value
+            if(field){
+                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }else{
+                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+            }
+        }
+
     @ColorRes
     var systemBarColor:Int = -1
         set(value) {

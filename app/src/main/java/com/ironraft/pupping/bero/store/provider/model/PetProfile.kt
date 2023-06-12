@@ -71,6 +71,7 @@ class PetProfile {
     }
     private val appTag = javaClass.simpleName
     var id:String = UUID.randomUUID().toString(); private set
+    var index:Int = UUID.randomUUID().hashCode(); private set
     var petId:Int = 0; private set
     var userId:String = ""; private set
     val imagePath:MutableLiveData<String?> = MutableLiveData<String?>(null)
@@ -129,6 +130,7 @@ class PetProfile {
     fun init(data:PetData, userId:String? = null,isMyPet:Boolean = false, isFriend:Boolean = false, lv:Int? = null, index:Int = -1): PetProfile{
         if (isMyPet) originData = data
         lv?.let { level = it }
+        this.index = index
         this.userId = data.userId ?: userId ?: ""
         this.isMypet = isMyPet
         this.petId = data.petId ?: 0

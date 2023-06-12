@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.scene.page.walk.PageWalkViewModel
 import com.ironraft.pupping.bero.store.walk.model.Mission
+import com.ironraft.pupping.bero.store.walk.model.Place
 import com.skeleton.theme.AppTheme
 import com.skeleton.theme.ColorApp
+import com.skeleton.theme.ColorTransparent
 import com.skeleton.theme.DimenRadius
 
 
@@ -38,6 +40,8 @@ fun WalkHalfPopup(
                     WalkPopupType.ChooseDog -> PopupChooseDog( viewModel = viewModel, close = close )
                     WalkPopupType.WalkUser -> PopupWalkUser(
                         viewModel = viewModel, selectMission = value as? Mission, close = close)
+                    WalkPopupType.WalkPlace -> PopupWalkPlace(
+                        viewModel = viewModel, selectPlace = value as? Place, close = close)
                     else -> Spacer(modifier = Modifier.fillMaxWidth())
                 }
             },
@@ -45,7 +49,8 @@ fun WalkHalfPopup(
                 topStart = CornerSize(DimenRadius.medium.dp),
                 topEnd = CornerSize(DimenRadius.medium.dp)
             ),
-            sheetBackgroundColor = ColorApp.white
+            sheetBackgroundColor = ColorApp.white,
+            scrimColor = ColorTransparent.clear
         ) {
 
         }

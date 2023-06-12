@@ -2,6 +2,7 @@ package com.ironraft.pupping.bero.store
 
 import android.provider.Settings
 import com.ironraft.pupping.bero.store.api.ApiResponse
+import com.ironraft.pupping.bero.store.api.rest.CodeData
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -21,6 +22,14 @@ class SystemEnvironment {
                 Instant.now()
             )
         const val platform = "AOS"
+
+        fun setupBreedCode(datas:List<CodeData>){
+            datas.forEach{ data ->
+                    data.id?.toString()?.let {
+                        breedCode[it] = data.value ?: "bero?"
+                    }
+            }
+        }
 
     }
 }

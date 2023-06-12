@@ -17,10 +17,10 @@ import com.skeleton.theme.ColorApp
 import com.skeleton.theme.DimenRadius
 
 enum class WalkPopupType{
-    None, ChooseDog, WalkUsers, WalkUser;
+    None, ChooseDog, WalkUsers, WalkUser, WalkPlace, WalkPlaceVistor;
     val isHalf : Boolean
         get() = when(this) {
-           WalkPopupType.WalkUsers -> false
+           WalkUsers, WalkPlaceVistor -> false
            else -> true
         }
 }
@@ -49,6 +49,7 @@ fun WalkPopup(
             sheetContent = {
                 when (type) {
                     WalkPopupType.WalkUsers -> PopupWalkUsers( viewModel = viewModel, close = close )
+                    WalkPopupType.WalkPlaceVistor -> PopupPlaceVisitor( placeId = value as? String, close = close )
                     else -> Spacer(modifier = Modifier.fillMaxWidth())
                 }
             },

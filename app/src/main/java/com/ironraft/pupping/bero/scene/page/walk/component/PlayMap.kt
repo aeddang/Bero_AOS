@@ -26,6 +26,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.rememberMarkerState
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
@@ -79,25 +81,12 @@ fun PlayMap(
 
 ) {
 
-    val owner = LocalLifecycleOwner.current
-
-    val pagePresenter: PagePresenter = get()
-    val appSceneObserver: AppSceneObserver = get()
-    val dataProvider: DataProvider = get()
     val walkManager: WalkManager = get()
-
-    var isWalk:Boolean by remember { mutableStateOf(walkManager.status.value == WalkStatus.Walking) }
-    val walkStatus = walkManager.status.observeAsState()
     val isFollowMe by playMapModel.isFollowMe.observeAsState()
+    val isWalk by playMapModel.isWalk.observeAsState()
 
-    walkStatus.value.let { status ->
-        val walk = status == WalkStatus.Walking
-        if (walk == isWalk) return@let
-        isWalk = walk
-    }
 
     fun onInit():Boolean{
-        //playMapModel.initSetup(owner = owner)
         return true
     }
     val isInit:Boolean by remember { mutableStateOf( onInit() )}

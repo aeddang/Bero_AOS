@@ -17,6 +17,7 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.api.rest.AlarmData
 import com.ironraft.pupping.bero.store.api.rest.ChatData
+import com.ironraft.pupping.bero.store.api.rest.CodeCategory
 import com.ironraft.pupping.bero.store.api.rest.CodeData
 import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
@@ -237,6 +238,17 @@ class PageRepository (
             ApiType.GetChatRooms -> if (res.page == 0) onMassageUpdated(res)
             ApiType.GetAlarms -> if (res.page == 0) onAlarmUpdated(res)
             ApiType.RequestBlock -> walkManager.replaceMapStatus()
+            ApiType.GetCode -> {
+                if (res.id == appTag) {
+                    val category = res.requestData as? CodeCategory ?: return
+                    if (category != CodeCategory.Breed) return
+                    (res.data as? List<*>)?.let { lists ->
+                        val datas = lists.filterIsInstance<CodeData>()
+                        SystemEnvironment.setupBreedCode(datas)
+                    }
+                    onReady()
+                }
+            }
             else -> {}
         }
         val coreDatakey = if(res.useCoreData) res.type.coreDataKey(res.requestData) else null
@@ -250,10 +262,21 @@ class PageRepository (
     private fun errorApi(err:ApiError<ApiType>){
         accountManager.errorApi(err, appSceneObserver)
         walkManager.errorApi(err)
+
         when (err.type) {
             ApiType.RegistPush -> {
                 val token = err.requestData as? String?
                 token?.let { registFailPushToken(token) }
+            }
+            ApiType.GetCode -> {
+                if (err.id == appTag) {
+                    val category = err.requestData as? CodeCategory ?: return
+                    apiCoreDataManager.getData<List<CodeData>>(CodeCategory.Breed.apiCoreKey)
+                        ?.let { savedData ->
+                            SystemEnvironment.setupBreedCode(savedData)
+                        }
+                    if (category == CodeCategory.Breed) onReady()
+                }
             }
             else -> {}
         }
@@ -301,13 +324,20 @@ class PageRepository (
     private fun loginCompleted() {
         DataLog.d("loginCompleted ${interceptor.accesstoken}", appTag)
         pagePresenter.loaded()
-        onReady()
+        event.value = RepositoryEvent.LoginUpdated
+        if (SystemEnvironment.breedCode.isEmpty()) getBreedCodeData()
+        else onReady()
     }
+    private fun getBreedCodeData(){
+        val params = java.util.HashMap<String, String>()
+        params[ApiField.category] = CodeCategory.Breed.name.lowercase()
+        val q = ApiQ(appTag, ApiType.GetCode, query = params, requestData = CodeCategory.Breed)
+        dataProvider.requestData(q)
 
+    }
     private fun onReady() {
         storage.authToken = interceptor.accesstoken
         status.value = RepositoryStatus.Ready
-        event.value = RepositoryEvent.LoginUpdated
         dataProvider.user.snsUser?.let {
             apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, contentID = it.snsID))
             apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, contentID = it.snsID))

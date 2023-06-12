@@ -108,11 +108,11 @@ android {
     productFlavors {
         create("demo") {
             dimension = "version"
-            buildConfigField("String", "APP_REST_ADDRESS", "\"http://acf14fe3f33d448ed863b0965826ef23-882930440.ap-northeast-2.elb.amazonaws.com/\"")
+            buildConfigField("String", "APP_REST_ADDRESS", "\"https://devapi.bero.dog/\"")
         }
         create("full"){
             dimension = "version"
-            buildConfigField("String", "APP_REST_ADDRESS", "\"http://acf14fe3f33d448ed863b0965826ef23-882930440.ap-northeast-2.elb.amazonaws.com/\"")
+            buildConfigField("String", "APP_REST_ADDRESS", "\"https://api.bero.dog/\"")
         }
     }
     compileOptions {

@@ -81,6 +81,7 @@ data class PageObject(
 
 interface PagePresenter {
     var isFullScreen:Boolean
+    var isKeepScreen:Boolean
     var systemBarColor:Int
     var appTheme:Int
     var activity:PageComposeable

@@ -68,7 +68,7 @@ class Place: MapUserData(){
         this.title = title //String.app.place.lowercased()
         color = ColorBrand.primary
         category = origin.category
-        googlePlaceId = origin.googlePlaceId
+        googlePlaceId = UUID.randomUUID().toString()
         placeId = origin.placeId
         location = origin.location
         place = origin.place

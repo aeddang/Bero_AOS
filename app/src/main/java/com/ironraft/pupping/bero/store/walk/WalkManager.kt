@@ -45,8 +45,9 @@ data class WalkMapData(
 enum class WalkEventType {
     ViewTutorial,
     Start, End, Completed,
-    ChangeMapStatus, UpdatedPlaces, UpdatedUsers,
-    FindPlace,
+    ChangeMapStatus,
+    UpdatePlaces, UpdateUsers, UpdatedPlaces, UpdatedUsers,
+    FindPlace, MarkedPlace,
     UpdateViewLocation, UpdatedPath
 }
 data class WalkEvent(
@@ -232,6 +233,7 @@ class WalkManager(
     }
 
     fun updateMapPlace(location:LatLng){
+        event.value = WalkEvent(WalkEventType.UpdatePlaces)
         updateLocation = location
         val params = HashMap<String, String>()
         params[ApiField.lat] = location.latitude.toString()
@@ -245,6 +247,7 @@ class WalkManager(
     }
     fun updateMapUser(location:LatLng){
         if (missionUsers.isEmpty()) {
+            event.value = WalkEvent(WalkEventType.UpdateUsers)
             val params = HashMap<String, String>()
             params[ApiField.lat] = location.latitude.toString()
             params[ApiField.lng] = location.longitude.toString()
@@ -336,8 +339,14 @@ class WalkManager(
         isSimpleView.value = false
         locationObserver.requestMe(false, appTag)
     }
-    fun registPlace(){
-        filterPlace()
+    fun markPlace(place:Place){
+        val params = HashMap<String, Any>()
+        params[ApiField.lat] = place.location?.latitude.toString()
+        params[ApiField.lng] = place.location?.longitude.toString()
+        params[ApiField.name] = place.title ?: ""
+        params[ApiField.googlePlaceId] = place.googlePlaceId ?: ""
+        val q = ApiQ(appTag, ApiType.RegistVisitor, body = params , requestData = place)
+        dataProvider.requestData(q)
     }
 
     fun updateAbleCheck():Boolean{
@@ -416,9 +425,7 @@ class WalkManager(
             walkTime.postValue(t.toDouble())
             n += 1
             //PageLog.d("time $n", appTag)
-            if( n == updateTime ){
-                //updateStatus()
-            }
+            if( n == updateTime ) updateStatus()
         }
     }
 
@@ -454,7 +461,7 @@ class WalkManager(
 
         val summary:ArrayList<Mission> = arrayListOf()
         var prev:Mission? = null
-        var idx:Int = 0
+        var idx = 0
         val title = ctx.getString(R.string.appUser).lowercase()
         for(data in missionUsers) {
             data.setRange(idx, width = 0f)
@@ -519,10 +526,10 @@ class WalkManager(
                 }
             )
 
-        var count:Int = 0
+        var count = 0
         val completed = datas.filter{it.isMark}
         val new = datas.filter{!it.isMark}
-        var fixed:ArrayList<Place> = arrayListOf()
+        val fixed:ArrayList<Place> = arrayListOf()
         val limited = WalkManager.nearDistance*5
         for (data in new) {
             data.location?.let { loc->
@@ -540,7 +547,7 @@ class WalkManager(
             if (count == 10) break
         }
         fixed.addAll(completed)
-        var idx:Int = 0
+        var idx = 0
         fixed.forEach{
             it.setRange(idx, width = 0f)
             idx += 1
@@ -548,7 +555,7 @@ class WalkManager(
         DataLog.d("filterPlace end " + fixed.count().toString(), appTag)
         places = fixed
 
-        var summary:ArrayList<Place> = arrayListOf()
+        val summary:ArrayList<Place> = arrayListOf()
         val title = ctx.getString(R.string.place).lowercase()
         var prev:Place? = null
         for (data in fixed) {
@@ -595,6 +602,14 @@ class WalkManager(
                 walkId = data.walkId
                 startWalk()
             }
+            ApiType.RegistVisitor ->
+                (res.requestData as? Place)?.let { place->
+                    place.addMark(dataProvider.user)
+                    filterPlace()
+                    event.value = WalkEvent(WalkEventType.MarkedPlace, value = place)
+
+                }
+
             ApiType.UpdateWalk -> {
                 if(res.contentID != walkId.toString()) return
                 (res.requestData as? WalkadditionalData)?.img?.let {  img->

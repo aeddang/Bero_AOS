@@ -51,6 +51,8 @@ object Api {
         const val place = "$VERSION_V1/$PATH/{${CONTENT_ID}}"
         const val search = "$VERSION_V1/$PATH/search"
         const val visit = "$VERSION_V1/$PATH/visit"
+        const val visitors = "$place/visitors"
+
     }
 
     object Album {
@@ -175,6 +177,7 @@ object ApiField {
     const val receiver = "receiver"
     const val title = "title"
     const val contents = "contents"
+    const val googlePlaceId = "googlePlaceId"
 }
 
 
