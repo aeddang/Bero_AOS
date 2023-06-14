@@ -1,7 +1,6 @@
 package com.skeleton.component.tab
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,17 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
-import com.skeleton.component.item.ValueInfo
-import com.skeleton.component.item.ValueInfoType
-import com.skeleton.component.progress.ProgressInfo
 import com.skeleton.theme.*
-import com.skeleton.view.button.TransparentButton
-import java.util.UUID
 
 
 
 @Composable
 fun ChangeBox(
+    modifier:Modifier = Modifier,
     prev:String? = null,
     next:String? = null,
     color:Color = ColorApp.white,
@@ -37,8 +32,8 @@ fun ChangeBox(
 ) {
     AppTheme {
         Row(
-            modifier = Modifier
-                .wrapContentWidth().height(DimenButton.medium.dp)
+            modifier = modifier
+                .wrapContentWidth()
                 .clip(RoundedCornerShape(DimenRadius.mediumUltra.dp))
                 .border(
                     width = DimenStroke.light.dp,
@@ -47,7 +42,7 @@ fun ChangeBox(
                 )
                 .padding(
                     horizontal = DimenMargin.medium.dp,
-                    vertical = DimenMargin.light.dp
+                    vertical = DimenMargin.thin.dp
                 ),
             horizontalArrangement = Arrangement.spacedBy(DimenMargin.regularExtra.dp),
             verticalAlignment = Alignment.CenterVertically

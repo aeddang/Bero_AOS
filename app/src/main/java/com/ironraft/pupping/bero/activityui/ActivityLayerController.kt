@@ -1,42 +1,42 @@
 package com.ironraft.pupping.bero.activityui
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import com.ironraft.pupping.bero.AppSceneObserver
-import com.skeleton.theme.ColorApp
-import com.skeleton.theme.ColorBrand
 import org.koin.compose.koinInject
-import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.SceneEventType
+import com.ironraft.pupping.bero.scene.page.layer.LayerPageLevelUp
+import com.ironraft.pupping.bero.scene.page.layer.LayerPageTutorial
 import com.ironraft.pupping.bero.scene.page.walk.component.SimpleWalkBox
 import com.skeleton.component.dialog.Check
-import com.skeleton.component.dialog.Sheet
-import com.skeleton.component.dialog.SheetBtnData
-import kotlinx.coroutines.launch
 
 data class CheckData(
     val text: String,
     @DrawableRes var icon: Int? = null,
-    var isAuto:Boolean = true
+    var isAuto:Boolean = true,
+    var handler: (() -> Unit)? = null
 )
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ActivityLayerController(){
     val viewModel = koinInject<AppSceneObserver>()
     var isShowCheck by remember { mutableStateOf(false) }
     var checkData:CheckData? by remember { mutableStateOf(null) }
 
+    var isShowLevelUp by remember { mutableStateOf(false) }
+
+    var isShowTutorial by remember { mutableStateOf(false) }
+    @RawRes var tutorialId:Int? by remember { mutableStateOf(null) }
     val event = viewModel.event.observeAsState()
     event.value.let {
         val evt = it ?: return@let
@@ -48,6 +48,17 @@ fun ActivityLayerController(){
                 }
                 viewModel.event.value = null
             }
+            SceneEventType.LevelUp -> {
+                isShowLevelUp = true
+                viewModel.event.value = null
+            }
+            SceneEventType.ShowTutorial -> {
+                (evt.value as? Int)?.let { data->
+                    tutorialId = data
+                    isShowTutorial = true
+                }
+                viewModel.event.value = null
+            }
             else -> return@let
         }
     }
@@ -56,6 +67,16 @@ fun ActivityLayerController(){
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        AnimatedVisibility(visible = isShowLevelUp, enter = fadeIn(), exit = fadeOut()) {
+            LayerPageLevelUp {
+                isShowLevelUp = false
+            }
+        }
+        AnimatedVisibility(visible = isShowTutorial, enter = fadeIn(), exit = fadeOut()) {
+            LayerPageTutorial(ani = tutorialId ?: -1 ) {
+                isShowLevelUp = false
+            }
+        }
         Check(
             isShow = isShowCheck,
             icon = checkData?.icon,
@@ -63,6 +84,7 @@ fun ActivityLayerController(){
             isAuto = checkData?.isAuto ?: true
         ) {
             isShowCheck = false
+            checkData?.handler?.let { it() }
         }
         Box(
             modifier = Modifier.fillMaxSize(),

@@ -13,7 +13,6 @@ import com.skeleton.theme.ColorBrand
 import java.util.UUID
 
 class Place: MapUserData(){
-    val id:String = UUID.randomUUID().toString()
 
     var placeId:Int = -1; private set
     var googlePlaceId: String? = null

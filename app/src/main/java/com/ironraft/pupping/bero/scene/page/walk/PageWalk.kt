@@ -288,8 +288,7 @@ fun PageWalk(
             PlayBox(
                 viewModel = viewModel,
                 playMapModel = playMapModel,
-                walkPickViewModel = walkPickViewModel,
-                isInitable = true
+                walkPickViewModel = walkPickViewModel
             )
         }
         WalkHalfPopup(

@@ -28,7 +28,6 @@ import com.ironraft.pupping.bero.scene.component.tab.BottomTab
 import com.ironraft.pupping.bero.scene.page.intro.PageIntro
 import com.ironraft.pupping.bero.scene.page.login.PageLogin
 import com.ironraft.pupping.bero.scene.page.PageSplash
-import com.ironraft.pupping.bero.scene.page.PageTest
 import com.ironraft.pupping.bero.scene.page.chat.PageChat
 import com.ironraft.pupping.bero.scene.page.chat.PageChatRoom
 import com.ironraft.pupping.bero.scene.page.explore.PageExplore
@@ -64,14 +63,12 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.scene.page.walk.PageWalk
 import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.*
-import com.lib.util.PageLog
-import com.skeleton.component.dialog.Check
 import com.skeleton.theme.*
 import com.skeleton.view.progress.LoadingIndicator
 import dev.burnoo.cokoin.get
 
 enum class SceneEventType {
-    Initate, Check,
+    Initate, Check, LevelUp, ShowTutorial,
     SetupChat, CloseChat, SendChat
 }
 data class SceneEvent(val type: SceneEventType,
@@ -150,8 +147,6 @@ fun PageApp(
                         .fillMaxSize()
                         .background(ColorBrand.bg)
                 ) {
-                    //val routePage = pagePresenter.findPage(route)
-                    //PageLog.d(route ?: "", "PAGEROUTE")
                     PageID.values().forEach {
                         getPageComposable(
                             nav = this,

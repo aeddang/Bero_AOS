@@ -9,7 +9,12 @@ import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.SceneEvent
 import com.ironraft.pupping.bero.SceneEventType
+import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
+import com.ironraft.pupping.bero.activityui.ActivitAlertType
 import com.ironraft.pupping.bero.activityui.CheckData
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.ApiError
 import com.ironraft.pupping.bero.store.api.ApiField
 import com.ironraft.pupping.bero.store.api.ApiQ
@@ -180,10 +185,12 @@ class WalkManager(
     }
     fun firstWalk(){
         event.value = WalkEvent(WalkEventType.ViewTutorial, value = R.raw.tutorial_1)
+        appSceneObserver.event.value = SceneEvent(SceneEventType.ShowTutorial, value = R.raw.tutorial_1)
     }
-    fun firstWalkStart(){
+    private fun firstWalkStart(){
         if(todayWalkCount < 1){
             event.value = WalkEvent(WalkEventType.ViewTutorial, value = R.raw.tutorial_2)
+            appSceneObserver.event.value = SceneEvent(SceneEventType.ShowTutorial, value = R.raw.tutorial_2)
         }
     }
     private fun clearAllMapStatus(){
@@ -314,15 +321,27 @@ class WalkManager(
         val loc = currentLocation.value ?: return
         updateMapStatus(loc, isCheckDistence = true)
     }
-
     fun completeWalk(){
         val mission = Mission().setData(this, pagePresenter.activity)
         completedWalk = mission
         event.value = WalkEvent(WalkEventType.Completed, value = mission)
     }
+    fun sendResult(img:Bitmap){
+        val result = completedWalk ?: return
+        val loc = result.location ?: return
+        val id = result.missionId
+        val data = WalkadditionalData(
+            loc = loc,
+            status = com.ironraft.pupping.bero.store.api.rest.WalkStatus.Finish,
+            img = img,
+            walkTime = result.duration,
+            walkDistance = result.distance
+        )
+        val q = ApiQ(appTag, ApiType.CompleteWalk, contentID = id.toString(), requestData = data, isLock = true)
+        dataProvider.requestData(q)
+    }
 
     fun endWalk(){
-        //endLockScreen()
         completedWalk = null
         walkPath = null
         walkTime.value = 0.0
@@ -367,7 +386,7 @@ class WalkManager(
         }
         return true
     }
-    fun updateStatus(img:Bitmap? = null){
+    fun updateStatus(img:Bitmap? = null, isBackGround:Boolean = false){
         val loc = currentLocation.value ?: return
         val id = walkId ?: return
         val data = WalkadditionalData(
@@ -377,8 +396,8 @@ class WalkManager(
             walkTime = walkTime.value?.toDouble(),
             walkDistance = walkDistance.value
         )
-        val q = ApiQ(appTag, ApiType.UpdateWalk, contentID = id.toString(), requestData = data, isOptional = true)
-        dataProvider.requestData(q)
+        val q = ApiQ(appTag, ApiType.UpdateWalk, contentID = id.toString(), requestData = data, isOptional = isBackGround)
+        dataProvider.requestData(q, isBackGround)
     }
     private fun requestLocation() {
         locationObserver.requestMe(true, appTag)
@@ -398,19 +417,6 @@ class WalkManager(
         currentLocation.value = loc
         updateMapStatus(loc)
         if(isBackGround){
-            /*
-            if #available(iOS 16.2, *) , let lsm = self.lockScreenManager as? LockScreenManager {
-                if let place = self.findPlace(loc) {
-                    lsm.alertLockScreen(data: .init(
-                        title: "FIND",
-                    info: (place.title ?? "") + " find!",
-                    walkTime: self.walkTime,
-                    walkDistance: self.walkDistance))
-                } else {
-                    lsm.updateLockScreen(data: .init(title: String.lockScreen.walking, walkTime: self.walkTime, walkDistance: self.walkDistance))
-                }
-            }
-            */
         } else {
             findPlace(loc)
         }
@@ -424,8 +430,7 @@ class WalkManager(
             val t = (Date().time - startTime.time)/1000
             walkTime.postValue(t.toDouble())
             n += 1
-            //PageLog.d("time $n", appTag)
-            if( n == updateTime ) updateStatus()
+            if( n == updateTime ) updateStatus(isBackGround = true)
         }
     }
 
@@ -612,17 +617,36 @@ class WalkManager(
 
             ApiType.UpdateWalk -> {
                 if(res.contentID != walkId.toString()) return
-                (res.requestData as? WalkadditionalData)?.img?.let {  img->
+                (res.requestData as? WalkadditionalData)?.img?.let { img ->
                     updateImages.add(img)
                     updatePath()
                     val ac = pagePresenter.activity
                     appSceneObserver.event.value = SceneEvent(
                         type = SceneEventType.Check,
                         value = CheckData(
-                            text = updateImages.count().toString() + "/" + WalkManager.limitedUpdateImageSize.toString(),
+                            text = updateImages.count()
+                                .toString() + "/" + WalkManager.limitedUpdateImageSize.toString(),
                             icon = R.drawable.camera
                         )
                     )
+                }
+            }
+            ApiType.CompleteWalk -> {
+                completedWalk?.let {
+                    dataProvider.user.missionCompleted(it)
+                }
+                endWalk()
+                appSceneObserver.alert.value  = ActivitAlertEvent(
+                    type = ActivitAlertType.Confirm,
+                    text = pagePresenter.activity.getString(R.string.alert_completedAndMoveHistoryConfirm)
+                ){
+                    if(it == 1) {
+                        pagePresenter.openPopup(
+                            PageProvider.getPageObject(PageID.WalkHistory)
+                                .addParam(PageParam.data, dataProvider.user)
+                                .addParam(PageParam.isInitAction , true)
+                        )
+                    }
                 }
             }
             else -> {}

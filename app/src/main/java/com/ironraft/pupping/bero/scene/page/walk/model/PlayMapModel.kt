@@ -1,9 +1,7 @@
 package com.ironraft.pupping.bero.scene.page.walk.model
 
 import android.graphics.drawable.Drawable
-import android.view.WindowManager
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -28,14 +26,19 @@ import com.ironraft.pupping.bero.store.walk.model.Mission
 import com.ironraft.pupping.bero.store.walk.model.Place
 import com.lib.util.cropCircle
 import com.lib.util.toDp
+import com.skeleton.component.map.CircleData
+import com.skeleton.component.map.MapCircle
 import com.skeleton.component.map.MapMarker
 import com.skeleton.component.map.MapModel
+import com.skeleton.component.map.MapUserData
 import com.skeleton.component.map.MarkerData
 import com.skeleton.theme.DimenProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.max
+import kotlin.math.min
 
 enum class PlayMapUiEvent {
     ResetMap
@@ -216,8 +219,8 @@ class PlayMapModel(
         if (zoomType != PlayZoomType.Close) {
             updateUsers()
         }
-        if (zoomType != PlayZoomType.FarAway) {
-            //addCircles(self.getSummarys()))
+        if (zoomType == PlayZoomType.FarAway) {
+            addCircles(getSummarys())
         }
     }
 
@@ -390,6 +393,26 @@ class PlayMapModel(
         return marker
     }
 
+    private fun getSummarys():List<MapCircle>{
+        val summary:ArrayList<MapUserData> = arrayListOf()
+        walkManager.missionUsersSummary.forEach { summary.add(it) }
+        walkManager.placesSummary.forEach{ summary.add(it) }
+        val markers:List<MapCircle> = summary.map{ data ->
+            MapCircle(data.id, getCircle(data))
+        }
+        return markers
+    }
+    private fun getCircle(data: MapUserData): CircleData {
+        val loc = data.location ?: return CircleData(center = LatLng(0.0, 0.0))
+
+        val radius: Double = min(max(100.0, data.count * 20.0), 1000.0)
+        return CircleData(
+            center = loc,
+            radius = radius,
+            fillColor = data.color.copy(alpha = 0.3f),
+            strokeWidth = 0f
+        )
+    }
     private fun forceMoveLock(delayTime:Double = 0.0, closer:(() -> Unit)? = null){
         isForceMove = true
         scope?.launch(Dispatchers.Default) {

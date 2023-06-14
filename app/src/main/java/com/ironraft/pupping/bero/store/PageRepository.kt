@@ -8,12 +8,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.gson.reflect.TypeToken
 import com.ironraft.pupping.bero.AppSceneObserver
+import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.SceneEvent
+import com.ironraft.pupping.bero.SceneEventType
 import com.jaredrummler.android.device.DeviceName
 import com.lib.page.PagePresenter
 import com.ironraft.pupping.bero.activityui.ActivitAlertEvent
 import com.ironraft.pupping.bero.activityui.ActivitAlertType
+import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
+import com.ironraft.pupping.bero.activityui.ActivitSheetType
+import com.ironraft.pupping.bero.activityui.CheckData
 import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.api.rest.AlarmData
 import com.ironraft.pupping.bero.store.api.rest.ChatData
@@ -97,6 +104,25 @@ class PageRepository (
             }
         })
 
+        dataProvider.result.observe(owner, Observer{res: ApiSuccess<ApiType>? ->
+            res?.let {
+                when (it.type){
+                    ApiType.GetCode -> {
+                        if (res.id == appTag) {
+                            val category = res.requestData as? CodeCategory ?: return@Observer
+                            if (category != CodeCategory.Breed) return@Observer
+                            (res.data as? List<*>)?.let { lists ->
+                                val datas = lists.filterIsInstance<CodeData>()
+                                SystemEnvironment.setupBreedCode(datas)
+                            }
+                            onReady()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+        })
+
         apiManager.event.observe(owner, Observer{ evt ->
             evt?.let {
                 when (it){
@@ -129,6 +155,11 @@ class PageRepository (
             }
 
         })
+        apiManager.rewardData.observe(owner, Observer{data->
+            val meta = data ?: return@Observer
+            this.onRewardData(meta)
+        })
+
         AppObserver.pushToken.observe(owner, Observer{ token ->
             token?.let {
                 onCurrentPushToken(it)
@@ -210,7 +241,6 @@ class PageRepository (
                 ApiType.GetCode -> {
                     val type = object : TypeToken<List<CodeData>>() {}.type
                     dbData = apiCoreDataManager.getDatas<List<CodeData>>(coreDatakey, type)
-
                 }
                 else ->{}
             }
@@ -238,17 +268,7 @@ class PageRepository (
             ApiType.GetChatRooms -> if (res.page == 0) onMassageUpdated(res)
             ApiType.GetAlarms -> if (res.page == 0) onAlarmUpdated(res)
             ApiType.RequestBlock -> walkManager.replaceMapStatus()
-            ApiType.GetCode -> {
-                if (res.id == appTag) {
-                    val category = res.requestData as? CodeCategory ?: return
-                    if (category != CodeCategory.Breed) return
-                    (res.data as? List<*>)?.let { lists ->
-                        val datas = lists.filterIsInstance<CodeData>()
-                        SystemEnvironment.setupBreedCode(datas)
-                    }
-                    onReady()
-                }
-            }
+            ApiType.CompleteWalk -> updateTodayWalkCount()
             else -> {}
         }
         val coreDatakey = if(res.useCoreData) res.type.coreDataKey(res.requestData) else null
@@ -345,7 +365,6 @@ class PageRepository (
             apiManager.load(ApiQ(appTag, ApiType.GetChatRooms, isOptional = true, contentID = it.snsID))
         }
         retryRegisterPushToken()
-
     }
 
     val isLogin: Boolean get() {
@@ -355,6 +374,71 @@ class PageRepository (
         return token.isNotEmpty()
     }
 
+    private fun onRewardData(data:MetaData){
+        val expValue = if(data.exp == 0.0) null else data.exp
+        val pointValue = if(data.point == 0) null else data.point
+        if (expValue != null && pointValue != null){
+            dataProvider.user.updateReward(expValue, pointValue)
+        } else {
+            expValue?.let { exp ->
+                dataProvider.user.updateExp(exp)
+            }
+            pointValue?.let { point->
+                dataProvider.user.updatePoint(point)
+            }
+        }
+        getReward(data)
+    }
+    private fun getReward(lvData:MetaData?){
+        val exp = lvData?.exp ?: 0.0
+        val point = lvData?.point ?: 0
+        if (exp == 0.0 && point == 0) {return}
+        //SoundToolBox().play(snd:Asset.sound.reward)
+        if (point >= 100){
+            appSceneObserver.sheet.value  = ActivitSheetEvent(
+                type = ActivitSheetType.Select,
+                title= ctx.getString(R.string.alert_welcome),
+                text = ctx.getString(R.string.alert_welcomeText),
+                point = point,
+                exp = exp,
+                isNegative = false,
+                handler =  { checkLevelUp(lvData) }
+            )
+            walkManager.updateReward(exp, point)
+            return
+
+        } else if (point == 0){
+            appSceneObserver.event.value = SceneEvent(
+                type = SceneEventType.Check,
+                value = CheckData(
+                    text = "+ exp $exp",
+                    handler = { checkLevelUp(lvData) }
+                )
+            )
+        } else if (exp == 0.0){
+            appSceneObserver.event.value = SceneEvent(
+                type = SceneEventType.Check,
+                value = CheckData(
+                    text = "+ point $point",
+                    handler = { checkLevelUp(lvData) }
+                )
+            )
+        } else {
+            appSceneObserver.event.value = SceneEvent(
+                type = SceneEventType.Check,
+                value = CheckData(
+                    text = "+ point $point\n+ exp $exp",
+                    handler = { checkLevelUp(lvData) }
+                )
+            )
+        }
+        walkManager.updateReward(exp, point)
+    }
+    private fun checkLevelUp(lvData:MetaData?){
+        if (!dataProvider.user.isLevelUp(lvData)) {
+            appSceneObserver.event.value = SceneEvent(type = SceneEventType.LevelUp)
+        }
+    }
 
     private fun onAlarmUpdated(res:ApiSuccess<ApiType>){
         val lists = res.data as? List<*> ?: return
@@ -438,5 +522,21 @@ class PageRepository (
         storage.isExposeSetup = true
         storage.isExpose = isOn
     }
+
+    fun updateTodayWalkCount(diff:Int = 1){
+        var count = diff
+        val now = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
+        storage.walkCount.let { pre->
+            if (pre.contains(now)) {
+                val preCount = pre.replace(now, "").toInt()
+                if (preCount != -1) {
+                    count += preCount
+                }
+            }
+        }
+        storage.walkCount = now + count.toString()
+        WalkManager.todayWalkCount = count
+    }
+
 }
 

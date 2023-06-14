@@ -249,7 +249,6 @@ class User(val isMe:Boolean = false){
         this.point += point
         updateExp(exp)
     }
-
 }
 
 class History{

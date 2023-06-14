@@ -41,6 +41,7 @@ import com.ironraft.pupping.bero.scene.page.walk.model.PlayMapUiEvent
 import com.ironraft.pupping.bero.scene.page.walk.model.WalkPickViewModel
 import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupData
 import com.ironraft.pupping.bero.scene.page.walk.pop.WalkPopupType
+import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.SystemEnvironment
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.walk.WalkManager
@@ -75,10 +76,10 @@ fun PlayBox(
     modifier: Modifier = Modifier,
     viewModel: PageWalkViewModel,
     playMapModel: PlayMapModel,
-    walkPickViewModel: WalkPickViewModel,
-    isInitable:Boolean = true
+    walkPickViewModel: WalkPickViewModel
 ) {
     val pagePresenter: PagePresenter = get()
+    val repository: PageRepository = get()
     val appSceneObserver: AppSceneObserver = get()
     val dataProvider: DataProvider = get()
     val walkManager: WalkManager = get()
@@ -93,6 +94,11 @@ fun PlayBox(
     val pickImage = walkPickViewModel.pickImage.observeAsState()
 
     pickImage.value?.let { image->
+        walkManager.completedWalk?.let {
+            walkManager.sendResult(image)
+            walkPickViewModel.pickImage.value = null
+            return
+        }
         walkManager.updateStatus(image)
         walkPickViewModel.pickImage.value = null
     }
@@ -134,14 +140,16 @@ fun PlayBox(
     }
     fun checkFinish(){
         val ctx = pagePresenter.activity
-        if (SystemEnvironment.isTestMode && (walkManager.walkDistance.value ?: 0.0) < WalkManager.minDistance) {
+        if (!SystemEnvironment.isTestMode && (walkManager.walkDistance.value ?: 0.0) < WalkManager.minDistance) {
             Toast(ctx).showCustomToast(
                 ctx.getString(R.string.walkFinishCheckDistance).replace(WalkManager.minDistance.toString()),
                 ctx
             )
             return
         }
+
         walkManager.completeWalk()
+        walkPickViewModel.onPick()
     }
 
     fun cancelWalk(){
@@ -268,8 +276,8 @@ fun PlayBox(
                         if(isWalk==true){
                             finishWalk()
                         } else {
-                            if(isInitable) startWalk()
-                            else needDog()
+                            if (dataProvider.user.pets.isEmpty()) needDog()
+                            else startWalk()
                         }
                     }
                 }

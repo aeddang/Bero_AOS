@@ -60,8 +60,7 @@ enum class MissionType {
 }
 
 class Mission:MapUserData(){
-    val id:String = UUID.randomUUID().toString()
-    var missionId:Int = -1; private set
+     var missionId:Int = -1; private set
     var type: MissionType = MissionType.Walk; private set
     var description:String? = null; private set
     var pictureUrl:String? = null; private set

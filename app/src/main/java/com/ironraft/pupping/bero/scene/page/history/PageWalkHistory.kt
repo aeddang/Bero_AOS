@@ -83,17 +83,21 @@ import java.util.Date
 
 class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHistory, repo){
     var currentUserId:String = ""; private set
+    var isInitAction:Boolean = false
     val user = MutableLiveData<User?>(null)
     val walkDatas = MutableLiveData<List<WalkListItemData>>(listOf())
+    val openWalkData = MutableLiveData<WalkListItemData?>(null)
     val selectAbleDate = MutableLiveData<List<String>>(listOf())
     val isEmpty = MutableLiveData<Boolean>(false)
     val currentDate = MutableLiveData<String>("")
     override fun onCurrentPageEvent(type: PageEventType, pageObj: PageObject) {
         when (type) {
             PageEventType.ChangedPage -> {
+                isInitAction = pageObj.getParamValue(PageParam.isInitAction) as? Boolean ?: false
                 val user = pageObj.getParamValue(PageParam.data) as? User
                 this.user.value = user
                 currentUserId = user?.userId ?: ""
+                pageObj.addParam(PageParam.isInitAction, null)
                 getMonthlyWalk(AppUtil.networkDate())
             }
             else ->{}
@@ -142,6 +146,10 @@ class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHi
                         }
                         walkDatas.value = items
                         isEmpty.value = items.isEmpty()
+                        if (isInitAction) {
+                            isInitAction = false
+                            openWalkData.value = items.firstOrNull()
+                        }
                     }
                 }
                 else ->{}
@@ -208,6 +216,11 @@ fun PageWalkHistory(
         )
     }
 
+    val openWalkData by viewModel.openWalkData.observeAsState()
+    LaunchedEffect(key1 = openWalkData){
+        openWalkData?.let { onMoveInfo(it) }
+    }
+
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -233,9 +246,12 @@ fun PageWalkHistory(
              if (walkDatas != null) {
                 walkDatas?.let { datas->
                     Column(
-                        modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(
-                            bottom = DimenMargin.heavyExtra.dp
-                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .padding(
+                                bottom = DimenMargin.heavyExtra.dp
+                            ),
                         verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

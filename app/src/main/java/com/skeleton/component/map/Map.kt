@@ -131,6 +131,7 @@ open class MapUserData: MapUserDataInterface, Comparable<MapUserData>{
     override var locations:ArrayList<LatLng> = arrayListOf()
     override var count:Int = 0
     override var color:Color = ColorApp.white
+    var id:String = UUID.randomUUID().toString(); protected set
     var index:Int = -1
     fun setPosition(pos:Float):MapUserData{
         midPos = pos

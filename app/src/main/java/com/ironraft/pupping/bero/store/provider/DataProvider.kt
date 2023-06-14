@@ -14,8 +14,9 @@ class DataProvider {
     val result = MutableLiveData<ApiSuccess<ApiType>?>()
     val error = MutableLiveData<ApiError<ApiType>?>()
 
-    fun requestData(q:ApiQ?){
-        request.value = q
+    fun requestData(q:ApiQ?, isBackGround:Boolean = false){
+        if (isBackGround) request.postValue(q)
+        else request.value = q
     }
 
     fun removeObserve(owner: LifecycleOwner){

@@ -18,6 +18,8 @@ enum class ApiStatus{
 enum class ApiEvent{
     Initate, Error, Join
 }
+
+
 class ApiManager(
         private val context: Context,
         private val networkFactory: NetworkFactory,
@@ -29,6 +31,7 @@ class ApiManager(
     var event: MutableLiveData<ApiEvent?> = MutableLiveData<ApiEvent?>(null)
     val result = MutableLiveData<ApiSuccess<ApiType>?>()
     val error = MutableLiveData<ApiError<ApiType>?>()
+    var rewardData:MutableLiveData<MetaData?> = MutableLiveData(null)
     private var apiQs :ArrayList<ApiQ> = arrayListOf()
     private var apiBridge = ApiBridge(context, networkFactory, interceptor)
 
@@ -103,9 +106,13 @@ class ApiManager(
                         }
                         else -> {}
                     }
-
+                    res?.metadata?.let { metadata->
+                        rewardData.value = metadata
+                    }
                     val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional,
                         apiQ.contentID, apiQ.requestData, apiQ.page, apiQ.useCoreData)
+
+
                     if ( accountManager?.respondApi(success) != true ){
                         result.value = success
                     }
