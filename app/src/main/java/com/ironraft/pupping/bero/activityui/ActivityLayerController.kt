@@ -7,10 +7,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.ironraft.pupping.bero.AppSceneObserver
 import org.koin.compose.koinInject
 import com.ironraft.pupping.bero.SceneEventType
@@ -18,6 +21,7 @@ import com.ironraft.pupping.bero.scene.page.layer.LayerPageLevelUp
 import com.ironraft.pupping.bero.scene.page.layer.LayerPageTutorial
 import com.ironraft.pupping.bero.scene.page.walk.component.SimpleWalkBox
 import com.skeleton.component.dialog.Check
+import com.skeleton.view.progress.CircleWave
 
 data class CheckData(
     val text: String,
@@ -74,7 +78,7 @@ fun ActivityLayerController(){
         }
         AnimatedVisibility(visible = isShowTutorial, enter = fadeIn(), exit = fadeOut()) {
             LayerPageTutorial(ani = tutorialId ?: -1 ) {
-                isShowLevelUp = false
+                isShowTutorial = false
             }
         }
         Check(
@@ -92,5 +96,6 @@ fun ActivityLayerController(){
         ) {
             SimpleWalkBox()
         }
+
     }
 }

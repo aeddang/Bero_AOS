@@ -351,7 +351,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     ) {
         PageLog.d("onPageChange -> $pageObject", tag = this.appTag)
         if( !isChangePageAble(pageObject) ) return
-        if( currentPageObject?.pageID == pageObject.pageID ) {
+        if( currentTopPage?.pageID == pageObject.pageID ) {
             if(pageObject.params == null){
                 PageLog.d("onPageChange -> reload", tag = this.appTag)
                 activityViewModel.event.value = PageEvent(

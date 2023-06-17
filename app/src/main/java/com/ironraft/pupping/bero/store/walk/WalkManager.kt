@@ -301,7 +301,7 @@ class WalkManager(
     }
 
     private fun startWalk(){
-        if (WalkManager.isFirstWalkStart) {
+        if (!WalkManager.isFirstWalkStart) {
             firstWalkStart()
             WalkManager.isFirstWalkStart = true
         }

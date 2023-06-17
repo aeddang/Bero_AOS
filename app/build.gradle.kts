@@ -181,7 +181,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
     implementation("com.google.accompanist:accompanist-webview:0.24.13-rc")
     debugImplementation ("androidx.compose.ui:ui-tooling:1.4.3")
-
+    debugImplementation("androidx.customview:customview:1.2.0-alpha02")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0")
     /**
      * system
      */

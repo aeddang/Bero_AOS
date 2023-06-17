@@ -7,11 +7,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -71,6 +74,7 @@ import com.skeleton.view.button.FillButtonType
 import com.skeleton.view.button.SortButton
 import com.skeleton.view.button.SortButtonSizeType
 import com.skeleton.view.button.SortButtonType
+import com.skeleton.view.progress.CircleWave
 import dev.burnoo.cokoin.get
 
 @Composable
@@ -84,18 +88,29 @@ fun PlayMap(
     val walkManager: WalkManager = get()
     val isFollowMe by playMapModel.isFollowMe.observeAsState()
     val isWalk by playMapModel.isWalk.observeAsState()
-
+    val place by playMapModel.findPlace.observeAsState()
 
     fun onInit():Boolean{
         return true
     }
     val isInit:Boolean by remember { mutableStateOf( onInit() )}
     AppTheme {
-        if (isInit) {
-            CPGoogleMap(
-                modifier = modifier,
-                mapModel = playMapModel
-            )
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ){
+            if (isInit) {
+                CPGoogleMap(
+                    modifier = modifier,
+                    mapModel = playMapModel
+                )
+                if (place != null) {
+                    CircleWave(
+                        modifier = Modifier.size(200.dp)
+                    )
+                }
+            }
         }
+
     }
 }

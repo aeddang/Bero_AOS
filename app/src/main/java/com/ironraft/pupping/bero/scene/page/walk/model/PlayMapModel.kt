@@ -1,10 +1,12 @@
 package com.ironraft.pupping.bero.scene.page.walk.model
 
 import android.graphics.drawable.Drawable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.target.Target
@@ -68,6 +70,7 @@ class PlayMapModel(
     val componentHidden: MutableLiveData<Boolean> = MutableLiveData(false)
     var isFollowMe:MutableLiveData<Boolean> = MutableLiveData(false)
     val isWalk:MutableLiveData<Boolean> = MutableLiveData(false)
+    val findPlace:MutableLiveData<Place?> = MutableLiveData(null)
 
     private var myLocationOn:BitmapDescriptor? = null
     private var myLocationOff:BitmapDescriptor? = null
@@ -155,6 +158,15 @@ class PlayMapModel(
                 WalkEventType.UpdateUsers -> clearMarkers(prevUsers)
                 WalkEventType.UpdatedPlaces -> if (isInitMap) addMarkers(getPlaces())
                 WalkEventType.UpdatedUsers -> if (isInitMap) updateUsers()
+                WalkEventType.FindPlace -> {
+                    (evt.value as? Place)?.let { data->
+                        viewModel.event.value = PageWalkEvent(
+                            PageWalkEventType.OpenPopup,
+                            WalkPopupData(WalkPopupType.WalkPlace, value = data)
+                        )
+                        onFindPlace(data)
+                    }
+                }
                 else -> {}
             }
         }
@@ -177,6 +189,16 @@ class PlayMapModel(
             }
         }
     }
+
+    private fun onFindPlace(place:Place){
+        if (!isInitMap) return
+        findPlace.value = place
+        viewModelScope.launch {
+            delay(4000)
+            findPlace.value = null
+        }
+    }
+
     private fun move(loc:LatLng){
         if (!isInitMap) return
         if (isInit) {

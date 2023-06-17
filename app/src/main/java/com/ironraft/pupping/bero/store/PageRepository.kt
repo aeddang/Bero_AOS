@@ -435,7 +435,7 @@ class PageRepository (
         walkManager.updateReward(exp, point)
     }
     private fun checkLevelUp(lvData:MetaData?){
-        if (!dataProvider.user.isLevelUp(lvData)) {
+        if (dataProvider.user.isLevelUp(lvData)) {
             appSceneObserver.event.value = SceneEvent(type = SceneEventType.LevelUp)
         }
     }

@@ -34,6 +34,7 @@ import com.skeleton.theme.DimenMargin
 import com.skeleton.theme.FontSize
 import com.skeleton.view.button.FillButton
 import com.skeleton.view.button.FillButtonType
+import com.skeleton.view.button.TransparentButton
 import dev.burnoo.cokoin.get
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 fun LayerPageTutorial(
     modifier: Modifier = Modifier,
     @RawRes ani:Int,
+    isAutoClose:Boolean = false,
     close:()->Unit
 ){
     val composition by rememberLottieComposition(
@@ -50,6 +52,7 @@ fun LayerPageTutorial(
     )
     val progress by animateLottieCompositionAsState(composition)
     LaunchedEffect(key1 = progress){
+        if (!isAutoClose) return@LaunchedEffect
         if (progress == 1f) close()
     }
 
@@ -64,6 +67,11 @@ fun LayerPageTutorial(
             composition = composition,
             modifier = Modifier.wrapContentSize(),
             contentScale = ContentScale.Fit
+        )
+        TransparentButton(
+            action = {
+                close()
+            }
         )
     }
 }
