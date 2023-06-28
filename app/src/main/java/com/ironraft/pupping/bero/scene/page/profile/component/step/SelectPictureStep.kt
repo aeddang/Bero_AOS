@@ -142,7 +142,8 @@ fun SelectPictureStep(
                     modifier = Modifier.weight(1.0f),
                     type = FillButtonType.Fill,
                     text = stringResource(id = R.string.button_next),
-                    color = ColorBrand.primary
+                    color = ColorBrand.primary,
+                    isActive = selectData != null
                 ) {
                     onAction()
                 }

@@ -78,7 +78,6 @@ open class FriendListViewModel(val repo: PageRepository, id:String = "", initTyp
             }
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

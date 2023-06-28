@@ -59,7 +59,6 @@ open class UserAlbumListViewModel(val repo: PageRepository)
             UserAlbumListItemData().setData(d,  idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

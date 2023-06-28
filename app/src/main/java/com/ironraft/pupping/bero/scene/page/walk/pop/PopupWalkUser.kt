@@ -128,12 +128,7 @@ fun PopupWalkUser(
                     .padding(bottom = offsetY),
                 contentAlignment = Alignment.TopEnd
             ) {
-                ImageButton(
-                    modifier = Modifier.padding( all = DimenMargin.regular.dp ),
-                    defaultImage = R.drawable.close
-                ) {
-                    close()
-                }
+
                 Column(
                     Modifier
                         .padding(vertical = DimenMargin.thin.dp)
@@ -163,6 +158,12 @@ fun PopupWalkUser(
                             status = if(profile.isFriend) FriendStatus.MoveFriend else FriendStatus.Move
                         )
                     }
+                }
+                ImageButton(
+                    modifier = Modifier.padding( all = DimenMargin.regular.dp ),
+                    defaultImage = R.drawable.close
+                ) {
+                    close()
                 }
             }
         }

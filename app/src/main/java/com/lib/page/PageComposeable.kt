@@ -274,6 +274,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
             val last = popups.last()
             if (!last.isGoBackAble) return onGoBackPage()
             if (!isGobackAble(last)) return
+            if( last.isHome ) onExitAction()
             onClosePopup(last)
             return
         }

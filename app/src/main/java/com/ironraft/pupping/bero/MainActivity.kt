@@ -45,11 +45,6 @@ class MainActivity : PageComposeable() {
     override fun getPageActivityPresenter(): PageComposePresenter = get()
     override fun getPageActivityViewModel(): PageAppViewModel = get()
     override fun getPageActivityModel(): PageModel = get()
-    /*
-        val model:ActivityModel = get()
-        return model
-    }
-     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         scope.createJob()
@@ -161,6 +156,7 @@ class MainActivity : PageComposeable() {
         requsetNotificationPermission()
         PageLog.d("onPageInit", appTag)
         if (!repository.isLogin) {
+
             isInit = false
             if (pagePresenter.currentPage?.pageID != PageID.Login.value) {
                 pagePresenter.changePage(

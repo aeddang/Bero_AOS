@@ -140,6 +140,7 @@ fun SelectGenderStep(
                     color = ColorBrand.primary,
                     isActive = selectGender != null
                 ) {
+                    if (selectGender == null) return@FillButton
                     onAction()
                 }
 

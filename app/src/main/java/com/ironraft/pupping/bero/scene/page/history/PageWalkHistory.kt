@@ -97,7 +97,7 @@ class PageWalkHistoryViewModel(repo:PageRepository): PageViewModel(PageID.WalkHi
                 val user = pageObj.getParamValue(PageParam.data) as? User
                 this.user.value = user
                 currentUserId = user?.userId ?: ""
-                pageObj.addParam(PageParam.isInitAction, null)
+                pageObj.addParam(PageParam.isInitAction, false)
                 getMonthlyWalk(AppUtil.networkDate())
             }
             else ->{}

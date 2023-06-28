@@ -78,7 +78,6 @@ open class ChatRoomViewModel(val repo: PageRepository)
             ChatItemData().setData(d, me = me, idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

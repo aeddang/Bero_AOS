@@ -62,7 +62,6 @@ open class AlbumListViewModel(val repo: PageRepository)
             }
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 
@@ -105,7 +104,7 @@ open class AlbumListViewModel(val repo: PageRepository)
                     loaded(res.data as? List<PictureData> ?: listOf())
                 }
                 ApiType.RegistAlbumPicture , ApiType.DeleteAlbumPictures ->{
-                    reset()
+                    reset(0)
                     load()
                 }
                 else ->{}

@@ -50,7 +50,6 @@ open class VisitorListViewModel(val repo: PageRepository, id:String = "")
             )
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

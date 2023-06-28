@@ -39,7 +39,6 @@ open class BlockUserListViewModel(val repo: PageRepository)
             BlockUserItemData().setData(d,  idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

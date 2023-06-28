@@ -101,7 +101,7 @@ fun Date.sinceNowDate(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
 
 
 fun LocalDateTime.toFormatString(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ"
+    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"
 ): String? {
     return try {
         val pattern = DateTimeFormatter.ofPattern(dateFormat)

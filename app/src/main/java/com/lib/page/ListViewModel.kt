@@ -12,7 +12,10 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
     var pageSize:Int = 12
     var isLoadCompleted:Boolean = false; protected set
     var currentPage:Int = 0; protected set
-    fun reset(){
+    fun reset(page: Int? = null){
+        page?.let {
+            currentPage = it
+        }
         isLoadCompleted = false
         listDatas.value = null
         isBusy = false
@@ -54,6 +57,7 @@ abstract class ListViewModel<T,V>:ComponentViewModel() {
         resultList.addAll(added)
         listDatas.value = resultList.toList()
         isBusy = false
+        isEmpty.value = resultList.isEmpty()
         isLoading.value = false
         onLoadedEnd(added)
     }

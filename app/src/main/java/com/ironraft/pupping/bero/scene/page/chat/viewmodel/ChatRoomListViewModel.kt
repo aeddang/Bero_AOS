@@ -42,7 +42,6 @@ open class ChatRoomListViewModel(val repo: PageRepository)
             ChatRoomListItemData().setData(d,  idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
     fun read(roomId:Int){

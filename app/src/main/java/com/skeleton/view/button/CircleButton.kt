@@ -72,7 +72,11 @@ fun CircleButton(
                 )
                 .border(
                     width = strokeWidth.dp,
-                    color = if (isSelected) ColorApp.white else ColorApp.grey200,
+                    color =
+                        if (strokeWidth == 0.0f) ColorTransparent.clear
+                        else {
+                            if (isSelected) ColorApp.white else ColorApp.grey200
+                        },
                     shape = CircleShape
                 )
                 .size((originSize ?: type.size).dp),

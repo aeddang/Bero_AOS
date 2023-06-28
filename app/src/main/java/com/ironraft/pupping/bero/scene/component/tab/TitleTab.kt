@@ -165,7 +165,6 @@ fun TitleTab(
                         SortButton(
                             type = SortButtonType.Stroke,
                             sizeType = SortButtonSizeType.Small,
-                            icon = R.drawable.search,
                             text = it,
                             color = ColorApp.grey400,
                             isSort = true,

@@ -42,7 +42,7 @@ fun ChatRoomList(
     chatRoomListViewModel:ChatRoomListViewModel? = null,
     scrollState: LazyListState = rememberLazyListState(),
     isEdit: Boolean = false,
-    marginTop:Float = 0.0f,
+    marginTop:Float = DimenMargin.regular,
     marginBottom:Float = DimenMargin.medium
 ) {
     val owner = LocalLifecycleOwner.current

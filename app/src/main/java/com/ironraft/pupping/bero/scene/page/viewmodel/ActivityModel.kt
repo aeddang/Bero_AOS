@@ -28,7 +28,7 @@ class ActivityModel : PageModel{
     override fun getCloseExceptions(): List<String> = arrayListOf()
 
     private val disableHistoryPages = arrayOf(
-        PageID.Intro, PageID.AddDog, PageID.AddDogCompleted, PageID.PictureViewer).map { it.value }
+        PageID.Intro, PageID.AddDog, PageID.AddDogCompleted, PageID.PictureViewer, PageID.Login).map { it.value }
     override fun isHistoryPage(page: PageObject): Boolean {
         val f= disableHistoryPages.indexOf(page.pageID)
         return f == -1

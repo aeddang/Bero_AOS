@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.activityui.ActivitSelectEvent
@@ -47,11 +49,13 @@ fun PetProfilePictureEdit(
     val imagePath by profile.imagePath.observeAsState()
 
     val requestId:Int  by remember {mutableStateOf(UUID.randomUUID().hashCode())}
-    fun onEdit(img:Bitmap = BitmapFactory.decodeResource(pagePresenter.activity.resources, R.drawable.profile_dog_default)){
+    fun onEdit(img:Bitmap? = null){
+        val imgData = img ?: ContextCompat.getDrawable(pagePresenter.activity, R.drawable.profile_dog_default)?.toBitmap()
+
         val q = ApiQ(appTag,
             ApiType.UpdatePetImage,
             contentID = profile.petId.toString(),
-            requestData = img)
+            requestData = imgData)
         dataProvider.requestData(q)
     }
     fun onResultData(data: Intent){

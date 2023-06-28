@@ -10,9 +10,11 @@ open class PageViewModel(val pageID:PageID, val repo: PageRepository) : Componen
     var appTag:String = pageID.value; private set
     val currentPage = MutableLiveData<PageObject?>()
     val goBack = MutableLiveData<PageObject?>()
+    val onReload = MutableLiveData<PageObject?>()
     val onClose = MutableLiveData<PageObject?>()
     var lifecycleOwner: LifecycleOwner? = null; private set
     fun goBackCompleted(){ goBack.value = null }
+    fun onReloadCompleted(){ onReload.value = null }
     fun initSetup(owner: LifecycleOwner): PageViewModel {
         lifecycleOwner = owner
         setDefaultLifecycleOwner(owner)
@@ -36,6 +38,10 @@ open class PageViewModel(val pageID:PageID, val repo: PageRepository) : Componen
             onPageEvent(evt)
             if(evt.id != appTag) return@observe
             val pageObject = evt.data as? PageObject ?: return@observe
+            when(evt.type){
+                PageEventType.ReloadPage -> onReload.value = pageObject
+                else -> {}
+            }
             if (currentPage.value?.key != pageObject.key) return@observe
             onCurrentPageEvent(evt.type, pageObject)
             when(evt.type){

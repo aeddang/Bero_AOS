@@ -108,6 +108,7 @@ fun FriendList(
 
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
+    val dataProvider: DataProvider = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel: FriendListViewModel by remember { mutableStateOf(
         friendListViewModel ?: FriendListViewModel(repo = repository).initSetup(owner, ApiValue.PAGE_SIZE )
@@ -150,6 +151,12 @@ fun FriendList(
                                     status = if (isEdit && type == FriendListType.Friend) FriendStatus.Friend else type.status,
                                     isHorizontal = false
                                 ) {
+                                    if (dataProvider.user.isSameUser(data.userId)) {
+                                        Toast(pagePresenter.activity).showCustomToast(
+                                            R.string.alert_itsMe,
+                                            pagePresenter.activity
+                                        )
+                                    }
                                     pagePresenter.openPopup(
                                         PageProvider.getPageObject(PageID.User)
                                             .addParam(key = PageParam.id, value = data.userId)

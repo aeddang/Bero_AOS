@@ -38,7 +38,6 @@ open class AlarmListViewModel(val repo: PageRepository)
             AlarmListItemData().setData(d,  idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

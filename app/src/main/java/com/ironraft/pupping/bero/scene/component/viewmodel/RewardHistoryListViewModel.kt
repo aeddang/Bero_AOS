@@ -42,7 +42,6 @@ open class RewardHistoryListViewModel(val repo: PageRepository, val type: Histor
             RewardHistoryListItemData().setData(d,  type = type, idx = start + idx)
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

@@ -23,6 +23,7 @@ import com.ironraft.pupping.bero.scene.component.viewmodel.UserAlbumListViewMode
 
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.rest.ExplorerSearchType
 import com.lib.page.PageComposePresenter
@@ -41,9 +42,12 @@ fun PageExplore(
     val owner = LocalLifecycleOwner.current
     val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
-    val viewModel: UserAlbumListViewModel by remember { mutableStateOf(
+    val viewModel: PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Explore, repository).initSetup(owner)) }
+
+    val userAlbumListViewModel: UserAlbumListViewModel by remember { mutableStateOf(
          UserAlbumListViewModel(repo = repository).initSetup(owner)
     )}
+
     val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(
         AlbumPickViewModel(repo = repository).initSetup(owner).meSetup())
     }
@@ -81,18 +85,25 @@ fun PageExplore(
                 0 ->{
                     onResetScroll()
                     searchType = ExplorerSearchType.All
-                    viewModel.resetLoad(ExplorerSearchType.All)
+                    userAlbumListViewModel.resetLoad(ExplorerSearchType.All)
                 }
 
                 1 -> {
                     onResetScroll()
                     searchType = ExplorerSearchType.Friends
-                    viewModel.resetLoad(ExplorerSearchType.Friends)
+                    userAlbumListViewModel.resetLoad(ExplorerSearchType.Friends)
                 }
                 else -> {}
             }
         }
     }
+
+    val onReload = viewModel.onReload.observeAsState()
+    onReload.value?.let {
+        onResetScroll()
+        viewModel.onReloadCompleted()
+    }
+
 
     Column (
         modifier = modifier
@@ -120,7 +131,7 @@ fun PageExplore(
         }
         UserAlbumList(
             modifier = Modifier.weight(1.0f),
-            userAlbumListViewModel = viewModel,
+            userAlbumListViewModel = userAlbumListViewModel,
             scrollState = scrollState,
             type = searchType,
             listSize = screenWidth.toFloat()

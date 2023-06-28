@@ -42,7 +42,6 @@ open class WalkListViewModel(val repo: PageRepository, id:String = "")
             WalkListItemData().setData(d,  idx = start + idx, ctx = activity )
         }
         isLoadCompleted = datas.count() < pageSize
-        isEmpty.value = added.isEmpty()
         return added
     }
 

@@ -102,7 +102,7 @@ fun ChatRoomListItem(
             }
             if (isEdit){
                 CircleButton(
-                    modifier = Modifier.padding(all = DimenMargin.thin.dp),
+                    modifier = Modifier,
                     type = CircleButtonType.Icon,
                     icon = R.drawable.exit,
                     isSelected = false,

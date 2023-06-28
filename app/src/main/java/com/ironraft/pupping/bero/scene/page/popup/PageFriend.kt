@@ -60,7 +60,7 @@ fun PageFriend(
     var isEdit: Boolean by remember { mutableStateOf( false ) }
 
     var originSortType:FriendListType = FriendListType.Friend
-    var sortType:FriendListType = FriendListType.Friend
+    var sortType:FriendListType  by remember { mutableStateOf(FriendListType.Friend)}
     var title:String? by remember { mutableStateOf( null ) }
 
     currentPage.value?.let { page->
@@ -73,7 +73,7 @@ fun PageFriend(
                 isEdit = page.getParamValue(PageParam.isEdit) as? Boolean ?: false
             } else {
                 userData?.representativeName?.let {
-                    title = pagePresenter.activity.getString(R.string.pageTitle_friends).replace(it)
+                    title = pagePresenter.activity.getString(R.string.pageTitle_usersFriends).replace(it)
                 }
             }
             scrollStateKey = page.key

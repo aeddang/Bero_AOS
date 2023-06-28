@@ -144,11 +144,16 @@ fun AlbumListItem(
     }
     fun onMovePicture(){
         pagePresenter.openPopup(
+            PageProvider.getPageObject(PageID.PictureViewer)
+                .addParam(PageParam.data, data)
+        )
+        /*
+        pagePresenter.openPopup(
             PageProvider.getPageObject(PageID.Album)
                 .addParam(key = PageParam.data, value = user)
                 .addParam(key = PageParam.subData, value = pet)
                 .addParam(key = PageParam.id, value = data.pictureId)
-        )
+        )*/
     }
     fun onShare(){
         val currentValue = data.isExpose.value

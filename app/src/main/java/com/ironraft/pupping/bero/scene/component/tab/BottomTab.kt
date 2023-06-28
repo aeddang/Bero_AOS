@@ -25,6 +25,7 @@ import com.ironraft.pupping.bero.scene.component.item.RewardInfoType
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.PageRepository
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageComposePresenter
@@ -95,7 +96,9 @@ fun BottomTab(
                         defaultColor = ColorApp.grey200,
                         activeColor = ColorBrand.primary
                     ) {
-                        pagePresenter.changePage(PageObject(page.id.value, page.idx))
+                        pagePresenter.changePage(
+                            PageProvider.getPageObject(page.id)
+                        )
                     }
                 }
             }

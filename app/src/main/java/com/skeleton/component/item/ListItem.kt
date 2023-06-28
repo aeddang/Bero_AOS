@@ -91,6 +91,9 @@ fun ListItem(
                         modifier = Modifier.matchParentSize()
                     )
                 }
+                move?.let {
+                    TransparentButton { it() }
+                }
                 Column(
                     modifier = Modifier
                         .matchParentSize()
@@ -129,9 +132,7 @@ fun ListItem(
                         }
                     }
                 }
-                move?.let {
-                    TransparentButton { it() }
-                }
+
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),

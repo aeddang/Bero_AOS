@@ -127,23 +127,16 @@ fun AlbumList(
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(type.marginRow.dp)
                             ) {
-                                WrapTransparentButton(
-                                    {
-                                        pagePresenter.openPopup(
-                                            PageProvider.getPageObject(PageID.PictureViewer)
-                                                .addParam(PageParam.data, data)
-                                        )
-                                    }
-                                ) {
-                                    AlbumListItem(
-                                        type = type,
-                                        data = data,
-                                        user = user,
-                                        pet = pet,
-                                        imgSize = albumSize,
-                                        isEdit = isEdit
-                                    )
-                                }
+
+                                AlbumListItem(
+                                    type = type,
+                                    data = data,
+                                    user = user,
+                                    pet = pet,
+                                    imgSize = albumSize,
+                                    isEdit = isEdit
+                                )
+
                             }
                         }
                     }

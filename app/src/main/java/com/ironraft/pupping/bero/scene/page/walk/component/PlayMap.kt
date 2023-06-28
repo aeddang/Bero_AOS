@@ -89,7 +89,7 @@ fun PlayMap(
     val isFollowMe by playMapModel.isFollowMe.observeAsState()
     val isWalk by playMapModel.isWalk.observeAsState()
     val place by playMapModel.findPlace.observeAsState()
-
+    val currentLocation by walkManager.currentLocation.observeAsState()
     fun onInit():Boolean{
         return true
     }
@@ -99,7 +99,7 @@ fun PlayMap(
             modifier = modifier,
             contentAlignment = Alignment.Center
         ){
-            if (isInit) {
+            if (isInit && currentLocation != null) {
                 CPGoogleMap(
                     modifier = modifier,
                     mapModel = playMapModel
