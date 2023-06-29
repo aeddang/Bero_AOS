@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -24,9 +25,12 @@ import com.ironraft.pupping.bero.activityui.ActivitRadioType
 import com.ironraft.pupping.bero.activityui.ActivitSheetEvent
 import com.ironraft.pupping.bero.activityui.ActivitSheetType
 import com.ironraft.pupping.bero.scene.component.list.AlbumListType
+import com.ironraft.pupping.bero.scene.component.viewmodel.AlbumFunctionViewModel
+import com.ironraft.pupping.bero.scene.component.viewmodel.FriendFunctionViewModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
+import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.api.ApiQ
 import com.ironraft.pupping.bero.store.api.ApiType
 import com.ironraft.pupping.bero.store.api.rest.*
@@ -101,40 +105,20 @@ fun AlbumListItem(
     isEdit:Boolean = false,
     isOriginSize:Boolean = false
 ){
-    val dataProvider:DataProvider = get()
+    val owner = LocalLifecycleOwner.current
+    val repository: PageRepository = get()
     val pagePresenter:PagePresenter = get()
+
+    val albumFunctionViewModel: AlbumFunctionViewModel by remember { mutableStateOf(
+        AlbumFunctionViewModel(repository).initSetup(owner).lazySetup(data)
+    ) }
+
     val isDelete by data.isDelete.observeAsState()
     val isLike by data.isLike.observeAsState()
     val likeCount by data.likeCount.observeAsState()
     val isExpose by data.isExpose.observeAsState()
 
-    val apiResult = dataProvider.result.observeAsState()
-    @Suppress("UNCHECKED_CAST")
-    apiResult.value.let { res ->
-        res?.type ?: return@let
-        if(res.contentID != data.pictureId.toString()) return@let
-        when ( res.type ){
-            ApiType.UpdateAlbumPicturesLike-> {
-                data.updata(isLike = res.requestData as? Boolean ?: false)
-            }
-            ApiType.UpdateAlbumPicturesExpose-> {
-                data.updata(isExpose = res.requestData as? Boolean ?: false)
-            }
-            else ->{}
-        }
-    }
 
-    fun onLike(){
-        val currentValue = data.isLike.value
-        val id = data.pictureId.toString()
-        currentValue?.let {
-            val q = ApiQ(id,
-                ApiType.UpdateAlbumPicturesLike,
-                contentID = id,
-                requestData = !currentValue)
-            dataProvider.requestData(q)
-        }
-    }
     fun onMoveWalk(){
         pagePresenter.openPopup(
             PageProvider.getPageObject(PageID.WalkInfo)
@@ -146,6 +130,7 @@ fun AlbumListItem(
         pagePresenter.openPopup(
             PageProvider.getPageObject(PageID.PictureViewer)
                 .addParam(PageParam.data, data)
+                .addParam(PageParam.userData, user)
         )
         /*
         pagePresenter.openPopup(
@@ -155,17 +140,7 @@ fun AlbumListItem(
                 .addParam(key = PageParam.id, value = data.pictureId)
         )*/
     }
-    fun onShare(){
-        val currentValue = data.isExpose.value
-        val id = data.pictureId.toString()
-        currentValue?.let {
-            val q = ApiQ(id,
-                ApiType.UpdateAlbumPicturesExpose,
-                contentID = id,
-                requestData = !currentValue)
-            dataProvider.requestData(q)
-        }
-    }
+
     Box(modifier = modifier.wrapContentSize(),
         contentAlignment = Alignment.TopEnd
     ){
@@ -180,7 +155,7 @@ fun AlbumListItem(
                     isLike = isLike ?: false,
                     likeSize = SortButtonSizeType.Small,
                     iconAction = { onMoveWalk() },
-                    action = { onLike() },
+                    action = { albumFunctionViewModel.updateLike(isLike?.toggle() ?: false) },
                     move = { onMovePicture() }
                 )
             AlbumListType.Detail ->
@@ -195,8 +170,8 @@ fun AlbumListItem(
                     isShared = if(user?.isMe == true) isExpose else null,
                     isOriginSize = isOriginSize,
                     iconAction = { onMoveWalk() },
-                    likeAction = { onLike() },
-                    shareAction = { onShare() }
+                    likeAction = { albumFunctionViewModel.updateLike(isLike?.toggle() ?: false) },
+                    shareAction = { albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false) }
                 )
         }
 

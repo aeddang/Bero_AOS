@@ -26,6 +26,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.koin.pageModelModule
+import com.ironraft.pupping.bero.scene.component.button.LikeButton
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
@@ -159,39 +160,11 @@ fun ListDetailItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 likeCount?.let {likeCount ->
-                    Row(
-                        modifier.weight(1.0f),
-                        horizontalArrangement = Arrangement.spacedBy(space = DimenMargin.tinyExtra.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SortButton(
-                            type = SortButtonType.Stroke,
-                            sizeType = likeSize,
-                            icon = if(isLike) R.drawable.favorite_on else R.drawable.favorite_on,
-                            color = if(isLike) ColorBrand.primary else ColorApp.grey400,
-                            isSort = false
-                        ){
-                            likeAction?.let { it() }
-                        }
-                        Box(modifier = Modifier.wrapContentSize()){
-                            Text(
-                                likeCount.toThousandUnit() + " " + stringResource(id = R.string.likes),
-                                fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.regular.dp)))
-                                    .background(ColorApp.whiteDeepLight)
-                                    .padding(
-                                        horizontal = DimenMargin.light.dp,
-                                        vertical = DimenMargin.tinyExtra.dp
-                                    )
-                            )
-                            TransparentButton(modifier = Modifier.matchParentSize()) {
-                                likeAction?.let { it() }
-                            }
-                        }
-
+                    LikeButton(
+                        isLike = isLike,
+                        likeCount = likeCount
+                    ){
+                        likeAction?.let { it() }
                     }
                 }
                 if(pets.isNotEmpty())

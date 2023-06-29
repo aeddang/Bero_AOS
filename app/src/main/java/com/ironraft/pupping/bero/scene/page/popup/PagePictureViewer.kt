@@ -10,13 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.ironraft.pupping.bero.R
+import com.ironraft.pupping.bero.scene.component.button.LikeButton
 import com.ironraft.pupping.bero.scene.component.item.AlbumListItemData
-import com.ironraft.pupping.bero.scene.component.item.UserProfileItem
+import com.ironraft.pupping.bero.scene.component.viewmodel.AlbumFunctionViewModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageParam
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
@@ -24,11 +25,15 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.model.User
 import com.lib.page.PageComposePresenter
-import com.skeleton.component.item.profile.HorizontalProfileType
+import com.lib.util.toggle
 import com.skeleton.theme.ColorApp
+import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenMargin
 import com.skeleton.view.button.ImageButton
+import com.skeleton.view.button.SortButton
+import com.skeleton.view.button.SortButtonSizeType
+import com.skeleton.view.button.SortButtonType
 import dev.burnoo.cokoin.get
 
 
@@ -40,20 +45,29 @@ fun PagePictureViewer(
     val repository: PageRepository = get()
     val pagePresenter:PageComposePresenter = get()
     val viewModel:PageViewModel by remember { mutableStateOf(PageViewModel(PageID.Album, repository).initSetup(owner)) }
+    val albumFunctionViewModel: AlbumFunctionViewModel by remember { mutableStateOf(
+        AlbumFunctionViewModel(repository).initSetup(owner)
+    ) }
+
     val currentPage = viewModel.currentPage.observeAsState()
+
+    var data:AlbumListItemData? by remember { mutableStateOf( null ) }
+
 
     var imagePath:String? by remember { mutableStateOf( null ) }
     var title:String? by remember { mutableStateOf( null ) }
     var user:User? by remember { mutableStateOf( null ) }
 
+
     currentPage.value?.let { page ->
         if(imagePath != null) return@let
         val imageData = page.getParamValue(PageParam.data) as? AlbumListItemData
+
         imagePath = if(imageData == null) page.getParamValue(PageParam.data) as? String
         else imageData.imagePath
         title = page.getParamValue(PageParam.title) as? String
         user = page.getParamValue(PageParam.userData) as? User
-
+        data = imageData
     }
 
     fun moveUser(user:User){
@@ -99,24 +113,67 @@ fun PagePictureViewer(
             horizontalAlignment = Alignment.Start
 
         ) {
-            ImageButton(
-                defaultImage = R.drawable.back,
-                defaultColor = ColorApp.white
-            ){
-                pagePresenter.goBack()
-            }
-            Spacer(modifier = Modifier.weight(1.0f))
-            user?.let {
-                UserProfileItem(
-                    profile = it.currentProfile,
-                    type = HorizontalProfileType.Pet,
-                    title = it.representativeName,
-                    lv = it.lv,
-                    imagePath = it.representativeImage,
-                ){
-                    moveUser(it)
+            if (data == null) {
+                ImageButton(
+                    defaultImage = R.drawable.back,
+                    defaultColor = ColorApp.white
+                ) {
+                    pagePresenter.goBack()
+                }
+                Spacer(modifier = Modifier.weight(1.0f))
+            } else {
+                data?.let { data->
+                    albumFunctionViewModel.lazySetup(data)
+                    val isLike by data.isLike.observeAsState()
+                    val likeCount by data.likeCount.observeAsState()
+                    val isExpose by data.isExpose.observeAsState()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = DimenApp.pageHorinzontal.dp),
+                        horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ImageButton(
+                            defaultImage = R.drawable.back,
+                            defaultColor = ColorApp.white
+                        ) {
+                            pagePresenter.goBack()
+                        }
+                        Spacer(modifier = Modifier.weight(1.0f))
+                        LikeButton(
+                            isLike = isLike ?: false,
+                            likeCount = likeCount
+                        ){
+                            albumFunctionViewModel.updateLike(isLike?.toggle() ?: false)
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    if( user?.isMe == true) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = DimenApp.pageHorinzontal.dp),
+                            horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.weight(1.0f))
+                            SortButton(
+                                type = SortButtonType.Stroke,
+                                sizeType = SortButtonSizeType.Big,
+                                icon = R.drawable.global,
+                                text = stringResource(id = R.string.share),
+                                color = if (isExpose == true) ColorBrand.primary else ColorApp.grey400,
+                                isSort = false
+                            ) {
+                                albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false)
+                            }
+                        }
+                    }
+
                 }
             }
+
         }
     }
 }

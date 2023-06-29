@@ -51,10 +51,10 @@ android {
 
     signingConfigs {
         create("releaseWithSignedKey") {
-            storeFile = file("bero_release_key")
-            storePassword = "12qw34ER"
-            keyAlias = "bero"
-            keyPassword = "12qw34ER"
+            storeFile = file("bero_key")
+            storePassword = "12qw34er"
+            keyAlias = "beroalias"
+            keyPassword = "34er12qw"
         }
     }
     kapt {
@@ -96,7 +96,7 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = false
-            isDebuggable = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             )
