@@ -270,18 +270,21 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     }
     @CallSuper
     override fun onBackPressed() {
+        val top = currentTopPage
+        if (top?.isHome == true) {
+            onExitAction()
+            return
+        }
         if(popups.isNotEmpty()){
             val last = popups.last()
             if (!last.isGoBackAble) return onGoBackPage()
             if (!isGobackAble(last)) return
-            if( last.isHome ) onExitAction()
             onClosePopup(last)
             return
         }
         currentPageObject?.let { page ->
             if (!page.isGoBackAble) return onGoBackPage()
             if (!isGobackAble(page)) return
-            if( page.isHome ) onExitAction()
             else onBackPressedAction()
         }
 
@@ -375,7 +378,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
                 }
             }
         }
-        //onCloseAllPopup()
+        onCloseAllPopup(isEnd = false)
         //resetBackPressedAction()
         val top = currentTopPage
         val prev = currentPageObject
@@ -435,14 +438,14 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         onChangedPage()
         PageLog.d("onOpenPopup -> ${pageObject.pageID} completed", tag = this.appTag)
     }
-    private fun onCloseAllPopup() {
+    private fun onCloseAllPopup(isEnd:Boolean = true) {
         val allPopups = popups.map { it }
         popups.clear()
-        onWillChangePage(currentPageObject)
+        if (isEnd) onWillChangePage(currentPageObject)
         allPopups.forEach { p ->
             navController?.popBackStack()
         }
-        onChangedPage()
+        if (isEnd) onChangedPage()
     }
     fun onClosePopupId(id: String){
         val f = popups.find { it.pageID == id }

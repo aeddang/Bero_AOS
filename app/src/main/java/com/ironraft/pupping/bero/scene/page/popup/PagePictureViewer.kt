@@ -1,12 +1,20 @@
 package com.ironraft.pupping.bero.scene.page.popup
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -24,6 +32,7 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageViewModel
 import com.ironraft.pupping.bero.store.PageRepository
 import com.ironraft.pupping.bero.store.provider.model.User
+import com.lib.page.PageAnimationType
 import com.lib.page.PageComposePresenter
 import com.lib.util.toggle
 import com.skeleton.theme.ColorApp
@@ -34,6 +43,8 @@ import com.skeleton.view.button.ImageButton
 import com.skeleton.view.button.SortButton
 import com.skeleton.view.button.SortButtonSizeType
 import com.skeleton.view.button.SortButtonType
+import com.skeleton.view.button.TransparentButton
+import com.skeleton.view.button.WrapTransparentButton
 import dev.burnoo.cokoin.get
 
 
@@ -53,7 +64,7 @@ fun PagePictureViewer(
 
     var data:AlbumListItemData? by remember { mutableStateOf( null ) }
 
-
+    var showUi:Boolean by remember { mutableStateOf( true ) }
     var imagePath:String? by remember { mutableStateOf( null ) }
     var title:String? by remember { mutableStateOf( null ) }
     var user:User? by remember { mutableStateOf( null ) }
@@ -80,6 +91,11 @@ fun PagePictureViewer(
     Box (
         modifier = modifier
             .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures (
+                    onTap = { showUi = showUi.toggle() }
+                )
+            }
             .background(ColorApp.black)
     ) {
         if (imagePath == null) {
@@ -102,79 +118,78 @@ fun PagePictureViewer(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        Column (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = DimenMargin.regular.dp)
-                .padding(
-                    horizontal = DimenApp.pageHorinzontal.dp,
-                ),
-            verticalArrangement = Arrangement.spacedBy(0.dp),
-            horizontalAlignment = Alignment.Start
+        AnimatedVisibility(visible = showUi,enter = fadeIn(), exit = fadeOut()) {
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = DimenApp.pageHorinzontal.dp,
+                        vertical = DimenMargin.regular.dp
+                    ),
+                verticalArrangement = Arrangement.spacedBy(0.dp),
+                horizontalAlignment = Alignment.Start
 
-        ) {
-            if (data == null) {
-                ImageButton(
-                    defaultImage = R.drawable.back,
-                    defaultColor = ColorApp.white
-                ) {
-                    pagePresenter.goBack()
-                }
-                Spacer(modifier = Modifier.weight(1.0f))
-            } else {
-                data?.let { data->
-                    albumFunctionViewModel.lazySetup(data)
-                    val isLike by data.isLike.observeAsState()
-                    val likeCount by data.likeCount.observeAsState()
-                    val isExpose by data.isExpose.observeAsState()
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = DimenApp.pageHorinzontal.dp),
-                        horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
-                        verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (data == null) {
+                    ImageButton(
+                        defaultImage = R.drawable.back,
+                        defaultColor = ColorApp.white
                     ) {
-                        ImageButton(
-                            defaultImage = R.drawable.back,
-                            defaultColor = ColorApp.white
-                        ) {
-                            pagePresenter.goBack()
-                        }
-                        Spacer(modifier = Modifier.weight(1.0f))
-                        LikeButton(
-                            isLike = isLike ?: false,
-                            likeCount = likeCount
-                        ){
-                            albumFunctionViewModel.updateLike(isLike?.toggle() ?: false)
-                        }
+                        pagePresenter.goBack()
                     }
                     Spacer(modifier = Modifier.weight(1.0f))
-                    if( user?.isMe == true) {
+                } else {
+                    data?.let { data->
+                        albumFunctionViewModel.lazySetup(data)
+                        val isLike by data.isLike.observeAsState()
+                        val likeCount by data.likeCount.observeAsState()
+                        val isExpose by data.isExpose.observeAsState()
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = DimenApp.pageHorinzontal.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.weight(1.0f))
-                            SortButton(
-                                type = SortButtonType.Stroke,
-                                sizeType = SortButtonSizeType.Big,
-                                icon = R.drawable.global,
-                                text = stringResource(id = R.string.share),
-                                color = if (isExpose == true) ColorBrand.primary else ColorApp.grey400,
-                                isSort = false
+                            ImageButton(
+                                defaultImage = R.drawable.back,
+                                defaultColor = ColorApp.white
                             ) {
-                                albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false)
+                                pagePresenter.goBack()
+                            }
+                            Spacer(modifier = Modifier.weight(1.0f))
+                            LikeButton(
+                                isLike = isLike ?: false,
+                                likeCount = likeCount
+                            ){
+                                albumFunctionViewModel.updateLike(isLike?.toggle() ?: false)
                             }
                         }
-                    }
+                        Spacer(modifier = Modifier.weight(1.0f))
+                        if( user?.isMe == true) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.weight(1.0f))
+                                SortButton(
+                                    type = SortButtonType.Stroke,
+                                    sizeType = SortButtonSizeType.Big,
+                                    icon = R.drawable.global,
+                                    text = stringResource(id = R.string.share),
+                                    color = if (isExpose == true) ColorBrand.primary else ColorApp.grey400,
+                                    isSort = false
+                                ) {
+                                    albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false)
+                                }
+                            }
+                        }
 
+                    }
                 }
             }
-
         }
+
     }
 }
 

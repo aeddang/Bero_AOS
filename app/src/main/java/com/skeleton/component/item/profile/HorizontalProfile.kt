@@ -369,8 +369,10 @@ fun HorizontalProfile(
                             .clip(CircleShape)
                             .background(funcViewColor)
                             .padding(
-                                all = DimenMargin.micro.dp
+                                vertical = 0.dp,
+                                horizontal = DimenMargin.micro.dp
                             )
+
                         ) {
                             Text(
                                 funcValue ?: "" ,
@@ -409,7 +411,7 @@ fun HorizontalProfileComposePreview(){
             HorizontalProfile(
                 type = HorizontalProfileType.Pet,
                 funcType = HorizontalProfileFuncType.View,
-                funcValue = " N ",
+                funcValue = "N",
                 color = ColorBrand.primary,
                 image = null,
                 imagePath = null,

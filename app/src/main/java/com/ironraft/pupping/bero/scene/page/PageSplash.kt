@@ -23,12 +23,7 @@ fun PageSplash(
         modifier = Modifier.fillMaxSize().background(ColorBrand.primary),
         contentAlignment = Alignment.Center
     ){
-        Image(
-            painterResource(R.drawable.splash_logo),
-            modifier = Modifier.wrapContentSize(),
-            contentDescription = "",
-            contentScale = ContentScale.Fit
-        )
+
     }
 }
 

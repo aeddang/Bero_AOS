@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,8 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.internal.analytics.AnalyticsEventLogger
+import com.ironraft.pupping.bero.store.PageRepository
 import com.skeleton.component.item.profile.ProfileImage
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
+import dev.burnoo.cokoin.get
 
 
 enum class CircleButtonType() {
@@ -55,6 +61,7 @@ fun CircleButton(
     modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
+    val analytics: Analytics = get()
     val imagePath: String? by remember { mutableStateOf(
         if(type == CircleButtonType.Image) value else null
     )}
@@ -122,6 +129,10 @@ fun CircleButton(
             */
             TransparentButton(
                 action = {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "CircleButton"
+                    parameter["buttonText"] = value ?: icon.toString() ?: ""
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,parameter)
                     action(index)
                 }
             )

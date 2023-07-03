@@ -43,7 +43,7 @@ android {
         applicationId = "com.ironraft.pupping.bero"
         minSdk = 28
         targetSdk = 33
-        versionCode = 2
+        versionCode = 4
         versionName = "1.1.3"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -261,7 +261,7 @@ dependencies {
     implementation("com.google.firebase:firebase-core:21.1.1")
     implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 
     /**
      * Google Map

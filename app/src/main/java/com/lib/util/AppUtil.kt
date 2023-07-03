@@ -24,11 +24,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.lib.page.PageComposeable
 import java.io.File
 import java.io.IOException
-import java.net.URI
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.sqrt
 
@@ -177,7 +174,7 @@ object AppUtil {
                     sig.apkContentsSigners.map {
                         val digest = MessageDigest.getInstance("SHA")
                         digest.update(it.toByteArray())
-                        //Log.d(TAG, "ApplicationSignature ${Base64.encodeToString(digest.digest(), Base64.NO_WRAP)}")
+                        //Log.d(TAG, "ApplicationSignature ${Base64.encodeToString(digest.digest(), Base64.NO_WRAR)}")
                         Log.d(TAG, "ApplicationSignature ${byte2HexFormatted(digest.digest())}")
 
                     }

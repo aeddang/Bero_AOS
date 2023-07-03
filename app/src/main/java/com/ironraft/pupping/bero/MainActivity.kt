@@ -156,7 +156,6 @@ class MainActivity : PageComposeable() {
         requsetNotificationPermission()
         PageLog.d("onPageInit", appTag)
         if (!repository.isLogin) {
-
             isInit = false
             if (pagePresenter.currentPage?.pageID != PageID.Login.value) {
                 pagePresenter.changePage(
@@ -165,7 +164,7 @@ class MainActivity : PageComposeable() {
             }
             return
         }
-        if (isInit && pagePresenter.currentPage?.pageID != PageID.Login.value) {
+        if (isInit && pagePresenter.currentTopPage?.pageID != PageID.Login.value) {
             PageLog.d("onPageInit already init", appTag)
             return
         }

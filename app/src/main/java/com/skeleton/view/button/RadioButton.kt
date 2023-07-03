@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skeleton.theme.*
 import com.ironraft.pupping.bero.R
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.view.switch.Switch
+import dev.burnoo.cokoin.get
 
 enum class RadioButtonType() {
     Text {
@@ -71,6 +73,7 @@ fun RadioButton(
     modifier: Modifier = Modifier,
     action:(Boolean) -> Unit
 ) {
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier
@@ -158,7 +161,12 @@ fun RadioButton(
             ) {
                 TransparentButton(
                     action = {
-                        action(!isChecked)
+                        val checked = !isChecked
+                        val parameter = HashMap<String,String>()
+                        parameter["buttonType"] = "RadioButton"
+                        parameter["buttonText"] = text ?: icon.toString()
+                        parameter["isChecked"] = checked.toString()
+                        action(checked)
                     }
                 )
             }

@@ -37,6 +37,7 @@ import com.lib.page.PageAppViewModel
 import com.lib.page.PageCoroutineScope
 import com.lib.util.*
 import com.skeleton.module.Repository
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.sns.SnsManager
 import com.skeleton.sns.SnsUser
 import com.skeleton.sns.SnsUserInfo
@@ -63,6 +64,7 @@ class PageRepository (
     val appSceneObserver: AppSceneObserver,
     val walkManager: WalkManager,
     val snsManager: SnsManager,
+    val analytics: Analytics,
     val topic:Topic,
     private val interceptor: ApiInterceptor
 ) : Repository(ctx){
@@ -309,9 +311,8 @@ class PageRepository (
         storage.loginType = user.snsType.apiCode()
         dataProvider.user.registUser(user)
         pagePresenter.loading(true)
-        apiManager.joinAuth(user, info)
         status.value = RepositoryStatus.Initate
-        event.value = RepositoryEvent.LoginUpdate
+        apiManager.joinAuth(user, info)
     }
     fun clearLogin() {
         DataLog.d("clearLogin", appTag)
@@ -326,6 +327,7 @@ class PageRepository (
         status.value = RepositoryStatus.Ready
         event.value = RepositoryEvent.LoginUpdated
         retryRegisterPushToken()
+        analytics.setUserID(null)
     }
 
    fun autoSnsLogin() {
@@ -334,7 +336,6 @@ class PageRepository (
         DataLog.d("$user",appTag)
         DataLog.d("token " + (token ?: ""),appTag)
         if ( user != null && token.isNotEmpty() ) {
-            event.value = RepositoryEvent.LoginUpdate
             apiManager.initateApi(token, user)
         } else {
             clearLogin()
@@ -344,9 +345,9 @@ class PageRepository (
     private fun loginCompleted() {
         DataLog.d("loginCompleted ${interceptor.accesstoken}", appTag)
         pagePresenter.loaded()
-        event.value = RepositoryEvent.LoginUpdated
         if (SystemEnvironment.breedCode.isEmpty()) getBreedCodeData()
         else onReady()
+
     }
     private fun getBreedCodeData(){
         val params = java.util.HashMap<String, String>()
@@ -358,6 +359,7 @@ class PageRepository (
     private fun onReady() {
         storage.authToken = interceptor.accesstoken
         status.value = RepositoryStatus.Ready
+        event.value = RepositoryEvent.LoginUpdated
         dataProvider.user.snsUser?.let {
             apiManager.load(ApiQ(appTag, ApiType.GetUser, isOptional = true, contentID = it.snsID))
             apiManager.load(ApiQ(appTag, ApiType.GetPets, isOptional = true, contentID = it.snsID))
@@ -365,6 +367,11 @@ class PageRepository (
             apiManager.load(ApiQ(appTag, ApiType.GetChatRooms, isOptional = true, contentID = it.snsID))
         }
         retryRegisterPushToken()
+        dataProvider.user.snsUser?.let { user->
+            analytics.setUserID(user.snsID)
+            analytics.setUserProperty(user.snsType)
+        }
+
     }
 
     val isLogin: Boolean get() {

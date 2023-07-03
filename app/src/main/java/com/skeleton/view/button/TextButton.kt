@@ -21,7 +21,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
+import dev.burnoo.cokoin.get
 
 enum class TextButtonType() {
     Box {
@@ -66,6 +68,7 @@ fun TextButton(
     modifier: Modifier = Modifier,
     action:(Int) -> Unit
 ) {
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier
@@ -106,6 +109,9 @@ fun TextButton(
             TransparentButton(
                 modifier = Modifier.matchParentSize(),
                 action =  {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "TextButton"
+                    parameter["buttonText"] = defaultText
                     action(index)
                 }
             )

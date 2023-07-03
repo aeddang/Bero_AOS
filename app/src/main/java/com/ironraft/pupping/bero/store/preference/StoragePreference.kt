@@ -80,7 +80,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         set(value:Boolean){ put(StoragePreference.isFirstChat, value) }
 
     var isFirstWalk:Boolean
-        get(){ return get(StoragePreference.isFirstWalk, true) as Boolean }
+        get(){ return get(StoragePreference.isFirstWalk, false) as Boolean }
         set(value:Boolean){ put(StoragePreference.isFirstWalk, value) }
 
     fun isDailyBannerCheck(id:PageID):Boolean{

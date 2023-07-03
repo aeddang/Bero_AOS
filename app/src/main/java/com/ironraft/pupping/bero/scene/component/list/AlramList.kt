@@ -88,10 +88,14 @@ fun AlarmList(
     AppTheme {
         if (isInit) {
             Column(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize().padding(horizontal = DimenApp.pageHorinzontal.dp),
                 verticalArrangement = Arrangement.spacedBy(DimenMargin.regularUltra.dp)
             ) {
-                if (isEmpty.value == true) EmptyItem(type = EmptyItemType.MyList)
+                if (isEmpty.value == true)
+                    EmptyItem(
+                        modifier = Modifier,
+                        type = EmptyItemType.MyList
+                    )
                 else if (alarms != null)
                     alarms?.let { datas ->
                         LazyColumn(

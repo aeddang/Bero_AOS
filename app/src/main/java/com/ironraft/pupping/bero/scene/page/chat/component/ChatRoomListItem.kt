@@ -74,14 +74,15 @@ fun ChatRoomListItem(
             horizontalArrangement = Arrangement.spacedBy(
                 space = DimenMargin.thin.dp,
                 alignment = Alignment.CenterHorizontally
-            )
+            ),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             HorizontalProfile(
                 modifier = Modifier.weight(1.0f),
                 type = HorizontalProfileType.Pet,
                 sizeType = HorizontalProfileSizeType.Small,
                 funcType = if(isRead == true) null else HorizontalProfileFuncType.View,
-                funcValue = if(isRead == true) null else " N ",
+                funcValue = if(isRead == true) null else "N",
                 imagePath = data.profileImagePath,
                 lv = data.lv,
                 name = data.title,

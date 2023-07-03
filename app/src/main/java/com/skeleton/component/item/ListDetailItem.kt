@@ -61,7 +61,8 @@ fun ListDetailItem(
     pets:List<PetProfile> = listOf(),
     iconAction: (() -> Unit)? = null,
     likeAction: (() -> Unit)? = null,
-    shareAction: (() -> Unit)? = null
+    shareAction: (() -> Unit)? = null,
+    move:(() -> Unit)? = null
     ) {
     val pagePresenter: PagePresenter = get()
     var painter: AsyncImagePainter? = null
@@ -107,6 +108,9 @@ fun ListDetailItem(
                         if(isOriginSize) Modifier.fillMaxWidth()
                         else Modifier.matchParentSize()
                     )
+                }
+                move?.let {
+                    TransparentButton { it() }
                 }
                 Column(
                     modifier = Modifier
@@ -167,6 +171,7 @@ fun ListDetailItem(
                         likeAction?.let { it() }
                     }
                 }
+                Spacer(modifier = Modifier.weight(1.0f))
                 if(pets.isNotEmpty())
                     Row(
                         modifier = modifier.wrapContentSize(),

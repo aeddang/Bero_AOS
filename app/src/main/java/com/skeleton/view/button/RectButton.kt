@@ -21,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ironraft.pupping.bero.R
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
+import dev.burnoo.cokoin.get
 
 enum class RectButtonType {
     Tiny {
@@ -56,6 +58,7 @@ fun RectButton(
     action:(Int) -> Unit
 
 ) {
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier
@@ -100,6 +103,9 @@ fun RectButton(
             }
             TransparentButton(
                 action = {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "RectButton"
+                    parameter["buttonText"] = text ?: icon.toString()
                     action(index)
                 }
             )

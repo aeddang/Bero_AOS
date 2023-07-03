@@ -76,16 +76,24 @@ fun PageLogin(
                     title = errorMsg,
                     isNegative = true
                 )
-            SnsEvent.GetProfile -> join()
+            SnsEvent.GetProfile -> {
+                if (!isAgree) return@let
+                join()
+            }
             else -> {}
         }
         snsManager.error.value = null
     }
-    snsUser.value?.let {
-        snsManager.getUserInfo()
+    LaunchedEffect(key1 = snsUser.value){
+        snsUser.value?.let {
+            snsManager.getUserInfo()
+        }
     }
-    snsUserInfo.value?.let {
-        join()
+
+    LaunchedEffect(key1 = snsUserInfo.value) {
+        snsUserInfo.value?.let {
+            join()
+        }
     }
     Box(
         modifier = modifier

@@ -15,6 +15,7 @@ import com.lib.observer.LocationObserver
 import com.skeleton.sns.SnsManager
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.skeleton.module.network.NetworkFactory
+import com.skeleton.module.firebase.Analytics
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -23,6 +24,7 @@ import org.koin.dsl.module
 val pageModelModule = module {
     singleOf(::PageAppObserver) { bind<AppObserver>() }
     singleOf(::ActivityModel) { bind<PageModel>() }
+    singleOf(::Analytics)
     singleOf(::PageAppViewModel)
     singleOf(::StoragePreference)
     singleOf(::DataProvider)

@@ -170,7 +170,9 @@ fun PageApp(
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 LoadingIndicator(
-                    modifier = Modifier.padding(bottom = DimenApp.bottom.dp)
+                    modifier = Modifier
+                        .padding(bottom = DimenApp.bottom.dp)
+                        .padding(bottom = DimenMargin.regular.dp)
                 )
             }
         }

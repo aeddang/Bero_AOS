@@ -51,6 +51,7 @@ class AlarmListItemData{
         data.album?.let {
             album = AlbumListItemData().setData(it)
         }
+        type = AlarmType.getType(data.alarmType)
         title = data.title
         description = data.contents
         imagePath = album?.thumbIagePath
@@ -107,7 +108,7 @@ fun AlarmListItem(
     }
     fun onMoveUser(){
         pagePresenter.openPopup(
-            PageProvider.getPageObject(PageID.Album)
+            PageProvider.getPageObject(PageID.User)
                 .addParam(key = PageParam.data, value = data.user)
                 .addParam(key = PageParam.isEdit, value = true)
                 .addParam(key = PageParam.id, value = data.pet?.userId)

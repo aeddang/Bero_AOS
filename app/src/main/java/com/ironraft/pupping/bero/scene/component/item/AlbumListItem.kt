@@ -171,7 +171,8 @@ fun AlbumListItem(
                     isOriginSize = isOriginSize,
                     iconAction = { onMoveWalk() },
                     likeAction = { albumFunctionViewModel.updateLike(isLike?.toggle() ?: false) },
-                    shareAction = { albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false) }
+                    shareAction = { albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false) },
+                    move = { onMovePicture() }
                 )
         }
 

@@ -20,8 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ironraft.pupping.bero.R
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
+import dev.burnoo.cokoin.get
 
 enum class FillButtonType {
     Fill {
@@ -64,6 +67,7 @@ fun FillButton(
     action:(Int) -> Unit
 
 ) {
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier
@@ -108,6 +112,10 @@ fun FillButton(
             }
             TransparentButton(
                 action = {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "FillButton"
+                    parameter["buttonText"] = text
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,parameter)
                     action(index)
                 }
             )

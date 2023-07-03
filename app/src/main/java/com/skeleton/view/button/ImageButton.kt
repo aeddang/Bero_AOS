@@ -19,9 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ironraft.pupping.bero.R
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
-
+import dev.burnoo.cokoin.get
 
 
 @Composable
@@ -41,6 +43,7 @@ fun ImageButton(
     modifier: Modifier = Modifier.wrapContentSize(),
     action:(Int) -> Unit
 ) {
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier,
@@ -107,6 +110,11 @@ fun ImageButton(
             TransparentButton(
                 modifier = Modifier.matchParentSize(),
                 action = {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "ImageButton"
+                    parameter["buttonText"] = text ?: defaultImage.toString()
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,parameter)
+
                     action(index)
                 }
             )

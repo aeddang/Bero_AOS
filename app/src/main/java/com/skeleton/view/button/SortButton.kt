@@ -26,7 +26,9 @@ import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.store.provider.model.PetProfile
 import com.ironraft.pupping.bero.store.provider.model.UserProfile
 import com.skeleton.component.item.profile.ProfileImage
+import com.skeleton.module.firebase.Analytics
 import com.skeleton.theme.*
+import dev.burnoo.cokoin.get
 
 enum class SortButtonType {
     Fill {
@@ -92,7 +94,7 @@ fun SortButton(
     action:() -> Unit
 
 ) {
-
+    val analytics: Analytics = get()
     AppTheme {
         Box(
             modifier = modifier
@@ -181,7 +183,12 @@ fun SortButton(
             }
             TransparentButton(
                 modifier = Modifier.matchParentSize(),
-                action = action
+                action = {
+                    val parameter = HashMap<String,String>()
+                    parameter["buttonType"] = "SortButton"
+                    parameter["buttonText"] = text
+                    action()
+                }
             )
         }
     }
