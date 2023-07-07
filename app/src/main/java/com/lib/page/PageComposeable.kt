@@ -271,6 +271,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     @CallSuper
     override fun onBackPressed() {
         val top = currentTopPage
+        if (!isGobackAble(top)) return
         if (top?.isHome == true) {
             onExitAction()
             return
@@ -278,13 +279,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         if(popups.isNotEmpty()){
             val last = popups.last()
             if (!last.isGoBackAble) return onGoBackPage()
-            if (!isGobackAble(last)) return
             onClosePopup(last)
             return
         }
         currentPageObject?.let { page ->
             if (!page.isGoBackAble) return onGoBackPage()
-            if (!isGobackAble(page)) return
             else onBackPressedAction()
         }
 

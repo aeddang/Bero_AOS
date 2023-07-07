@@ -192,7 +192,8 @@ fun FriendListItemBodyVertical(
             friendStatus = currentStatus,
             imagePath = data.imagePath,
             lv = data.lv,
-            name = data.name,
+            name = data.petName,
+            description = data.name,
             isSelected = false,
             useBg = false
         ){

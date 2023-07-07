@@ -79,8 +79,12 @@ class MainActivity : PageComposeable() {
             this.appSceneObserver.sheet.value = ActivitSheetEvent(ActivitSheetType.Cancel)
             return false
         }
-        if(this.appSceneObserver.isAlertShow ) {
+        if(this.appSceneObserver.isAlertShow) {
             this.appSceneObserver.alert.value = ActivitAlertEvent(ActivitAlertType.Cancel)
+            return false
+        }
+        if(this.appSceneObserver.isLayerShow){
+            this.appSceneObserver.event.value = SceneEvent(SceneEventType.CloseLayer)
             return false
         }
         return super.isGobackAble(prevPage, nextPage)
@@ -91,6 +95,7 @@ class MainActivity : PageComposeable() {
 
     @OptIn(ExperimentalAnimationApi::class)
     private fun setupComposeScreen(){
+
         setContent {
             val radioState = rememberModalBottomSheetState(
                 initialValue = ModalBottomSheetValue.Hidden,

@@ -112,7 +112,6 @@ class ApiManager(
                     val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional,
                         apiQ.contentID, apiQ.requestData, apiQ.page, apiQ.useCoreData)
 
-
                     if ( accountManager?.respondApi(success) != true ){
                         result.value = success
                     }
@@ -127,6 +126,25 @@ class ApiManager(
                     }else{
                         error.postValue(e)
                     }
+                }
+            )
+    }
+
+    fun load(apiQ: ApiQ, completed:(ApiSuccess<ApiType>) -> Unit, error: (ApiError<ApiType>) -> Unit){
+        ApiAdapter { apiBridge.getApi(apiQ, snsUser) }
+            .onSuccess(
+                { res->
+                    val data = res?.contents
+                    val datas = res?.items
+                    val success = ApiSuccess(apiQ.type, data ?: datas, apiQ.id, apiQ.isOptional,
+                        apiQ.contentID, apiQ.requestData, apiQ.page, apiQ.useCoreData)
+                    completed(success)
+
+                },
+                { type , code , msg ->
+                    val e = ApiError(apiQ.type, type, code, msg, apiQ.id, apiQ.isOptional,
+                        apiQ.contentID, apiQ.requestData, apiQ.page)
+                    error(e)
                 }
             )
     }

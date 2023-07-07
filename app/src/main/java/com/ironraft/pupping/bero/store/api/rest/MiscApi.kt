@@ -69,6 +69,12 @@ interface MiscApi {
         @Query(ApiField.page) page: Int? = 0,
         @Query(ApiField.size) size: Int? = ApiValue.PAGE_SIZE
     ): ApiResponse<AlarmData>?
+
+    @GET(Api.Misc.banners)
+    suspend fun getBanners(
+        @Path(Api.CONTENT_ID) contentID: String,
+        @Query(ApiField.exposedDate) exposedDate: String? = ""
+    ): ApiResponse<BannerData>?
 }
 
 data class WeatherData(
@@ -92,4 +98,8 @@ data class AlarmData (
     @SerializedName("title") var title: String? = null,
     @SerializedName("contents") var contents: String? = null,
     @SerializedName("createdAt") var createdAt: String? = null
+)
+data class BannerData (
+    @SerializedName("id") var id: String? = null,
+    @SerializedName("url") var url: String? = null
 )

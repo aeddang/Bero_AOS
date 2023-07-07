@@ -37,6 +37,7 @@ object Api {
         const val codes = "$VERSION_V1/$PATH/codes"
         const val report = "$VERSION_V1/$PATH/report/things"
         const val alarms = "$VERSION_V1/$PATH/alarms"
+        const val banners = "$VERSION_V1/$PATH/banners/{${CONTENT_ID}}"
     }
 
     object Mission {
@@ -178,12 +179,13 @@ object ApiField {
     const val title = "title"
     const val contents = "contents"
     const val googlePlaceId = "googlePlaceId"
+    const val exposedDate = "exposedDate"
 }
 
 
 enum class ApiType{
     AuthLogin, AuthReflash , GetUser, UpdateUser, RegistPush, DeleteUser,
-    GetWeather, GetCode,
+    GetWeather, GetCode, GetBanner,
     GetMission, SearchMission, CompleteMission, GetMissionSummary,
     GetPet, GetPets, RegistPet, UpdatePetImage, UpdatePet, DeletePet,  ChangeRepresentativePet,
     GetAlbumPictures, GetExplorePictures, RegistAlbumPicture, DeleteAlbumPictures, UpdateAlbumPicturesLike, UpdateAlbumPicturesExpose,

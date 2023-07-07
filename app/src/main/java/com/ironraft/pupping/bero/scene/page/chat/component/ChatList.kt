@@ -116,7 +116,7 @@ fun ChatList(
                             ) {
                                 data.date?.let {
                                     Text(
-                                        it.toDateFormatter() ?: "",
+                                        it.toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                                         fontSize = FontSize.thin.sp,
                                         color = ColorApp.grey400,
                                         textAlign = TextAlign.Center,

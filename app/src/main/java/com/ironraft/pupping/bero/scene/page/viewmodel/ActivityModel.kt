@@ -14,7 +14,7 @@ class ActivityModel : PageModel{
 
     override fun isFullScreenPage(page: PageObject): Boolean {
         return when(page.pageID){
-            PageID.PictureViewer.value -> true
+            PageID.PictureViewer.value,PageID.Splash.value -> true
             else -> false
         }
     }

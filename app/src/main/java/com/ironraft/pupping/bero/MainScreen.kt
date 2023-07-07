@@ -68,7 +68,8 @@ import com.skeleton.view.progress.LoadingIndicator
 import dev.burnoo.cokoin.get
 
 enum class SceneEventType {
-    Initate, Check, LevelUp, ShowTutorial,
+    Initate,
+    Check, LevelUp, ShowTutorial, WebView, CloseLayer,
     SetupChat, CloseChat, SendChat
 }
 data class SceneEvent(val type: SceneEventType,
@@ -87,7 +88,7 @@ class AppSceneObserver {
     val useBottom = MutableLiveData<Boolean>(false)
     var isActiveChat = MutableLiveData<Boolean>(false)
     var isAlertShow:Boolean = false
-
+    var isLayerShow:Boolean = false
 }
 
 
@@ -102,7 +103,6 @@ fun PageApp(
     sheetState: ModalBottomSheetState,
     modifier: Modifier = Modifier
 ) {
-    val activityModel:ActivityModel = get()
     val appSceneObserver:AppSceneObserver = get()
     val pageAppViewModel:PageAppViewModel = get()
     val repository: PageRepository = get()

@@ -66,6 +66,7 @@ class ApiBridge(
             ApiType.RegistPush -> user.post(apiQ.body as Map<String, String>)
             ApiType.GetWeather -> misc.getWeather(apiQ.query?.get(ApiField.lat), apiQ.query?.get(ApiField.lng))
             ApiType.GetCode -> misc.getCodes(apiQ.query?.get(ApiField.category), apiQ.query?.get(ApiField.searchText))
+            ApiType.GetBanner -> misc.getBanners(apiQ.contentID, apiQ.requestData as? String)
             ApiType.GetMission -> mission.getMissions(
                 apiQ.query?.get(ApiField.userId), apiQ.query?.get(ApiField.petId), apiQ.query?.get(ApiField.missionCategory),apiQ.page, apiQ.pageSize)
             ApiType.SearchMission -> mission.getSearch(

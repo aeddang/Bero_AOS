@@ -85,7 +85,7 @@ class WalkManager(
         const val nearDistance:Double = 20.0
         const val minDistance:Double = 100.0
         const val limitedUpdateImageSize:Int = 9
-        fun viewSpeed(value:Double, unit:String? = "kmPerH") : String {
+        fun viewSpeed(value:Double, unit:String? = "km/h") : String {
             val v = String.format("%.1f",(value / 1000.0))
             unit?.let {
                 return "$v $it"

@@ -6,6 +6,7 @@ import android.provider.Settings
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.reflect.TypeToken
 import com.ironraft.pupping.bero.AppSceneObserver
 import com.ironraft.pupping.bero.R
@@ -23,18 +24,22 @@ import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.store.api.*
 import com.ironraft.pupping.bero.store.api.rest.AlarmData
+import com.ironraft.pupping.bero.store.api.rest.BannerData
 import com.ironraft.pupping.bero.store.api.rest.ChatData
 import com.ironraft.pupping.bero.store.api.rest.CodeCategory
 import com.ironraft.pupping.bero.store.api.rest.CodeData
+import com.ironraft.pupping.bero.store.api.rest.UserData
 import com.ironraft.pupping.bero.store.database.ApiCoreDataManager
 import com.ironraft.pupping.bero.store.preference.StoragePreference
 import com.ironraft.pupping.bero.store.provider.DataProvider
 import com.ironraft.pupping.bero.store.provider.manager.AccountManager
+import com.ironraft.pupping.bero.store.provider.model.User
 import com.ironraft.pupping.bero.store.walk.WalkManager
 import com.lib.model.SingleLiveData
 import com.lib.page.AppObserver
 import com.lib.page.PageAppViewModel
 import com.lib.page.PageCoroutineScope
+import com.lib.page.PageObject
 import com.lib.util.*
 import com.skeleton.module.Repository
 import com.skeleton.module.firebase.Analytics
@@ -91,6 +96,27 @@ class PageRepository (
         accountManager.setDefaultLifecycleOwner(owner)
         walkManager.setDefaultLifecycleOwner(owner)
         apiManager.setAccountManager(accountManager)
+
+        pageAppViewModel.currentTopPage.observe(owner) { page: PageObject? ->
+            val currentPage = page ?: return@observe
+            val parameter = HashMap<String,String>()
+            parameter["pageId"] = page.pageID
+            analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW,parameter)
+            if (currentPage.isPopup) return@observe
+            val date = storage.getPageBannerCheckDate(currentPage.pageID)
+            apiManager.load(ApiQ(appTag, ApiType.GetBanner, contentID = page.pageID, requestData = date),
+                completed = { res->
+                    (res.data as? BannerData)?.let{ data->
+                        val url = data.url ?: "www.naver.com"// return@let
+
+                        storage.updatedPageBannerValue(currentPage.pageID)
+                        appSceneObserver.event.value = SceneEvent(SceneEventType.WebView, value = url)
+                    }
+                },
+                error = {}
+            )
+        }
+
         dataProvider.request.observe(owner, Observer{apiQ: ApiQ?->
             apiQ?.let {
                 val coreDatakey = if(it.useCoreData) it.type.coreDataKey(it.requestData) else null
@@ -162,6 +188,8 @@ class PageRepository (
             this.onRewardData(meta)
         })
 
+
+
         AppObserver.pushToken.observe(owner, Observer{ token ->
             token?.let {
                 onCurrentPushToken(it)
@@ -202,6 +230,7 @@ class PageRepository (
         accountManager.disposeDefaultLifecycleOwner(owner)
         pagePresenter.activity.getPageActivityViewModel().onDestroyView(owner)
         AppObserver.disposeDefaultLifecycleOwner(owner)
+        pageAppViewModel.removeObserve(owner)
     }
 
     override fun disposeLifecycleOwner(owner: LifecycleOwner){

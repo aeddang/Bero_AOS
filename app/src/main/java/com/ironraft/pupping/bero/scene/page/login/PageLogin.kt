@@ -137,7 +137,7 @@ fun PageLogin(
             FillButton(
                 icon = SnsType.Google.logo,
                 isOriginIcon = true,
-                text = stringResource(id = R.string.loginButtonText) + SnsType.Google.title,
+                text = stringResource(id = R.string.loginButtonText) + " " + SnsType.Google.title,
                 color = SnsType.Google.color,
                 isActive = isAgree,
                 modifier = Modifier.padding(horizontal = DimenMargin.regular.dp)
@@ -153,7 +153,7 @@ fun PageLogin(
             }
             FillButton(
                 icon = SnsType.Fb.logo,
-                text = stringResource(id = R.string.loginButtonText) + SnsType.Fb.title,
+                text = stringResource(id = R.string.loginButtonText) + " " + SnsType.Fb.title,
                 color = SnsType.Fb.color,
                 isActive = isAgree,
                 modifier = Modifier.padding(horizontal = DimenMargin.regular.dp)

@@ -8,6 +8,8 @@ import com.ironraft.pupping.bero.store.TopicCategory
 import com.lib.util.AppUtil
 import com.lib.util.toDateFormatter
 import com.lib.util.toFormatString
+import java.time.ZoneId
+import java.util.TimeZone
 
 class StoragePreference(context: Context) : CachedPreference(context, PreferenceName.SETTING + BuildConfig.BUILD_TYPE) {
     companion object {
@@ -24,8 +26,7 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         private const val walkCount = "walkCount$VS"
         private const val isFirstChat = "isFirstChat$VS"
         private const val isFirstWalk = "isFirstWalk$VS"
-        private const val bannerDate = "bannerDate$VS"
-        private const val bannerValue = "bannerValue$VS"
+        private const val bannerDate = "bannerDateUTC$VS"
         private const val isExposeSetup = "isExposeSetup$VS"
         private const val isExpose = "isExpose$VS"
         private const val alarmDate = "alarmDate$VS"
@@ -83,25 +84,17 @@ class StoragePreference(context: Context) : CachedPreference(context, Preference
         get(){ return get(StoragePreference.isFirstWalk, false) as Boolean }
         set(value:Boolean){ put(StoragePreference.isFirstWalk, value) }
 
-    fun isDailyBannerCheck(id:PageID):Boolean{
-        val now = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
-        val prev =  getPageBannerCheckDate(id)
-        return now == prev
+    fun getPageBannerCheckDate(id:String):String?{
+        (get(StoragePreference.bannerDate + id, null) as? String)?.let {
+            return it + "Z"
+        }
+        return null
     }
-    fun isSameBannerCheck(id:PageID, value:String):Boolean{
-        val prev =  getPageBannerCheckValue(id)
-        return value == prev
-    }
-
-    fun getPageBannerCheckValue(id:PageID):String?{
-        return get(StoragePreference.bannerValue + id, null) as? String
-    }
-    fun getPageBannerCheckDate(id:PageID):String?{
-        return get(StoragePreference.bannerDate + id, null) as? String
-    }
-    fun updatedPageBannerValue(id:PageID, value:String){
-        val now = AppUtil.networkDate().toDateFormatter("yyyyMMdd")
-        put(StoragePreference.bannerValue + id, value)
+    fun updatedPageBannerValue(id:String){
+        val now = AppUtil.networkDate().toDateFormatter(
+            "yyyy-MM-dd'T'HH:mm:ss",
+            TimeZone.getTimeZone("UTC")
+        )
         put(StoragePreference.bannerDate + id, now)
     }
 
