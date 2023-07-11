@@ -325,7 +325,11 @@
     <string name="introText3_2">Filter places for your dog and leave\ntraces of your visits.</string>
     <string name="introComplete">Let’s explore!</string>
 
-    <string name="loginText">For your dog’s\nhappiness</string>
+    <string name="loginText0">Welcome!</string>
+    <string name="loginText1">Ready to share your\nPawsome experience?</string>
+    <string name="loginText2">By continuing, you agree to Bero’s </string>
+    <string name="loginText3"> and </string>
+    <string name="loginText4">.</string>
     <string name="loginButtonText">Continue with</string>
 
     <string name="addDogCompletedText1">Nice to meet you</string>

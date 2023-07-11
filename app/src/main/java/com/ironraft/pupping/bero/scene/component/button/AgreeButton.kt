@@ -33,11 +33,11 @@ import org.koin.compose.koinInject
 
 enum class AgreeButtonType {
     Privacy {
-        override var text:String = "Privacy usage agreement"
+        override var text:String = "Privacy Policy"
         override var page:PageID? = PageID.Privacy
     },
     Service{
-        override var text:String = "Terms of service agreement"
+        override var text:String = "Terms of service"
         override var page:PageID? = PageID.ServiceTerms
     },
     Neutralized{

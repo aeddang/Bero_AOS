@@ -28,8 +28,9 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
     val requestId:Int = UUID.randomUUID().hashCode()
     var currentId:String = ""
     var currentType:AlbumCategory = AlbumCategory.User
-
-    fun initSetup(owner: LifecycleOwner): AlbumPickViewModel {
+    var isAutoExpose:Boolean = false
+    fun initSetup(owner: LifecycleOwner, isAutoExpose:Boolean = false): AlbumPickViewModel {
+        this.isAutoExpose = isAutoExpose
         setDefaultLifecycleOwner(owner)
         return this
     }
@@ -85,6 +86,11 @@ open class AlbumPickViewModel(val repo: PageRepository):ComponentViewModel() {
     }
 
     fun updateConfirm(img: Bitmap){
+        if( isAutoExpose ){
+            update(img, true)
+            return
+        }
+
         val isExpose = repo.storage.isExpose
         if (repo.storage.isExposeSetup) {
             update(img, isExpose)

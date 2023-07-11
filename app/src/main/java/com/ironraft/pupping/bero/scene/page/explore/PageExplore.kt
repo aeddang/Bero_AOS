@@ -49,7 +49,7 @@ fun PageExplore(
     )}
 
     val albumPickViewModel: AlbumPickViewModel by remember { mutableStateOf(
-        AlbumPickViewModel(repo = repository).initSetup(owner).meSetup())
+        AlbumPickViewModel(repo = repository).initSetup(owner, true).meSetup())
     }
     val coroutineScope = rememberCoroutineScope()
     val scrollState: LazyListState = rememberForeverLazyListState(key = appTag)

@@ -107,7 +107,7 @@ class PageRepository (
             apiManager.load(ApiQ(appTag, ApiType.GetBanner, contentID = page.pageID, requestData = date),
                 completed = { res->
                     (res.data as? BannerData)?.let{ data->
-                        val url = data.url ?: "www.naver.com"// return@let
+                        val url = data.url ?: return@let
 
                         storage.updatedPageBannerValue(currentPage.pageID)
                         appSceneObserver.event.value = SceneEvent(SceneEventType.WebView, value = url)
