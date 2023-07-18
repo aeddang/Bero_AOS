@@ -158,18 +158,20 @@ class ReportData(val ctx:Context) {
     }
     private fun setupData(data:WalkReport){
         originData = data
-        daysWalkReport = daysWalkData.value.toInt().toString() + " " + ctx.getString(R.string.reportWalkDayUnit)
+        val n = daysWalkData.value.toInt()
+        val unit = if(n <= 1) ctx.getString(R.string.day) else ctx.getString(R.string.reportWalkDayUnit)
+        daysWalkReport = "$n $unit"
         if (daysWalkCompareData.count() >= 2) {
             val me = daysWalkCompareData.first().value
             val other = daysWalkCompareData.last().value
             val diff = me - other
             if (diff > 0) {
-                daysWalkCompareReport = String.format("%.2f",diff) +
+                daysWalkCompareReport = String.format("%.2f",diff) + " " +
                         ctx.getString(R.string.reportWalkDayUnit) + " " +
                         ctx.getString(R.string.reportWalkDayCompareMore)
 
             } else if (diff < 0) {
-                daysWalkCompareReport = String.format("%.2f",abs(diff)) +
+                daysWalkCompareReport = String.format("%.2f",abs(diff)) + " " +
                         ctx.getString(R.string.reportWalkDayUnit) + " " +
                         ctx.getString(R.string.reportWalkDayCompareLess)
             } else {
@@ -406,7 +408,8 @@ fun PageWalkReport(
                                 stringResource(id = R.string.reportWalkRecentlyTip),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.grey400,
+                                modifier = Modifier.padding(bottom = DimenMargin.medium.dp)
                             )
                         }
                     }

@@ -4,11 +4,16 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ironraft.pupping.bero.BuildConfig
 import com.ironraft.pupping.bero.R
 import com.ironraft.pupping.bero.scene.component.tab.TitleTab
 import com.ironraft.pupping.bero.scene.component.tab.TitleTabButtonType
@@ -25,6 +30,7 @@ import com.skeleton.theme.ColorBrand
 import com.skeleton.theme.DimenApp
 import com.skeleton.theme.DimenLine
 import com.skeleton.theme.DimenMargin
+import com.skeleton.theme.FontSize
 import com.skeleton.view.button.RadioButton
 import com.skeleton.view.button.RadioButtonType
 import com.skeleton.view.button.SelectButton
@@ -145,6 +151,13 @@ fun PageSetup(
                 )
             }
         }
+        Text(
+            "v${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
+            fontSize = FontSize.thin.sp,
+            color = ColorApp.grey400,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(DimenMargin.thin.dp)
+        )
     }
 }
 

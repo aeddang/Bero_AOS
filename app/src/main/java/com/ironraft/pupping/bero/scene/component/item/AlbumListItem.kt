@@ -160,7 +160,7 @@ fun AlbumListItem(
                 )
             AlbumListType.Detail ->
                 ListDetailItem(
-                    imagePath = data.thumbIagePath,
+                    imagePath = data.imagePath,
                     imgSize = imgSize,
                     icon = data.type?.icon,
                     iconText = data.type?.text,

@@ -43,8 +43,8 @@ android {
         applicationId = "com.ironraft.pupping.bero"
         minSdk = 28
         targetSdk = 33
-        versionCode = 9
-        versionName = "1.1.3"
+        versionCode = 11
+        versionName = "1.1.4"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

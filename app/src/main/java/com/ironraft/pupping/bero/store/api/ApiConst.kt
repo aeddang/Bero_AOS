@@ -180,7 +180,7 @@ object ApiField {
     const val contents = "contents"
     const val googlePlaceId = "googlePlaceId"
     const val exposedDate = "exposedDate"
-    
+
 }
 
 

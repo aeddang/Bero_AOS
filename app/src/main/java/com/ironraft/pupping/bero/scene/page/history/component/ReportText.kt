@@ -31,7 +31,7 @@ fun ReportText(
     val annotatedString = buildAnnotatedString {
         append(leading)
         withStyle(style = SpanStyle(ColorBrand.primary)) {
-            append(" $value")
+            append(" $value " )
         }
         append(trailing)
     }

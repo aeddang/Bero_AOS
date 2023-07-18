@@ -48,7 +48,7 @@ fun String.toDate(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss", timeZone: TimeZo
     return parser.parse(this)
 }
 
-fun Date.toDateFormatter(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZ", timeZone: TimeZone = TimeZone.getDefault()): String {
+fun Date.toDateFormatter(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss", timeZone: TimeZone = TimeZone.getDefault()): String {
     val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
     formatter.timeZone = timeZone
     return formatter.format(this)

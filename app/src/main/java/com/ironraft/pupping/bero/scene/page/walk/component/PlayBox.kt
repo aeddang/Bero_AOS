@@ -79,7 +79,6 @@ fun PlayBox(
     walkPickViewModel: WalkPickViewModel
 ) {
     val pagePresenter: PagePresenter = get()
-    val repository: PageRepository = get()
     val appSceneObserver: AppSceneObserver = get()
     val dataProvider: DataProvider = get()
     val walkManager: WalkManager = get()
@@ -87,7 +86,6 @@ fun PlayBox(
 
 
     val isSimple by walkManager.isSimpleView.observeAsState()
-    val walkStatus = walkManager.status.observeAsState()
     val isHidden by playMapModel.componentHidden.observeAsState()
     val isFollowMe by playMapModel.isFollowMe.observeAsState()
     val isWalk by playMapModel.isWalk.observeAsState()
@@ -140,9 +138,12 @@ fun PlayBox(
     }
     fun checkFinish(){
         val ctx = pagePresenter.activity
-        if (!SystemEnvironment.isTestMode && (walkManager.walkDistance.value ?: 0.0) < WalkManager.minDistance) {
+        val dis = walkManager.walkDistance.value ?: 0.0
+        val min = WalkManager.minDistance
+        val minStr = min.toInt().toString()
+        if (!SystemEnvironment.isTestMode && dis < WalkManager.minDistance) {
             Toast(ctx).showCustomToast(
-                ctx.getString(R.string.walkFinishCheckDistance).replace(WalkManager.minDistance.toString()),
+                ctx.getString(R.string.walkFinishCheckDistance).replace(minStr),
                 ctx
             )
             return

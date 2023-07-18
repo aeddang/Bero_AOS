@@ -62,7 +62,7 @@
     <string name="users">Users</string>
     <string name="place">Place</string>
     <string name="filter">Filter</string>
-
+    <string name="day">day</string>
     <string name="speed">Speed</string>
     <string name="distance">Distance</string>
     <string name="owners">\'s</string>
@@ -92,7 +92,7 @@
     <string name="alert_locationFind">Retrieving location information. Please wait.</string>
     <string name="alert_dragdown">Pull to close this page</string>
 
-    <string name="alert_snsLoginError">After login. Available.</string>
+    <string name="alert_snsLoginError">Available after login.</string>
     <string name="alert_getUserProfileError">Failed to retrieve user information, Please try again in a few minutes</string>
 
     <string name="alert_addDogTitle">Tell us about your dog!</string>
@@ -146,7 +146,7 @@
     <string name="alert_accuseAlbumConfirmText">As your report submitted, Bero administration team will take an action after review shortly.</string>
     <string name="alert_accuseAlbumCompleted">Report submitted.</string>
 
-    <string name="alert_firstChatMessage">In the case of using inappropriate post or language, i agree that account suspension and use of Bero app may not be possible according to the terms and conditions.</string>
+    <string name="alert_firstChatMessage">I agree that use of inappropriate language or posts may lead to account suspension, as outlined in the terms and conditions.</string>
 
     <string name="alert_needAgreement">You should agree to the terms and conditions before using it.</string>
 

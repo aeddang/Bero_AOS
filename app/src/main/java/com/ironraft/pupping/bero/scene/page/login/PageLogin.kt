@@ -144,7 +144,7 @@ fun PageLogin(
                     .padding(all = DimenMargin.regular.dp)
                     .padding(vertical = DimenMargin.regular.dp)
                 ,
-                verticalArrangement = Arrangement.spacedBy(DimenMargin.mediumUltra.dp),
+                verticalArrangement = Arrangement.spacedBy(0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 /*
@@ -158,17 +158,20 @@ fun PageLogin(
                     text = stringResource(R.string.loginText0),
                     fontSize = FontSize.light.sp,
                     color = ColorApp.grey500,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(DimenMargin.tinyExtra.dp)
                 )
+
                 Text(
                     text = stringResource(R.string.loginText1),
                     fontSize = FontSize.medium.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = ColorApp.black,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(DimenMargin.tinyExtra.dp)
                 )
                 Column (
-                    modifier = Modifier.wrapContentHeight(),
+                    modifier = Modifier.wrapContentHeight().padding(top = 56.dp),
                     verticalArrangement = Arrangement.spacedBy(DimenMargin.thin.dp)
                 ) {
                     FillButton(
@@ -204,7 +207,7 @@ fun PageLogin(
                     }
                 }
                 Column (
-                    modifier = Modifier.wrapContentHeight(),
+                    modifier = Modifier.wrapContentHeight().padding(top = 48.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     Text(
