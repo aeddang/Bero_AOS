@@ -70,7 +70,7 @@ fun TitleSection(
                         it,
                         fontSize = FontSize.thin.sp,
                         fontWeight = FontWeight.Normal,
-                        color = ColorApp.grey400,
+                        color = ColorApp.gray400,
                         textAlign = TextAlign.Start
                     )
                 }
@@ -89,7 +89,7 @@ fun TitleSection(
                         it,
                         fontSize = FontSize.thin.sp,
                         fontWeight = FontWeight.Normal,
-                        color = ColorApp.grey400,
+                        color = ColorApp.gray400,
                         textAlign = TextAlign.Start
                     )
                 }

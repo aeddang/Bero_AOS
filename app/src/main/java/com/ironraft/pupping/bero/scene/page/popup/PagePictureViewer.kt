@@ -177,7 +177,7 @@ fun PagePictureViewer(
                                     sizeType = SortButtonSizeType.Big,
                                     icon = R.drawable.global,
                                     text = stringResource(id = R.string.share),
-                                    color = if (isExpose == true) ColorBrand.primary else ColorApp.grey400,
+                                    color = if (isExpose == true) ColorBrand.primary else ColorApp.gray400,
                                     isSort = false
                                 ) {
                                     albumFunctionViewModel.updateExpose(isExpose?.toggle() ?: false)

@@ -302,7 +302,7 @@ fun PageUser(
                             .padding(top = DimenMargin.medium.dp)
                             .fillMaxWidth()
                             .height(DimenLine.heavy.dp)
-                            .background(ColorApp.grey50)
+                            .background(ColorApp.gray200)
                     )
                     UserHistorySection(
                         modifier = Modifier
@@ -315,7 +315,7 @@ fun PageUser(
                             .padding(top = DimenMargin.medium.dp)
                             .fillMaxWidth()
                             .height(DimenLine.heavy.dp)
-                            .background(ColorApp.grey50)
+                            .background(ColorApp.gray200)
                     )
                     UserDogsSection(
                         modifier = Modifier

@@ -227,14 +227,14 @@ fun ChatBox(
                                 backgroundColor = ColorApp.white,
                                 cursorColor = ColorBrand.primary,
                                 focusedBorderColor = ColorBrand.primary,
-                                unfocusedBorderColor = ColorApp.grey200
+                                unfocusedBorderColor = ColorApp.gray200
                             ),
                             singleLine = false,
                             maxLines = 3,
                             trailingIcon = {
                                 ImageButton(
                                     defaultImage = R.drawable.send,
-                                    defaultColor = ColorApp.grey200,
+                                    defaultColor = ColorApp.gray200,
                                     isSelected = input?.isNotEmpty() ?: false
                                 ) {
                                     if(input?.isEmpty() != false) return@ImageButton

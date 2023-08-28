@@ -351,9 +351,9 @@ enum class Gender {
 
     val color : Color
         get() = when(this) {
-            Male -> ColorApp.blue
-            Female -> ColorApp.orange
-            Neutral -> ColorApp.green
+            Male -> ColorApp.blue600
+            Female -> ColorApp.orange600
+            Neutral -> ColorApp.green600
         }
 
 
@@ -427,11 +427,11 @@ enum class Lv {
 
     val color : Color
         get() = when(this) {
-            Green -> ColorApp.green
-            Blue -> ColorApp.blue
-            Yellow -> ColorApp.yellow
-            Pink -> ColorApp.pink
-            Orange -> ColorApp.orange
+            Green -> ColorApp.green600
+            Blue -> ColorApp.blue600
+            Yellow -> ColorApp.yellow600
+            Pink -> ColorApp.pink600
+            Orange -> ColorApp.orange600
         }
 
     val title : String

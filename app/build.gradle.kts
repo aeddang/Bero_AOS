@@ -235,12 +235,12 @@ dependencies {
     /**
      * Exo Player
      */
-    implementation("com.google.android.exoplayer:exoplayer:2.18.7")
-    implementation("com.google.android.exoplayer:exoplayer-core:2.18.7")
-    implementation("com.google.android.exoplayer:exoplayer-dash:2.18.7")
-    implementation("com.google.android.exoplayer:exoplayer-hls:2.18.7")
-    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.7")
-    implementation("com.google.android.exoplayer:extension-cast:2.18.7")
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-dash:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-hls:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.19.1")
+    implementation("com.google.android.exoplayer:extension-cast:2.19.1")
 
     /**
      * REMOTE DEBUG LIB
@@ -267,7 +267,7 @@ dependencies {
      * Google Map
      */
     implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("com.google.android.libraries.places:places:3.1.0")
+    implementation("com.google.android.libraries.places:places:3.2.0")
     implementation("com.google.maps.android:maps-compose:2.11.3")
 
     /**

@@ -5,25 +5,13 @@
     <color name="colorPrimaryDark">#F48808</color>
     <color name="colorAccent">#F48808</color>
 
-    <color name="brand_primary">#FF7D1F</color>
-    <color name="brand_secondary">#13CEA1</color>
-    <color name="brand_thirdly">#F2270B</color>
-    <color name="brand_bg">#fff</color>
+    <color name="brand_primary">#F0802F</color>
+    <color name="brand_secondary">#0DB26D</color>
+    <color name="brand_thirdly">#DE3737</color>
+    <color name="brand_bg">#FFFFFF</color>
 
-    <color name="app_orange">#FF7D1F</color>
-    <color name="app_orangeExtra">#FFF1E7</color>
-    <color name="app_green">#13CEA1</color>
-    <color name="app_red">#F2270B</color>
-    <color name="app_yellow">#FFE749</color>
-
-    <color name="app_black">#333333</color>
+    <color name="app_black">#000</color>
     <color name="app_white">#FFF</color>
-    <color name="app_grey50">#F9F9FA</color>
-    <color name="app_grey100">#F1F2F5</color>
-    <color name="app_grey200">#D4D8E1</color>
-    <color name="app_grey300">#A7ABB5</color>
-    <color name="app_grey400">#7C818B</color>
-    <color name="app_grey500">#545861</color>
 
     <color name="transparent">#00000000</color>
     <color name="transparent_black15">#50000000</color>

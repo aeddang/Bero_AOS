@@ -133,7 +133,7 @@ fun WalkBox(
                         .background(if (isSimple == false) ColorApp.white else ColorTransparent.clear)
                         .border(
                             width = DimenStroke.light.dp,
-                            color = if (isSimple == false) ColorApp.grey100 else ColorTransparent.clear,
+                            color = if (isSimple == false) ColorApp.gray100 else ColorTransparent.clear,
                             shape = RoundedCornerShape(DimenRadius.light.dp)
                         )
                         .padding(
@@ -157,7 +157,7 @@ fun WalkBox(
                                 title,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = FontSize.regular.sp,
-                                color = if (isWalk) ColorBrand.primary else ColorApp.grey500,
+                                color = if (isWalk) ColorBrand.primary else ColorApp.gray500,
                                 textAlign = TextAlign.Start
                             )
                         }
@@ -205,7 +205,7 @@ fun WalkBox(
                                         .weight(1.0f)
                                         .height(70.dp)
                                         .clip(RoundedCornerShape(DimenRadius.light.dp))
-                                        .background(ColorApp.grey50),
+                                        .background(ColorApp.gray200),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     PolygonGraph(

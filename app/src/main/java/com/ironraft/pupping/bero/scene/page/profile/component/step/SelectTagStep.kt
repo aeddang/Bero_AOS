@@ -119,7 +119,7 @@ fun SelectTagStep(
                                     type = if (selects.indexOf(btn.value) == -1) SortButtonType.Stroke else SortButtonType.Fill,
                                     sizeType = SortButtonSizeType.Big,
                                     text = btn.title,
-                                    color = if (selects.indexOf(btn.value) == -1) ColorApp.grey400 else ColorBrand.primary,
+                                    color = if (selects.indexOf(btn.value) == -1) ColorApp.gray400 else ColorBrand.primary,
                                     isSort = false,
                                     modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
                                 ) {

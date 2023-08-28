@@ -109,7 +109,7 @@ fun ValueInfo(
                             painterResource(type.icon),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(if(value.equals(0.0)) ColorApp.grey300 else type.iconColor!!),
+                            colorFilter = ColorFilter.tint(if(value.equals(0.0)) ColorApp.gray300 else type.iconColor!!),
                             modifier = Modifier.size(DimenIcon.regular.dp)
                         )
                     else
@@ -135,7 +135,7 @@ fun ValueInfo(
                     text = type.getValue(value),
                     fontSize = FontSize.medium.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if(value.equals(0.0)) ColorApp.grey300 else type.getTextColor(lv) ?: ColorBrand.primary
+                    color = if(value.equals(0.0)) ColorApp.gray300 else type.getTextColor(lv) ?: ColorBrand.primary
                 )
                 if(!type.isIconFirst){
                     if(type.iconColor != null)
@@ -143,7 +143,7 @@ fun ValueInfo(
                             painterResource(type.icon),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(if(value.equals(0.0)) ColorApp.grey300 else type.iconColor!!),
+                            colorFilter = ColorFilter.tint(if(value.equals(0.0)) ColorApp.gray300 else type.iconColor!!),
                             modifier = Modifier.size(DimenIcon.regular.dp)
                         )
                     else
@@ -158,7 +158,7 @@ fun ValueInfo(
             Text(
                 text = type.text,
                 fontSize = FontSize.tiny.sp,
-                color = ColorApp.grey300
+                color = ColorApp.gray300
             )
         }
     }

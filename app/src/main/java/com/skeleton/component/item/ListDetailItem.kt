@@ -88,7 +88,7 @@ fun ListDetailItem(
                     else Modifier
                         .clipToBounds()
                         .size(width = imgSize.width.dp, height = imgSize.height.dp))
-                    .background(ColorApp.grey100),
+                    .background(ColorApp.gray100),
                 contentAlignment = Alignment.Center
             ) {
                 if (painter == null) {
@@ -201,7 +201,7 @@ fun ListDetailItem(
                         sizeType = SortButtonSizeType.Small,
                         icon = R.drawable.global,
                         text = stringResource(id = R.string.share),
-                        color = if(isShared) ColorBrand.primary else ColorApp.grey400,
+                        color = if(isShared) ColorBrand.primary else ColorApp.gray400,
                         isSort = false
                     ){
                         shareAction?.let { it() }

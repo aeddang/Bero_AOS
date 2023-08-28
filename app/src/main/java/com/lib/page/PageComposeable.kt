@@ -424,6 +424,11 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
         resetBackPressedAction()
         pageObject.isPopup = true
         resetScrollState(pageObject.pageID)
+        popups.lastOrNull()?.let {
+            if(!activityModel.isHistoryPage(it)) {
+                popups.remove(it)
+            }
+        }
         popups.add(pageObject)
         onWillChangePage(pageObject)
         navController?.navigate(pageObject.pageID) {
@@ -461,6 +466,7 @@ abstract class PageComposeable : AppCompatActivity(), PageRequestPermission {
     private fun onClosePopup(pageObject: PageObject){
         val oldPopups = popups
         popups.remove(pageObject)
+
         val newPopups = popups
         val nextPage = if(newPopups.isNotEmpty()) newPopups.last() else currentPageObject
         onWillChangePage(nextPage)

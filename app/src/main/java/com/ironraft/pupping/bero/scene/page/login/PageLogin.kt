@@ -157,7 +157,7 @@ fun PageLogin(
                 Text(
                     text = stringResource(R.string.loginText0),
                     fontSize = FontSize.light.sp,
-                    color = ColorApp.grey500,
+                    color = ColorApp.gray500,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(DimenMargin.tinyExtra.dp)
                 )
@@ -214,7 +214,7 @@ fun PageLogin(
                         text = stringResource(R.string.loginText2),
                         fontWeight= FontWeight.Light,
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey500,
+                        color = ColorApp.gray500,
                         textAlign = TextAlign.Center
                     )
                     Row (
@@ -236,7 +236,7 @@ fun PageLogin(
                             text = stringResource(R.string.loginText3),
                             fontWeight= FontWeight.Light,
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey500,
+                            color = ColorApp.gray500,
                             textAlign = TextAlign.Center
                         )
                         TextButton(
@@ -254,7 +254,7 @@ fun PageLogin(
                             text = stringResource(R.string.loginText4),
                             fontWeight= FontWeight.Light,
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey500,
+                            color = ColorApp.gray500,
                             textAlign = TextAlign.Center
                         )
 

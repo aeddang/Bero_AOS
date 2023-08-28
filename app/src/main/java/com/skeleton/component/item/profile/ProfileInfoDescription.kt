@@ -38,7 +38,7 @@ fun ProfileInfoDescription(
     gender:Gender? = null,
     isNeutralized:Boolean? = null,
     useCircle:Boolean = true,
-    color:Color = ColorApp.grey500,
+    color:Color = ColorApp.gray500,
     action:(() -> Unit)? = null
 
 ) {
@@ -63,7 +63,7 @@ fun ProfileInfoDescription(
                             painterResource(R.drawable.neutralized),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(if (it) ColorApp.green else ColorApp.grey200),
+                            colorFilter = ColorFilter.tint(if (it) ColorApp.green600 else ColorApp.gray200),
                             modifier = Modifier.size(DimenIcon.tiny.dp, DimenIcon.tiny.dp)
                         )
                     }

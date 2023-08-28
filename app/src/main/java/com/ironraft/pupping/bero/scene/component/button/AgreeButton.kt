@@ -95,7 +95,7 @@ fun AgreeButton(
                         fontSize = FontSize.regular.sp,
                         letterSpacing = 0.sp,
                         maxLines = 1,
-                        color = if (isChecked) ColorApp.black else ColorApp.grey400,
+                        color = if (isChecked) ColorApp.black else ColorApp.gray400,
                         textAlign = TextAlign.Start,
 
                     )
@@ -114,7 +114,7 @@ fun AgreeButton(
                     contentDescription = "",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.size(DimenIcon.light.dp),
-                    colorFilter = ColorFilter.tint(if(isChecked) ColorBrand.primary else ColorApp.grey400)
+                    colorFilter = ColorFilter.tint(if(isChecked) ColorBrand.primary else ColorApp.gray400)
                 )
             }
 

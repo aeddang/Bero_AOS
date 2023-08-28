@@ -67,7 +67,7 @@ fun StepInfo(
                 Text(
                     it,
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey400,
+                    color = ColorApp.gray400,
                     modifier = Modifier.padding(top = DimenMargin.regular.dp)
                 )
             }

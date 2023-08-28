@@ -59,7 +59,7 @@ fun CompareGraph(
                         LinearProgressIndicator(
                             modifier = Modifier.fillMaxSize(),
                             color = ColorBrand.primary,
-                            backgroundColor = ColorApp.grey50,
+                            backgroundColor = ColorApp.gray200,
                             strokeCap = StrokeCap.Square,
                             progress = data.value/data.max)
                         Row(
@@ -70,13 +70,13 @@ fun CompareGraph(
                                 String.format("%.2f",data.value),
                                 fontSize = FontSize.micro.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = ColorApp.grey500
+                                color = ColorApp.gray500
                             )
                             Text(
                                 "/" + String.format("%.0f",data.max) + data.end,
                                 fontSize = FontSize.micro.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = ColorApp.grey300
+                                color = ColorApp.gray300
                             )
                         }
                     }

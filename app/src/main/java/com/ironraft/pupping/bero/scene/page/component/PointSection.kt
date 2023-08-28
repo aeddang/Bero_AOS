@@ -104,7 +104,7 @@ fun PointSection(
                 type = FillButtonType.Fill,
                 icon = R.drawable.store,
                 text = stringResource(id = R.string.myPointText2),
-                color = ColorApp.grey200
+                color = ColorApp.gray200
             ){
                 val ctx = pagePresenter.activity
                 Toast(ctx).showCustomToast(

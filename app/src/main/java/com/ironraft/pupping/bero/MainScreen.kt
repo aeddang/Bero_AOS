@@ -1,4 +1,3 @@
-
 package com.ironraft.pupping.bero
 
 import android.annotation.SuppressLint
@@ -57,7 +56,6 @@ import com.ironraft.pupping.bero.scene.page.profile.PageModifyPet
 import com.ironraft.pupping.bero.scene.page.profile.PageModifyPetHealth
 import com.ironraft.pupping.bero.scene.page.profile.PageModifyUser
 import com.ironraft.pupping.bero.scene.page.user.PageUser
-import com.ironraft.pupping.bero.scene.page.viewmodel.ActivityModel
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageID
 import com.ironraft.pupping.bero.scene.page.viewmodel.PageProvider
 import com.ironraft.pupping.bero.scene.page.walk.PageWalk

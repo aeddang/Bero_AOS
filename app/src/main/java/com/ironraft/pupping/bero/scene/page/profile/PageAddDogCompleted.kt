@@ -106,7 +106,7 @@ fun PageAddDogCompleted(
         Text(
             stringResource(id = R.string.addDogCompletedText1),
             fontSize = FontSize.thin.sp,
-            color = ColorApp.grey500,
+            color = ColorApp.gray500,
             modifier = Modifier.padding(vertical = DimenMargin.regularExtra.dp)
         )
         profile.name?.let {

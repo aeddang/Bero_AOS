@@ -302,7 +302,7 @@ fun CPCalendar(
                             Text(
                                 it,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey300
+                                color = ColorApp.gray300
                             )
                         }
                     }
@@ -331,7 +331,7 @@ fun CPCalendar(
                                                         .size(DimenIcon.medium.dp)
                                                         .clip(CircleShape)
                                                         .background(
-                                                            if (select == day.yyyyMMdd) ColorBrand.primary else ColorApp.orangeSub
+                                                            if (select == day.yyyyMMdd) ColorBrand.primary else ColorApp.orange200
                                                         ),
                                                     contentAlignment = Alignment.Center
                                                 ) {
@@ -357,7 +357,7 @@ fun CPCalendar(
                                                 Text(
                                                     day.date?.toDateFormatter("dd")?.toInt().toString(),
                                                     fontSize = FontSize.thin.sp,
-                                                    color = ColorApp.grey300
+                                                    color = ColorApp.gray300
                                                 )
                                             }
                                     DayStatus.Today ->
@@ -398,7 +398,7 @@ fun CPCalendar(
                                             Text(
                                                 day.date?.toDateFormatter("dd")?.toInt().toString(),
                                                 fontSize = FontSize.thin.sp,
-                                                color = ColorApp.grey200
+                                                color = ColorApp.gray200
                                             )
                                         }
 

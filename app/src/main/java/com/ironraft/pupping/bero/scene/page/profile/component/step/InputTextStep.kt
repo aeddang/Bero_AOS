@@ -77,7 +77,7 @@ fun InputTextStep(
                         Text(
                             step.placeHolder,
                             fontSize = FontSize.light.sp,
-                            color = ColorApp.grey200
+                            color = ColorApp.gray200
                         )
                     },
                     keyboardActions = KeyboardActions(
@@ -93,7 +93,7 @@ fun InputTextStep(
                         backgroundColor = ColorApp.white,
                         cursorColor = ColorBrand.primary,
                         focusedBorderColor = ColorBrand.primary,
-                        unfocusedBorderColor = ColorApp.grey200
+                        unfocusedBorderColor = ColorApp.gray200
                     ),
                     singleLine = true
                 )
@@ -102,7 +102,7 @@ fun InputTextStep(
                         Text(
                             it,
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey400
+                            color = ColorApp.gray400
                         )
                     }
                 }
@@ -113,7 +113,7 @@ fun InputTextStep(
                             defaultText = stringResource(id = R.string.button_skipNow),
                             textFamily = FontWeight.Medium,
                             textSize = FontSize.thin,
-                            textColor = ColorApp.grey500,
+                            textColor = ColorApp.gray500,
                             isUnderLine = true
                         ) {
                             next(ModifyPetProfileData())

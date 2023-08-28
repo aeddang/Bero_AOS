@@ -147,7 +147,7 @@ fun LocationInfo(
                 Text(
                     locationTitle ?: stringResource(id = R.string.walkLocationNotFound),
                     fontSize = FontSize.light.sp,
-                    color = ColorApp.grey400
+                    color = ColorApp.gray400
                 )
                 Text(
                     "|",
@@ -168,7 +168,7 @@ fun LocationInfo(
                     Text(
                         it,
                         fontSize = FontSize.light.sp,
-                        color = ColorApp.grey400
+                        color = ColorApp.gray400
                     )
                 }
             }

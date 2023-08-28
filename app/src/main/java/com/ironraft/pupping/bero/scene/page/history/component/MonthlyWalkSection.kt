@@ -185,7 +185,7 @@ fun MonthlyWalkSection(
                             Text(
                                 text = stringResource(id = R.string.km),
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.gray400
                             )
                         }
                     }
@@ -199,7 +199,7 @@ fun MonthlyWalkSection(
                         } else {
                             profile?.name?.value ?: ""
                         },
-                        color = ColorApp.grey400,
+                        color = ColorApp.gray400,
                         isSort = true
                     ) {
                         onSort()

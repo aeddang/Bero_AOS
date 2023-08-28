@@ -79,7 +79,7 @@ abstract class AnimateDrawView : View, CoroutineScope{
 
 
     @SuppressLint("DrawAllocation")
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (!isDrawing) return
         onDrawAnimation(canvas)

@@ -120,7 +120,7 @@ fun LvSection(
                     .padding(top = DimenMargin.regularUltra.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
-                    .background(ColorApp.orangeSub)
+                    .background(ColorApp.orange200)
                     .padding(horizontal = DimenMargin.light.dp, vertical = DimenMargin.tiny.dp)
 
             )

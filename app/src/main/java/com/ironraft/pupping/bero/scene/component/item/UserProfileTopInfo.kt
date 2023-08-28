@@ -89,12 +89,12 @@ fun UserProfileTopInfo(
                     if(description?.isNotEmpty() == true) description!!
                     else profile.getIntroduction(LocalContext.current),
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey400,
+                    color = ColorApp.gray400,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
-                        .background(ColorApp.whiteDeepLight)
+                        .background(ColorApp.gray200)
                         .padding(all = DimenMargin.light.dp)
 
                 )

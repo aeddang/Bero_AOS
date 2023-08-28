@@ -184,11 +184,11 @@ fun VerticalProfile(
                 Text(
                     it,
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.orange,
+                    color = ColorApp.orange600,
                     textAlign = if(alignment == Alignment.CenterHorizontally) TextAlign.Center  else TextAlign.Start,
                     modifier = Modifier
                         .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.regular.dp)))
-                        .background(ColorApp.orange.copy(alpha = 0.14f))
+                        .background(ColorApp.orange600.copy(alpha = 0.14f))
                         .padding(horizontal = DimenMargin.thin.dp, vertical = DimenMargin.micro.dp)
 
                 )
@@ -197,12 +197,12 @@ fun VerticalProfile(
                 Text(
                     it.ifEmpty { stringResource(id = R.string.introductionDefault).replace(name ?: "") },
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey400,
+                    color = ColorApp.gray400,
                     textAlign = if(alignment == Alignment.CenterHorizontally) TextAlign.Center  else TextAlign.Start,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.tiny.dp)))
-                        .background(ColorApp.whiteDeepLight)
+                        .background(ColorApp.gray200)
                         .padding(all = DimenMargin.light.dp)
 
                 )

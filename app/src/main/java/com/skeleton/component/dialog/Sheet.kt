@@ -95,7 +95,7 @@ fun Sheet(
                             Text(
                                 it,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.gray400
                             )
                         }
                     }
@@ -165,7 +165,7 @@ fun Sheet(
                                         icon = btn.img,
                                         text = btn.title,
                                         color = if (btn.index % 2 == 1) buttonColor
-                                            ?: ColorBrand.primary else ColorApp.grey200
+                                            ?: ColorBrand.primary else ColorApp.gray200
                                     ) {
                                         action(btn.index)
                                     }

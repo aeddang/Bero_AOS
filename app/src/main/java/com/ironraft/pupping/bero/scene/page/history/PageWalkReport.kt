@@ -133,7 +133,7 @@ class ReportData(val ctx:Context) {
             CompareGraphData(
                 value = (data.avgCount ?: 0).toFloat(),
                 max = max,
-                color = ColorApp.grey300,
+                color = ColorApp.gray300,
                 title = ctx.getString(R.string.reportWalkDayCompareOthers)
             )
         )
@@ -355,7 +355,7 @@ fun PageWalkReport(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(DimenLine.light.dp)
-                            .background(ColorApp.grey50)
+                            .background(ColorApp.gray200)
                     )
                     Column(
                         verticalArrangement = Arrangement.spacedBy(DimenMargin.heavyExtra.dp),
@@ -377,7 +377,7 @@ fun PageWalkReport(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(DimenLine.light.dp)
-                                .background(ColorApp.grey50)
+                                .background(ColorApp.gray200)
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(DimenMargin.regular.dp),
@@ -393,7 +393,7 @@ fun PageWalkReport(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(DimenLine.light.dp)
-                                .background(ColorApp.grey50)
+                                .background(ColorApp.gray200)
                         )
                         Column(
                             verticalArrangement = Arrangement.spacedBy(DimenMargin.regular.dp),
@@ -408,7 +408,7 @@ fun PageWalkReport(
                                 stringResource(id = R.string.reportWalkRecentlyTip),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400,
+                                color = ColorApp.gray400,
                                 modifier = Modifier.padding(bottom = DimenMargin.medium.dp)
                             )
                         }

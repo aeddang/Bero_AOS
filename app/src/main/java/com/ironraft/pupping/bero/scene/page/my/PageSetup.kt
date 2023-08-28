@@ -104,7 +104,7 @@ fun PageSetup(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
@@ -154,7 +154,7 @@ fun PageSetup(
         Text(
             "v${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
             fontSize = FontSize.thin.sp,
-            color = ColorApp.grey400,
+            color = ColorApp.gray400,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth().padding(DimenMargin.thin.dp)
         )

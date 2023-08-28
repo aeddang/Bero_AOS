@@ -75,7 +75,7 @@ fun Radio(
                             Text(
                                 it,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.gray400
                             )
                         }
                     }

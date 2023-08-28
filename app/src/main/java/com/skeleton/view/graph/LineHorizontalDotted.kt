@@ -31,7 +31,7 @@ import com.skeleton.theme.DimenStroke
 fun LineHorizontalDotted (
     modifier:Modifier = Modifier,
     dash:FloatArray =  floatArrayOf(3f,3f),
-    color:Color = ColorApp.grey300,
+    color:Color = ColorApp.gray300,
     stroke:Float = DimenStroke.light
 ) {
     Canvas(

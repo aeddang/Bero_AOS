@@ -145,7 +145,7 @@ fun HorizontalProfile(
                 .border(
                     width = if (useBg) DimenStroke.light.dp else 0.dp,
                     color = if (useBg) funcType?.strokeColor
-                        ?: ColorApp.grey100 else ColorTransparent.clear,
+                        ?: ColorApp.gray100 else ColorTransparent.clear,
                     shape = RoundedCornerShape(type.radius.dp)
                 )
                 .padding(if (useBg) type.padding.dp else 0.dp)
@@ -163,7 +163,7 @@ fun HorizontalProfile(
                             modifier = Modifier
                                 .size(DimenButton.medium.dp)
                                 .clip(RoundedCornerShape(CornerSize(DimenRadius.tiny.dp)))
-                                .background(ColorApp.orangeSub),
+                                .background(ColorApp.orange200),
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
@@ -229,13 +229,13 @@ fun HorizontalProfile(
                         stringResource(id = type.emptyTitle),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = FontSize.medium.sp,
-                        color = ColorApp.grey300
+                        color = ColorApp.gray300
                     )
                     description?.let {
                         Text(
                             it,
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey300
+                            color = ColorApp.gray300
                         )
                     }
                 } else {
@@ -259,7 +259,7 @@ fun HorizontalProfile(
                                 Text(
                                     it,
                                     fontSize = FontSize.tiny.sp,
-                                    color = ColorApp.grey300
+                                    color = ColorApp.gray300
                                 )
                             }
                         }
@@ -274,7 +274,7 @@ fun HorizontalProfile(
                                 gender = gender,
                                 isNeutralized = isNeutralized,
                                 useCircle = false,
-                                color = if(isSelected) ColorApp.white else ColorApp.grey500
+                                color = if(isSelected) ColorApp.white else ColorApp.gray500
                             )
 
                         breed?.let { breed ->
@@ -296,7 +296,7 @@ fun HorizontalProfile(
                                 Text(
                                     it ,
                                     fontSize = FontSize.thin.sp,
-                                    color = if(isSelected) ColorApp.white else ColorApp.grey500
+                                    color = if(isSelected) ColorApp.white else ColorApp.gray500
                                 )
                             }
                             distance?.let {
@@ -339,7 +339,7 @@ fun HorizontalProfile(
                     HorizontalProfileFuncType.MoreFunc, HorizontalProfileFuncType.Block, HorizontalProfileFuncType.UnBlock ->
                         ImageButton(
                             defaultImage = funcType.icon,
-                            defaultColor = if(isSelected) ColorApp.white else ColorApp.grey400
+                            defaultColor = if(isSelected) ColorApp.white else ColorApp.gray400
                         ){
                             action?.let { it(funcType) }
                         }
@@ -449,7 +449,7 @@ fun HorizontalProfileComposePreview(){
                 type = HorizontalProfileType.Place,
                 typeIcon = R.drawable.goal,
                 sizeType = HorizontalProfileSizeType.Small,
-                color = ColorApp.red,
+                color = ColorApp.red600,
                 name = "name",
                 description = "August 23, 2023"
             ) {

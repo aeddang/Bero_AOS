@@ -74,14 +74,14 @@ fun ChatList(
                 Text(
                     AppUtil.networkDate().toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey400,
+                    color = ColorApp.gray400,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
                 )
                 Text(
                     stringResource(id = R.string.chatRoomText),
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey300,
+                    color = ColorApp.gray300,
                     textAlign = TextAlign.Center
                 )
             }
@@ -103,7 +103,7 @@ fun ChatList(
                                     Text(
                                         it.toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                                         fontSize = FontSize.thin.sp,
-                                        color = ColorApp.grey400,
+                                        color = ColorApp.gray400,
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier.fillMaxSize().padding(bottom = DimenMargin.regular.dp)
                                     )
@@ -118,7 +118,7 @@ fun ChatList(
                                     Text(
                                         it.toDateFormatter("EEEE, MMMM d, yyyy") ?: "",
                                         fontSize = FontSize.thin.sp,
-                                        color = ColorApp.grey400,
+                                        color = ColorApp.gray400,
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier.fillMaxSize().padding(bottom = DimenMargin.regular.dp)
                                     )

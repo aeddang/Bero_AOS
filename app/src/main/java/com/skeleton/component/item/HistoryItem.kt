@@ -75,7 +75,7 @@ fun HistoryItem(
                     Text(
                         text = it,
                         fontSize = FontSize.tiny.sp,
-                        color = ColorApp.grey400
+                        color = ColorApp.gray400
                     )
                 }
             }

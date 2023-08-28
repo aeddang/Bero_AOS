@@ -39,10 +39,10 @@ enum class PlaceCategory {
 
     val color:Color
         get() = when(this) {
-            Cafe -> ColorApp.brown
-            Vet -> ColorApp.greenDeep
-            Park -> ColorApp.green
-            else -> ColorApp.green
+            Cafe -> ColorApp.gold600
+            Vet -> ColorApp.blue600
+            Park -> ColorApp.green600
+            else -> ColorApp.green600
         }
 
     @get:StringRes

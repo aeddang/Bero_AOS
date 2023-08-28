@@ -185,7 +185,7 @@ fun TotalWalkSection(
                             Text(
                                 text = stringResource(id = R.string.km),
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.grey400,
+                                color = ColorApp.gray400,
                                 modifier = Modifier.padding(top = 30.dp)
                             )
                         }
@@ -200,7 +200,7 @@ fun TotalWalkSection(
                         } else {
                             profile?.name?.value ?: ""
                         },
-                        color = ColorApp.grey400,
+                        color = ColorApp.gray400,
                         isSort = true
                     ) {
                         onSort()

@@ -39,7 +39,7 @@ fun ValueBox(
                 .clip(RoundedCornerShape(DimenRadius.thin.dp))
                 .border(
                     width = DimenStroke.light.dp,
-                    color = ColorApp.grey100,
+                    color = ColorApp.gray100,
                     shape = RoundedCornerShape(DimenRadius.thin.dp)
                 )
                 .background(ColorApp.white)
@@ -73,7 +73,7 @@ fun ValueBox(
                 if (index < datas.count()-1) {
                     Spacer(modifier = Modifier.fillMaxHeight()
                         .padding(vertical = DimenMargin.tiny.dp)
-                        .background(ColorApp.grey100)
+                        .background(ColorApp.gray100)
                         .width(DimenLine.light.dp)
                     )
                 }

@@ -73,7 +73,7 @@ fun BottomTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(DimenLine.light.dp)
-                    .background(ColorApp.grey50)
+                    .background(ColorApp.gray200)
             )
             Row(
                 modifier = Modifier
@@ -93,7 +93,7 @@ fun BottomTab(
                         iconText = if (page.id == PageID.Chat)
                             if(newChat == true) "N" else null
                             else null,
-                        defaultColor = ColorApp.grey200,
+                        defaultColor = ColorApp.gray200,
                         activeColor = ColorBrand.primary
                     ) {
                         pagePresenter.changePage(

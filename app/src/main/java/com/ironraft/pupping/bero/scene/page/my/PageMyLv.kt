@@ -66,7 +66,7 @@ fun PageMyLv(
             .padding(top = DimenMargin.medium.dp)
             .fillMaxWidth()
             .height(DimenLine.heavy.dp)
-            .background(ColorApp.grey50)
+            .background(ColorApp.gray200)
         )
         TitleSection(
             title = stringResource(id = R.string.earningHistory),
@@ -79,7 +79,7 @@ fun PageMyLv(
             .padding(top = DimenMargin.regularExtra.dp)
             .fillMaxWidth()
             .height(DimenLine.light.dp)
-            .background(ColorApp.grey50)
+            .background(ColorApp.gray200)
         )
         RewardHistoryList(
             type = HistoryType.Exp

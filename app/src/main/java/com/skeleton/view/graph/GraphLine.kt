@@ -36,7 +36,7 @@ fun GraphLine(
     modifier:Modifier = Modifier,
     points:List<PointF>,
     selectIdx:Int = -1,
-    color:Color = ColorApp.grey400,
+    color:Color = ColorApp.gray400,
     pointColor:Color = ColorApp.white,
     selectColor:Color = ColorBrand.primary,
     stroke:Float = DimenStroke.regular

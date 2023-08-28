@@ -104,7 +104,7 @@ fun Check(
                     ImageButton(
                         defaultImage = icon ?: R.drawable.check_circle,
                         size = DimenIcon.heavy,
-                        defaultColor = ColorApp.grey400,
+                        defaultColor = ColorApp.gray400,
                         activeColor = ColorBrand.primary,
                         isSelected = isChecked
                     ) {

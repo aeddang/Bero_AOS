@@ -23,8 +23,8 @@ import com.skeleton.view.button.TransparentButton
 fun Switch(
     isOn:Boolean = false,
     thumbColor:Color = ColorApp.white,
-    activeColor:Color = ColorApp.green,
-    defaultColor:Color = ColorApp.grey200,
+    activeColor:Color = ColorApp.green600,
+    defaultColor:Color = ColorApp.gray200,
     modifier: Modifier = Modifier,
     action:(Boolean) -> Unit
 ) {

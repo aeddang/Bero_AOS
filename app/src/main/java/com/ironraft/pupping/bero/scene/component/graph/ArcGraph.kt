@@ -93,7 +93,7 @@ fun ArcGraph(
                     data.start,
                     fontWeight = FontWeight.Bold,
                     fontSize = FontSize.tiny.sp,
-                    color = ColorApp.grey400,
+                    color = ColorApp.gray400,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.width(textSize.dp)
                 )

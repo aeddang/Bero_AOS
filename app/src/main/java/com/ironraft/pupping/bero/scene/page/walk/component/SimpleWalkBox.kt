@@ -75,7 +75,7 @@ fun SimpleWalkBox(
                 .background(ColorApp.white)
                 .border(
                     width = DimenStroke.light.dp,
-                    color = ColorApp.grey100,
+                    color = ColorApp.gray100,
                     shape = RoundedCornerShape(DimenRadius.light.dp)
                 )
                 .padding(

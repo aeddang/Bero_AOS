@@ -129,7 +129,7 @@ fun ProfileImageRect(
         Box(
             modifier = modifier.size(DimenButton.medium.dp)
                 .clip(RoundedCornerShape(CornerSize(DimenRadius.tiny.dp)))
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
 
         ) {
             painter?.let {

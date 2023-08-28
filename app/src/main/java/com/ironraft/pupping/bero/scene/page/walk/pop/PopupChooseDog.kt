@@ -67,7 +67,7 @@ fun PopupChooseDog(
                 Text(
                     stringResource(id = R.string.walkStartChooseDogText),
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey400
+                    color = ColorApp.gray400
                 )
             }
             Column(
@@ -92,8 +92,8 @@ fun PopupChooseDog(
                     modifier = Modifier.weight(1.0f),
                     type = FillButtonType.Fill,
                     text = stringResource(id = R.string.cancel),
-                    color = ColorApp.grey50,
-                    textColor = ColorApp.grey400
+                    color = ColorApp.gray200,
+                    textColor = ColorApp.gray400
                 ) {
                     close()
                 }

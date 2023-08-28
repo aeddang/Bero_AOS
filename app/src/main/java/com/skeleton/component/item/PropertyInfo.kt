@@ -31,8 +31,8 @@ enum class PropertyInfoType {
     val bgColor: Color
         get() = when (this) {
             Blank -> ColorTransparent.clear
-            Normal -> ColorApp.whiteDeepLight
-            Impect -> ColorApp.grey50
+            Normal -> ColorApp.gray200
+            Impect -> ColorApp.gray200
         }
 
     val valueTextStyle:FontWeight
@@ -103,20 +103,20 @@ fun PropertyInfo(
                 Text(
                     text = it,
                     fontSize = FontSize.tiny.sp,
-                    color = ColorApp.grey400
+                    color = ColorApp.gray400
                 )
             }
             Text(
                 text = value,
                 fontWeight = type.valueTextStyle,
                 fontSize = type.valueTextSize.sp,
-                color = ColorApp.grey400
+                color = ColorApp.gray400
             )
             unit?.let {
                 Text(
                     text = it,
                     fontSize = FontSize.tiny.sp,
-                    color = ColorApp.grey400
+                    color = ColorApp.gray400
                 )
             }
         }

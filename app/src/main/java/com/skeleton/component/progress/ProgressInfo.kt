@@ -83,7 +83,7 @@ fun ProgressInfo(
                     Text(
                         "/" + progressMax.toInt().toString() + trailingText,
                         fontSize = FontSize.tiny.sp,
-                        color = ColorApp.grey300
+                        color = ColorApp.gray300
                     )
                 }
             }
@@ -91,7 +91,7 @@ fun ProgressInfo(
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
                 color = ColorBrand.primary,
-                backgroundColor = ColorApp.grey50,
+                backgroundColor = ColorApp.gray200,
                 strokeCap = StrokeCap.Round,
                 progress = (progress/progressMax).toFloat()
             )

@@ -119,7 +119,7 @@ fun WalkTopInfo(
                     Text(
                         text = it,
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey400
+                        color = ColorApp.gray400
                     )
                 }
             }
@@ -130,7 +130,7 @@ fun WalkTopInfo(
                         sizeType = SortButtonSizeType.Small,
                         icon = R.drawable.global,
                         text = stringResource(id = R.string.share),
-                        color = if(isExpose==true) ColorBrand.primary else ColorApp.grey400,
+                        color = if(isExpose==true) ColorBrand.primary else ColorApp.gray400,
                         isSort = false
                     ){
                         val value = (isExpose ?: false).toggle()

@@ -84,7 +84,7 @@ enum class TitleTabButtonType {
     val color:Color
         get() = when (this) {
             Edit ->  ColorBrand.primary
-            ViewMore, ManageDogs -> ColorApp.grey400
+            ViewMore, ManageDogs -> ColorApp.gray400
             else -> ColorApp.black
         }
 
@@ -166,7 +166,7 @@ fun TitleTab(
                             type = SortButtonType.Stroke,
                             sizeType = SortButtonSizeType.Small,
                             text = it,
-                            color = ColorApp.grey400,
+                            color = ColorApp.gray400,
                             isSort = true,
                             petProfile = sortPetProfile
                         ) {
@@ -223,7 +223,7 @@ fun TitleTab(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(DimenLine.light.dp)
-                        .background(if (onTop) ColorTransparent.clear else ColorApp.grey50)
+                        .background(if (onTop) ColorTransparent.clear else ColorApp.gray200)
                 )
             }
         }

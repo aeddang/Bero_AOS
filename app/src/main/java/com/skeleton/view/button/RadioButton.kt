@@ -57,8 +57,8 @@ enum class RadioButtonType() {
     open var spacing:Float = 0.0f
     open var horizontalMargin:Float = 0.0f
     open var bgColor:Color = ColorTransparent.clear
-    open var iconColor:Color = ColorApp.grey200
-    open var textColor:Color = ColorApp.grey400
+    open var iconColor:Color = ColorApp.gray200
+    open var textColor:Color = ColorApp.gray400
 }
 
 
@@ -84,7 +84,7 @@ fun RadioButton(
                 .border(
                     width = type.strokeWidth.dp,
                     color = if (type.strokeWidth > 0.0f)
-                        if (isChecked) color else ColorApp.grey100
+                        if (isChecked) color else ColorApp.gray100
                     else type.bgColor,
 
                     shape = RoundedCornerShape(DimenRadius.thinExtra.dp)
@@ -129,7 +129,7 @@ fun RadioButton(
                         Text(
                             it,
                             fontSize = FontSize.tiny.sp,
-                            color = ColorApp.grey400,
+                            color = ColorApp.gray400,
                             textAlign = TextAlign.Start
                         )
                     }

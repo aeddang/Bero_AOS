@@ -35,7 +35,6 @@ enum class FillButtonType {
         override fun bgColor(color:Color):Color = ColorApp.white
         override var strokeWidth: Float = DimenStroke.light
         override fun iconType(color:Color): ColorFilter = ColorFilter.tint(color = color)
-
     };
     open fun bgColor(color:Color):Color {
         return color

@@ -99,7 +99,7 @@ fun PlaceInfo(
                     Text(
                         it,
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey400
+                        color = ColorApp.gray400
                     )
                 }
                 distance?.let {
@@ -114,13 +114,13 @@ fun PlaceInfo(
                             painterResource(R.drawable.walk),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(ColorApp.grey300),
+                            colorFilter = ColorFilter.tint(ColorApp.gray300),
                             modifier = Modifier.size(DimenIcon.thin.dp)
                         )
                         Text(
                             WalkManager.viewDistance(it),
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey300
+                            color = ColorApp.gray300
                         )
                     }
                 }

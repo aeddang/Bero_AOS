@@ -32,7 +32,7 @@ fun GraphArc(
     size:Float = 100.0f,
     progress: Float, // or some value binded
     progressColor:Color = ColorBrand.primary,
-    bgColor:Color = ColorApp.grey50,
+    bgColor:Color = ColorApp.gray200,
     stroke:Float = DimenBar.regular,
     start:Float = 180.0f,
     end:Float = 180.0f

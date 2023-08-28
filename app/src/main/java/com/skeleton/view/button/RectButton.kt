@@ -51,7 +51,7 @@ fun RectButton(
     text:String? = null,
     index:Int = 0,
     color:Color = ColorBrand.primary,
-    defaultColor:Color = ColorApp.grey500,
+    defaultColor:Color = ColorApp.gray500,
     bgColor:Color = ColorApp.white,
     isSelected:Boolean = false,
     modifier: Modifier = Modifier,
@@ -68,7 +68,7 @@ fun RectButton(
                 .background(if (isSelected) color else bgColor)
                 .border(
                     width = DimenStroke.light.dp,
-                    color = if(isSelected) color  else ColorApp.grey200,
+                    color = if(isSelected) color  else ColorApp.gray200,
                     shape = RoundedCornerShape(type.radius.dp)
                 )
             ,
@@ -124,7 +124,7 @@ fun RectButtonComposePreview(){
             type = RectButtonType.Medium,
             icon = R.drawable.noimage_1_1,
             text = "Rect BUTTON",
-            color = ColorApp.grey400,
+            color = ColorApp.gray400,
             isSelected = false
         ) {
 

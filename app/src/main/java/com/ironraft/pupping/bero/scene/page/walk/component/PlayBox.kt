@@ -200,7 +200,7 @@ fun PlayBox(
                             type = CircleButtonType.Icon,
                             icon = R.drawable.minimize,
                             strokeWidth = DimenStroke.regular,
-                            defaultColor = ColorApp.grey500
+                            defaultColor = ColorApp.gray500
                         ) {
                             val isSimple = isSimple?.toggle() ?: false
                             walkManager.updateSimpleView(isSimple)
@@ -231,7 +231,7 @@ fun PlayBox(
                         type = CircleButtonType.Icon,
                         icon = R.drawable.my_location,
                         strokeWidth = DimenStroke.regular,
-                        defaultColor = if (isFollowMe == true) ColorBrand.primary else ColorApp.grey500
+                        defaultColor = if (isFollowMe == true) ColorBrand.primary else ColorApp.gray500
                     ){
                         playMapModel.isFollowMe.value?.let {
                             playMapModel.isFollowMe.value = it.toggle()
@@ -246,7 +246,7 @@ fun PlayBox(
                         .background(ColorApp.white)
                         .border(
                             width = DimenStroke.light.dp,
-                            color = ColorApp.grey100,
+                            color = ColorApp.gray100,
                             shape = RoundedCornerShape(DimenRadius.light.dp)
                         )
                         .padding(

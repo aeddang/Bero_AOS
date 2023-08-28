@@ -66,7 +66,7 @@ fun MultiProfileListItem(
                 .background(ColorApp.white)
                 .border(
                     width = DimenStroke.light.dp,
-                    color = ColorApp.grey100,
+                    color = ColorApp.gray100,
                     shape = RoundedCornerShape(DimenRadius.light.dp)
                 )
                 .padding(DimenMargin.light.dp),
@@ -103,7 +103,7 @@ fun MultiProfileListItem(
                                 it,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = FontSize.thin.sp,
-                                color = ColorApp.grey400
+                                color = ColorApp.gray400
                             )
                         }
                     }
@@ -112,7 +112,7 @@ fun MultiProfileListItem(
             Spacer(modifier = Modifier
                 .fillMaxHeight()
                 .width(DimenLine.light.dp)
-                .background(ColorApp.grey100)
+                .background(ColorApp.gray100)
             )
             data.user?.let { userProfile ->
                 Column(

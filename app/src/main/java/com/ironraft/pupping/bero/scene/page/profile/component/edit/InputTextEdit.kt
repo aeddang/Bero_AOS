@@ -84,7 +84,7 @@ fun InputTextEdit(
                         Text(
                             type.placeHolder,
                             fontSize = FontSize.light.sp,
-                            color = ColorApp.grey200
+                            color = ColorApp.gray200
                         )
                     },
                     keyboardOptions = type.keyboardOptions,
@@ -100,7 +100,7 @@ fun InputTextEdit(
                         backgroundColor = ColorApp.white,
                         cursorColor = ColorBrand.primary,
                         focusedBorderColor = ColorBrand.primary,
-                        unfocusedBorderColor = ColorApp.grey200
+                        unfocusedBorderColor = ColorApp.gray200
                     ),
                     singleLine = type.limitLine == 1,
                     minLines = type.limitLine

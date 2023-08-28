@@ -72,7 +72,7 @@ fun ListItem(
                 modifier = Modifier
                     .size(width = imgSize.width.dp, height = imgSize.height.dp)
                     .clip(RoundedCornerShape(CornerSize(DimenRadius.light.dp)))
-                    .background(ColorApp.grey100),
+                    .background(ColorApp.gray100),
                 contentAlignment = Alignment.Center
             ) {
                 if (painter == null) {
@@ -124,7 +124,7 @@ fun ListItem(
                                 sizeType = likeSize,
                                 icon = if(isLike) R.drawable.favorite_on else R.drawable.favorite_on,
                                 text = likeCount.toThousandUnit(),
-                                color = if(isLike) ColorBrand.primary else ColorApp.grey400,
+                                color = if(isLike) ColorBrand.primary else ColorApp.gray400,
                                 isSort = false
                             ){
                                 action?.let { it() }
@@ -156,7 +156,7 @@ fun ListItem(
                         Text(
                             it,
                             fontSize = FontSize.thin.sp,
-                            color = ColorApp.grey300,
+                            color = ColorApp.gray300,
                             textAlign = TextAlign.Start
                         )
                     }

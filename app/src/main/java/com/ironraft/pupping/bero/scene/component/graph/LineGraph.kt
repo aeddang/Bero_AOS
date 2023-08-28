@@ -74,7 +74,7 @@ fun LineGraph(
                             Text(
                                 it,
                                 fontSize = FontSize.tiny.sp,
-                                color = ColorApp.grey300,
+                                color = ColorApp.gray300,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .size(rawsWidth.dp, DimenBar.medium.dp)
@@ -112,7 +112,7 @@ fun LineGraph(
                                         .padding(top = DimenMargin.medium.dp)
                                         .fillMaxWidth()
                                         .height(DimenStroke.light.dp)
-                                        .background(ColorApp.grey300)
+                                        .background(ColorApp.gray300)
                                     )
                                 }
                             }
@@ -141,7 +141,7 @@ fun LineGraph(
                 Text(
                     data.rawsUnit,
                     fontSize = FontSize.tiny.sp,
-                    color = ColorApp.grey200,
+                    color = ColorApp.gray200,
                     textAlign = TextAlign.Center
                 )
             }
@@ -155,7 +155,7 @@ fun LineGraph(
                         Text(
                             s,
                             fontSize = FontSize.tiny.sp,
-                            color = if(index == selectIdx) primaryColor else ColorApp.grey300,
+                            color = if(index == selectIdx) primaryColor else ColorApp.gray300,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1.0f)
                         )

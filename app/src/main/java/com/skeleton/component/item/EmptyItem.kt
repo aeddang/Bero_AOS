@@ -33,7 +33,7 @@ enum class EmptyItemType {
 
     val imageMode: ColorFilter?
         get() = when (this) {
-            MyList -> ColorFilter.tint(ColorApp.grey200)
+            MyList -> ColorFilter.tint(ColorApp.gray200)
             Chat -> null
         }
     val imageHeight: Float
@@ -54,7 +54,7 @@ enum class EmptyItemType {
         }
     val bgColor: Color
         get() = when (this) {
-            MyList -> ColorApp.grey50
+            MyList -> ColorApp.gray200
             Chat -> ColorTransparent.clear
         }
 
@@ -97,7 +97,7 @@ fun EmptyItem(
                     Text(
                         text = it,
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey300,
+                        color = ColorApp.gray300,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -122,7 +122,7 @@ fun EmptyData(
                 Text(
                     text = it,
                     fontSize = FontSize.thin.sp,
-                    color = ColorApp.grey300
+                    color = ColorApp.gray300
                 )
             }
             Image(

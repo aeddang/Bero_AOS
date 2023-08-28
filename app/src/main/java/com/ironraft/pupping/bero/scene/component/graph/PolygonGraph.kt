@@ -99,7 +99,7 @@ fun PolygonGraph(
     selectIdx:List<Int> = listOf(),
     points:List<PointF> = listOf(),
     selectedColor:Color = ColorBrand.primary,
-    pointColor:Color = ColorApp.green,
+    pointColor:Color = ColorApp.green600,
     lineColor:Color = ColorBrand.primary,
     stroke:Float = DimenStroke.heavyUltra,
     usePoint:Boolean = true,

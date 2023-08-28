@@ -65,7 +65,7 @@ fun Alert(
                             it,
                             fontSize = FontSize.thin.sp,
                             fontWeight = FontWeight.Medium,
-                            color = ColorApp.grey50,
+                            color = ColorApp.gray200,
                             modifier = Modifier.padding(top = DimenMargin.tiny.dp),
                             textAlign = TextAlign.Center
                         )
@@ -85,7 +85,7 @@ fun Alert(
                             it,
                             fontSize = FontSize.tiny.sp,
                             fontWeight = FontWeight.Medium,
-                            color = ColorApp.grey50,
+                            color = ColorApp.gray200,
                             modifier = Modifier.padding(top = DimenMargin.tiny.dp),
                             textAlign = TextAlign.Center
                         )
@@ -144,7 +144,7 @@ fun Alert(
                                         icon = btn.img,
                                         text = btn.title ?: "",
                                         color = if (btn.index % 2 == 1) buttonColor
-                                            ?: ColorBrand.primary else ColorApp.grey200
+                                            ?: ColorBrand.primary else ColorApp.gray200
                                     ) {
                                         action(btn.index)
                                     }

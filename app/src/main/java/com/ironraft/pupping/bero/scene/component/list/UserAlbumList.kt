@@ -101,7 +101,7 @@ fun UserAlbumList(
                                 modifier = Modifier
                                     .fillMaxWidth().padding(top = DimenMargin.regularUltra.dp)
                                     .height(DimenLine.heavy.dp)
-                                    .background(ColorApp.grey50)
+                                    .background(ColorApp.gray200)
                             )
                         }
                     }

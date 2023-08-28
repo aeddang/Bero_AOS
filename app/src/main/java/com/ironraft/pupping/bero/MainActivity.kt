@@ -1,3 +1,5 @@
+@file:Suppress("OverrideDeprecatedMigration", "OverrideDeprecatedMigration")
+
 package com.ironraft.pupping.bero
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -237,6 +239,7 @@ class MainActivity : PageComposeable() {
         deepLinkManager.disposeLifecycleOwner(this)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         snsManager.onActivityResult( requestCode, resultCode, data, activityRequstId)
         super.onActivityResult(requestCode, resultCode, data)

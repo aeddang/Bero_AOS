@@ -79,7 +79,7 @@ fun ChatItem(
                         it.toDateFormatter("hh:mm a"),
                         fontWeight = FontWeight.Light,
                         fontSize = FontSize.tiny.sp,
-                        color = ColorApp.grey300
+                        color = ColorApp.gray300
                     )
                 }
             }
@@ -91,7 +91,7 @@ fun ChatItem(
                 textAlign = if(data.isMe) TextAlign.End else TextAlign.Start,
                 modifier = Modifier
                     .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.medium.dp)))
-                    .background(if(data.isMe) ColorBrand.primary else ColorApp.grey50)
+                    .background(if(data.isMe) ColorBrand.primary else ColorApp.gray200)
                     .padding(
                         vertical = DimenMargin.micro.dp,
                         horizontal = DimenMargin.thin.dp
@@ -105,7 +105,7 @@ fun ChatItem(
                         it.toDateFormatter("hh:mm a"),
                         fontWeight = FontWeight.Light,
                         fontSize = FontSize.tiny.sp,
-                        color = ColorApp.grey300
+                        color = ColorApp.gray300
                     )
                 }
             }

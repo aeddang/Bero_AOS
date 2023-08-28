@@ -58,7 +58,7 @@ fun LvButton(
     lv:Lv = Lv.Green,
     type:LvButtonType = LvButtonType.Small,
     text:String? = null,
-    defaultColor:Color = ColorApp.grey100,
+    defaultColor:Color = ColorApp.gray100,
     isSelected: Boolean = true,
     index: Int = -1,
     modifier: Modifier = Modifier,

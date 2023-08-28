@@ -56,7 +56,7 @@ fun ChatUser(
     Box (
         modifier = modifier
             .fillMaxWidth().height(90.dp)
-            .background(ColorApp.orangeSub)
+            .background(ColorApp.orange200)
             .padding(
                 horizontal = DimenApp.pageHorinzontal.dp,
                 vertical = DimenMargin.thin.dp

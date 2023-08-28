@@ -262,7 +262,7 @@ class Mission:MapUserData(){
     }
 
     fun copySummry(origin:Mission, title:String?):Mission{
-        color = ColorApp.yellow
+        color = ColorApp.yellow600
         this.title = title //String.app.users.lowercased()
         missionId = origin.missionId
         type = origin.type

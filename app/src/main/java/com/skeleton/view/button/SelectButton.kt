@@ -70,7 +70,7 @@ fun SelectButton(
                 .border(
                     width = if(useStroke) DimenStroke.light.dp else 0.0f.dp,
                     color = if(useStroke)
-                        if(isSelected) ColorBrand.primary  else ColorApp.grey200
+                        if(isSelected) ColorBrand.primary  else ColorApp.gray200
                         else ColorTransparent.clear ,
                     shape = RoundedCornerShape(type.radius.dp)
                 )
@@ -95,7 +95,7 @@ fun SelectButton(
                                     .size(DimenCircle.regular.dp, DimenCircle.regular.dp)
                                     .border(
                                         width = DimenStroke.light.dp,
-                                        color = ColorApp.grey200,
+                                        color = ColorApp.gray200,
                                         shape = CircleShape
                                     )
                             )
@@ -119,7 +119,7 @@ fun SelectButton(
                             it,
                             fontSize = FontSize.thin.sp,
                             fontWeight = FontWeight.Medium,
-                            color = ColorApp.grey400,
+                            color = ColorApp.gray400,
                             textAlign = TextAlign.Start
                         )
                     }
@@ -135,7 +135,7 @@ fun SelectButton(
                             it,
                             fontSize = FontSize.thin.sp,
                             fontWeight = FontWeight.Medium,
-                            color = ColorApp.grey400,
+                            color = ColorApp.gray400,
                             textAlign = TextAlign.Start
                         )
                     }

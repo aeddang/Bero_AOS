@@ -281,7 +281,7 @@ fun PageWalkHistory(
                                 .padding(top = DimenMargin.medium.dp)
                                 .fillMaxWidth()
                                 .height(DimenLine.heavy.dp)
-                                .background(ColorApp.grey50)
+                                .background(ColorApp.gray200)
                             )
                             CPCalendar(modifier = Modifier
                                 .padding(top = DimenMargin.thin.dp)
@@ -294,7 +294,7 @@ fun PageWalkHistory(
                             Spacer(modifier = Modifier
                                 .fillMaxWidth()
                                 .height(DimenLine.light.dp)
-                                .background(ColorApp.grey50)
+                                .background(ColorApp.gray200)
                             )
 
 

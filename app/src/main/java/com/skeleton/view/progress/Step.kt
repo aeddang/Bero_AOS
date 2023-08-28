@@ -46,7 +46,7 @@ fun Step(
                 "of $total",
                 fontSize = FontSize.thin.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = ColorApp.grey300
+                color = ColorApp.gray300
             )
         }
 

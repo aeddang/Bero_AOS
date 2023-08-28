@@ -54,7 +54,7 @@ fun CircleButton(
     value: String? = null,
     originSize:Float? = null,
     strokeWidth:Float = 0.0f,
-    defaultColor: Color = ColorApp.grey300,
+    defaultColor: Color = ColorApp.gray300,
     activeColor: Color = ColorBrand.primary,
     index:Int = 0,
     isSelected:Boolean = false,
@@ -82,7 +82,7 @@ fun CircleButton(
                     color =
                         if (strokeWidth == 0.0f) ColorTransparent.clear
                         else {
-                            if (isSelected) ColorApp.white else ColorApp.grey200
+                            if (isSelected) ColorApp.white else ColorApp.gray200
                         },
                     shape = CircleShape
                 )
@@ -168,7 +168,7 @@ fun CircleButtonComposePreview(){
             type = CircleButtonType.Text,
             value = "LV99",
             strokeWidth = DimenStroke.regular,
-            defaultColor = ColorApp.green,
+            defaultColor = ColorApp.green600,
             isSelected = false
         ) {
 
@@ -177,7 +177,7 @@ fun CircleButtonComposePreview(){
             type = CircleButtonType.Image,
             value = "LV99",
             strokeWidth = DimenStroke.regular,
-            defaultColor = ColorApp.green,
+            defaultColor = ColorApp.green600,
             isSelected = false
         ) {
 

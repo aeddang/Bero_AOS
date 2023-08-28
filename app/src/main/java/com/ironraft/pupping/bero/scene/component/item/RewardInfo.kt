@@ -31,12 +31,12 @@ import com.skeleton.view.button.SortButtonType
 enum class RewardInfoType {
     Point {
         @DrawableRes override var icon: Int? = R.drawable.point
-        override var bgcolor:Color = ColorApp.yellowSub
+        override var bgcolor:Color = ColorApp.yellow300
     },
     Exp{
         @DrawableRes override var icon: Int? = R.drawable.exp
         override var iconFilter:ColorFilter? = ColorFilter.tint(ColorBrand.primary)
-        override var bgcolor:Color = ColorApp.orangeSub
+        override var bgcolor:Color = ColorApp.orange200
     };
 
     @DrawableRes open var icon:Int? = null
@@ -75,7 +75,7 @@ fun RewardInfo(
             modifier = modifier
                 .size(sizeType.boxSize.width.dp, sizeType.boxSize.height.dp)
                 .clip(RoundedCornerShape(DimenRadius.regular.dp))
-                .background(if (isActive) type.bgcolor else ColorApp.grey100)
+                .background(if (isActive) type.bgcolor else ColorApp.gray100)
                 .border(
                     width = sizeType.strokeSize.dp,
                     color = ColorBrand.primary.copy(alpha = 0.15f),
@@ -95,7 +95,7 @@ fun RewardInfo(
                     text = "+$value",
                     fontSize = sizeType.textSize.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isActive) type.color else ColorApp.grey400,
+                    color = if (isActive) type.color else ColorApp.gray400,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.padding(top= 4.dp)
                 )

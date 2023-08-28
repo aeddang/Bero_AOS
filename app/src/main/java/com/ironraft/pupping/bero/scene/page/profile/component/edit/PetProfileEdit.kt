@@ -59,7 +59,7 @@ fun PetProfileEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
@@ -77,7 +77,7 @@ fun PetProfileEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
@@ -95,7 +95,7 @@ fun PetProfileEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,

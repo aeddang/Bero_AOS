@@ -56,14 +56,14 @@ enum class FriendButtonFuncType {
         get() = when (this) {
             Move, Accept, Request, Chat -> ColorBrand.primary
             Delete, Reject -> ColorApp.black
-            Requested -> ColorApp.grey300
+            Requested -> ColorApp.gray300
         }
 
     val iconColor: Color
         get() = when (this) {
             Move, Accept, Request, Chat -> ColorBrand.primary
             Delete, Reject -> ColorApp.black
-            Requested -> ColorApp.grey300
+            Requested -> ColorApp.gray300
         }
 
     val textColor: Color

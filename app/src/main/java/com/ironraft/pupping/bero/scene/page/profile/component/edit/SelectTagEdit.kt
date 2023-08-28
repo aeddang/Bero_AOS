@@ -139,7 +139,7 @@ fun SelectTagEdit(
                                         type = if (isCheck) SortButtonType.Fill else SortButtonType.Stroke,
                                         sizeType = SortButtonSizeType.Big,
                                         text = btn.title,
-                                        color = if (isCheck) ColorBrand.primary else ColorApp.grey400,
+                                        color = if (isCheck) ColorBrand.primary else ColorApp.gray400,
                                         isSort = false,
                                         modifier = Modifier.padding(bottom = DimenMargin.regular.dp)
                                     ) {

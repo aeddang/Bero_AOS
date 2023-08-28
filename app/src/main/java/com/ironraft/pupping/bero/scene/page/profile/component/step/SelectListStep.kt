@@ -161,7 +161,7 @@ fun SelectListStep(
                         Text(
                             step.placeHolder,
                             fontSize = FontSize.light.sp,
-                            color = ColorApp.grey200
+                            color = ColorApp.gray200
                         )
                     },
                     keyboardActions = KeyboardActions(
@@ -174,7 +174,7 @@ fun SelectListStep(
                             painterResource(R.drawable.search),
                             contentDescription = "",
                             contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(if (keyword.isEmpty()) ColorApp.grey200 else ColorBrand.primary),
+                            colorFilter = ColorFilter.tint(if (keyword.isEmpty()) ColorApp.gray200 else ColorBrand.primary),
                             modifier = Modifier.size(DimenIcon.light.dp)
                         )
                     },
@@ -189,7 +189,7 @@ fun SelectListStep(
                         backgroundColor = ColorApp.white,
                         cursorColor = ColorBrand.primary,
                         focusedBorderColor = ColorBrand.primary,
-                        unfocusedBorderColor = ColorApp.grey200
+                        unfocusedBorderColor = ColorApp.gray200
                     ),
                     singleLine = true
                 )

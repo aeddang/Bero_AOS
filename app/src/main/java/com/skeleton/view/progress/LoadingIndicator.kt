@@ -12,7 +12,7 @@ import com.skeleton.theme.ColorApp
 fun LoadingIndicator(modifier: Modifier){
     CircularProgressIndicator(
         modifier = modifier.size(40.dp),
-        color = ColorApp.grey100,
+        color = ColorApp.gray100,
         strokeWidth = 5.dp)
 
 }

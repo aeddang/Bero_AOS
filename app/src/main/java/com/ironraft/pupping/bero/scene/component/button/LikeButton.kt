@@ -41,7 +41,7 @@ fun LikeButton(
                 type = SortButtonType.Stroke,
                 sizeType = likeSize,
                 icon = if(isLike) R.drawable.favorite_on else R.drawable.favorite_on,
-                color = if(isLike) ColorBrand.primary else ColorApp.grey400,
+                color = if(isLike) ColorBrand.primary else ColorApp.gray400,
                 isSort = false
             ){
                 action()
@@ -51,11 +51,11 @@ fun LikeButton(
                     Text(
                         count.toThousandUnit() + " " + stringResource(id = R.string.likes),
                         fontSize = FontSize.thin.sp,
-                        color = ColorApp.grey400,
+                        color = ColorApp.gray400,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .clip(RoundedCornerShape(corner = CornerSize(DimenRadius.regular.dp)))
-                            .background(ColorApp.whiteDeepLight)
+                            .background(ColorApp.gray200)
                             .padding(
                                 horizontal = DimenMargin.light.dp,
                                 vertical = DimenMargin.tinyExtra.dp

@@ -206,7 +206,7 @@ fun SortButtonComposePreview(){
             type = SortButtonType.Stroke,
             sizeType = SortButtonSizeType.Small,
             text = "Chip",
-            color = ColorApp.orange,
+            color = ColorApp.orange600,
             isSelected = true
         ) {
 
@@ -216,7 +216,7 @@ fun SortButtonComposePreview(){
             sizeType = SortButtonSizeType.Big,
             icon = R.drawable.paw,
             text = "Chip",
-            color = ColorApp.orange,
+            color = ColorApp.orange600,
             isOriginIcon = true,
             isSelected = true
         ) {
@@ -227,7 +227,7 @@ fun SortButtonComposePreview(){
             sizeType = SortButtonSizeType.Small,
             icon = R.drawable.paw,
             text = "",
-            color = ColorApp.orange,
+            color = ColorApp.orange600,
             isSort = false,
             isSelected = true
         ) {
@@ -238,7 +238,7 @@ fun SortButtonComposePreview(){
             sizeType = SortButtonSizeType.Small,
             icon = R.drawable.paw,
             text = "Chip",
-            color = ColorApp.orange,
+            color = ColorApp.orange600,
             isSelected = false
         ) {
 
@@ -248,7 +248,7 @@ fun SortButtonComposePreview(){
             sizeType = SortButtonSizeType.Small,
             icon = R.drawable.search,
             text = "이 지역 보기",
-            color = ColorApp.grey300,
+            color = ColorApp.gray300,
             isSort = false,
             isSelected = false
         ) {

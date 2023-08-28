@@ -27,13 +27,13 @@ import dev.burnoo.cokoin.get
 
 enum class TextButtonType() {
     Box {
-        override var bgColor:Color = ColorApp.whiteDeepLight
+        override var bgColor:Color = ColorApp.gray200
         override var bgRadius:Float = DimenRadius.regular
         override var paddingVertical:Float = DimenMargin.tinyExtra
         override var paddingHorizontal:Float = DimenMargin.light
         override var textFamily:FontWeight = FontWeight.Medium
         override var textSize:Float = FontSize.thin
-        override var textColor:Color = ColorApp.grey400
+        override var textColor:Color = ColorApp.gray400
         override var activeColor:Color = ColorApp.white
     },
     Blank {};

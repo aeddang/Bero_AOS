@@ -106,7 +106,7 @@ fun SelectDateEdit(
                     type = SortButtonType.StrokeFill,
                     sizeType = SortButtonSizeType.Small,
                     text = selectDate.toAge(),
-                    color = ColorApp.orange,
+                    color = ColorApp.orange600,
                     isSort = false,
                     isSelected = true
                 ) {

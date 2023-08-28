@@ -43,7 +43,7 @@ fun MenuTab(
     buttons:List<String>,
     selectedIdx:Int = 0,
     color:Color = ColorBrand.primary,
-    bgColor:Color = ColorApp.grey50,
+    bgColor:Color = ColorApp.gray200,
     height:Float = DimenButton.regular,
     isDivision:Boolean = true,
     action: ((Int) -> Unit)
@@ -105,7 +105,7 @@ private fun MenuTabButton(
             btn,
             fontSize = type.textSize.sp,
             fontWeight = FontWeight.Bold,
-            color = if (isSelected) color else ColorApp.grey400,
+            color = if (isSelected) color else ColorApp.gray400,
             modifier = Modifier.padding(horizontal = DimenMargin.regular.dp),
         )
         if (type == MenuTabType.Line)
@@ -116,7 +116,7 @@ private fun MenuTabButton(
                 Spacer(
                     modifier = Modifier.fillMaxWidth()
                         .height(if (isSelected) DimenLine.regular.dp else DimenLine.light.dp)
-                        .background(if (isSelected) color else ColorApp.grey100)
+                        .background(if (isSelected) color else ColorApp.gray100)
                 )
             }
 

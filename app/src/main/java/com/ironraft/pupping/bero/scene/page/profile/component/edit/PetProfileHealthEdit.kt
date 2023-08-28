@@ -120,7 +120,7 @@ fun PetProfileHealthEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
@@ -138,7 +138,7 @@ fun PetProfileHealthEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             if(codes.isNotEmpty())
                 SelectButton(
@@ -159,7 +159,7 @@ fun PetProfileHealthEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
@@ -177,7 +177,7 @@ fun PetProfileHealthEdit(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(DimenLine.light.dp)
-                .background(ColorApp.grey50)
+                .background(ColorApp.gray200)
             )
             SelectButton(
                 type = SelectButtonType.Medium,
